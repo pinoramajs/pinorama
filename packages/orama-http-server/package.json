@@ -1,0 +1,12 @@
+{
+  "name": "@pinorama/orama-http-server",
+  "version": "0.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "@pinorama/eslint-config": "*",
+    "@pinorama/typescript-config": "*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

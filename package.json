@@ -1,0 +1,36 @@
+{
+  "name": "pinorama-monorepo",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Francesco Pasqua",
+    "email": "cesconix@me.com",
+    "url": "https://github.com/cesconix",
+    "author": true
+  },
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:release": "changeset publish",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@pinorama/eslint-config": "workspace:*",
+    "@pinorama/typescript-config": "workspace:*",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "turbo": "^1.10.16"
+  },
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=20"
+  }
+}
