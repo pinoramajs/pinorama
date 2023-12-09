@@ -23,7 +23,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   const dbExists = fs.existsSync(dbFilePath)
 
   const db: any = dbExists
-    ? await restoreFromFile("json", dbFilePath)
+    ? await restoreFromFile(dbFormat, dbFilePath)
     : await create({ schema: logSchema })
 
   fastify.post("/bulk", async (req, res) => {
