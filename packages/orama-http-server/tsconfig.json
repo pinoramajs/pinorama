@@ -1,5 +1,0 @@
-{
-  "extends": "@pinorama/typescript-config/base.json",
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
-}
