@@ -1,5 +1,6 @@
 {
-  "name": "@pinorama/typescript-config",
+  "name": "pinorama-typescript-config",
   "version": "0.1.0",
+  "private": true,
   "license": "MIT"
 }

@@ -1,5 +1,5 @@
 {
-  "extends": "@pinorama/typescript-config/base.json",
+  "extends": "pinorama-typescript-config/base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"

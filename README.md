@@ -4,20 +4,20 @@ Welcome to **Pinorama**, an open-source project designed to enhance log analysis
 
 ## Current Stage
 
-At present, I'm in the initial phase of developing the `@pinorama/orama-http-server`. This component is crucial as it lays the foundation for the entire Pinorama ecosystem.
+At present, I'm in the initial phase of developing the `pinorama-server`. This component is crucial as it lays the foundation for the entire Pinorama ecosystem.
 
-### @pinorama/orama-http-server (in development)
+### pinorama-server (in development)
 
 - **Objective**: To create an HTTP server that wraps an Orama instance.
 - **Functionality**: It will listen on a specific port, similar to Elasticsearch, focusing on processing incoming log data efficiently.
 
 ## Future Scope
 
-Once the `@pinorama/orama-http-server` is operational, I plan to expand the project with the following additional components:
+Once the `pinorama-server` is operational, I plan to expand the project with the following additional components:
 
-- **@pinorama/orama-http-client**: A client for the server, specialized in handling large volumes of log data through HTTP streams.
-- **@pinorama/pino-transport-orama**: A transport layer that integrates Pino Logger with Orama Search.
-- **pinorama-web-app**: A React-based user interface for interactive log data visualization and analysis.
+- **pinorama-client**: A client for the server, specialized in handling large volumes of log data through HTTP streams.
+- **pino-pinorama**: A transport layer that integrates Pino Logger with Orama Search.
+- **pinorama-dashboard**: A React-based user interface for interactive log data visualization and analysis.
 
 ## Contact and Support
 
