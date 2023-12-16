@@ -5,7 +5,7 @@ import fp from "fastify-plugin"
 import { create, insertMultiple, search } from "@orama/orama"
 import { persistToFile, restoreFromFile } from "@orama/plugin-data-persistence"
 
-import type { FastifyPluginAsync } from "fastify"
+import type { FastifyPluginAsync, FastifyServerOptions } from "fastify"
 
 // TODO: delete "any"
 // TODO: requests validation
@@ -20,8 +20,8 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   options
 ) => {
   const dbSchema = {
-    level: "string",
-    time: "string",
+    level: "number",
+    time: "number",
     msg: "string",
     pid: "number",
     hostname: "string"
@@ -36,7 +36,9 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     ? await restoreFromFile(dbFormat, dbFilePath)
     : await create({ schema: dbSchema })
 
-  fastify.post("/bulk", async (req, res) => {
+  // fastify.log.level = "silent"
+
+  fastify.post("/bulk", { logLevel: "silent" }, async (req, res) => {
     try {
       await insertMultiple(db, req.body as any)
       res.code(201).send({ success: true })
@@ -46,7 +48,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     }
   })
 
-  fastify.post("/search", async (req, res) => {
+  fastify.post("/search", { logLevel: "silent" }, async (req, res) => {
     try {
       const result = await search(db, req.body as any)
       res.code(200).send(result)
@@ -56,7 +58,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     }
   })
 
-  fastify.post("/persist", async (req, res) => {
+  fastify.post("/persist", { logLevel: "silent" }, async (req, res) => {
     try {
       await persistToFile(db, dbFormat, dbFilePath)
       res.code(204).send()
@@ -66,19 +68,22 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     }
   })
 
-  fastify.addHook("onClose", async (instance) => {
+  fastify.addHook("onClose", async (req) => {
     try {
       const savedPath = await persistToFile(db, dbFormat, dbFilePath)
-      instance.log.info(`database saved to ${savedPath}`)
+      req.log.info(`database saved to ${savedPath}`)
     } catch (error) {
-      instance.log.error(`failed to save database: ${error}`)
+      req.log.error(`failed to save database: ${error}`)
     }
   })
 }
 
-function createServer(options: PinoramaServerOptions) {
-  const fastify = Fastify()
-  fastify.register(fastifyPinoramaServer, options)
+function createServer(
+  pinoramaOptions: PinoramaServerOptions,
+  fastifyOptions?: FastifyServerOptions
+) {
+  const fastify = Fastify(fastifyOptions)
+  fastify.register(fastifyPinoramaServer, pinoramaOptions)
   return fastify
 }
 

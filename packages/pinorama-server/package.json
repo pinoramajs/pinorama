@@ -16,8 +16,7 @@
   ],
   "scripts": {
     "build:esm": "tsc",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "dev:example": "tsx example.ts"
+    "build:cjs": "tsc -p tsconfig.cjs.json"
   },
   "author": {
     "email": "cesconix@me.com",
