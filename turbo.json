@@ -2,10 +2,12 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build:esm": {
-      "dependsOn": ["^build:esm"]
+      "dependsOn": ["^build:esm"],
+      "cache": false
     },
     "build:cjs": {
-      "dependsOn": ["^build:cjs"]
+      "dependsOn": ["^build:cjs"],
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^lint"]
