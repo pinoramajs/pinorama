@@ -4,13 +4,19 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build:esm": "tsc",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "dev:example": "tsx example.ts"
   },
   "author": {
@@ -26,8 +32,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@orama/orama": "2.0.0-beta.7",
-    "@orama/plugin-data-persistence": "2.0.0-beta.9",
+    "@orama/orama": "2.0.0-beta.10",
+    "@orama/plugin-data-persistence": "2.0.0-beta.10",
     "fastify": "^4.24.3",
     "fastify-plugin": "^4.5.1"
   },
