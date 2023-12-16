@@ -1,8 +1,8 @@
 {
   "extends": "pinorama-typescript-config/base.json",
   "compilerOptions": {
-    "module":"es2015",
-    "outDir": "dist/esm"
+    "module":"commonjs",
+    "outDir": "dist/cjs"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
