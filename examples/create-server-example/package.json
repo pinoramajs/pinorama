@@ -1,0 +1,13 @@
+{
+  "name": "pinorama-create-server-example",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.6.2"
+  },
+  "dependencies": {
+    "fastify": "^4.24.3"
+  }
+}
