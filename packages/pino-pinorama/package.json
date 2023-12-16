@@ -1,6 +1,6 @@
 {
-  "name": "pinorama-client",
-  "version": "0.0.0",
+  "name": "pino-pinorama",
+  "version": "0.0.1",
   "license": "MIT",
   "type": "module",
   "main": "dist/cjs/index.js",
@@ -20,15 +20,16 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.2",
+    "pinorama-client": "workspace:*",
     "pinorama-eslint-config": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2"
   },
-  "dependencies": {
-    "undici": "^6.0.1"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "pino-abstract-transport": "^1.1.0"
   }
 }

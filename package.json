@@ -1,6 +1,7 @@
 {
-  "name": "pinorama-monorepo",
+  "name": "pinorama",
   "version": "0.0.0",
+  "description": "simple, log search for pino",
   "license": "MIT",
   "author": {
     "name": "Francesco Pasqua",
