@@ -2,18 +2,18 @@ import { setTimeout } from "node:timers/promises"
 import { Readable } from "stream"
 import { Pool } from "undici"
 
-type PinoramaClientOptions = {
-  baseUrl: string
-  maxRetries: number
-  retryInterval: number
-}
-
 type BulkInsertOptions = {
   batchSize: number
   flushInterval: number
 }
 
-class PinoramaClient {
+export type PinoramaClientOptions = {
+  baseUrl: string
+  maxRetries: number
+  retryInterval: number
+}
+
+export class PinoramaClient {
   private pool: Pool
   private maxRetries: number
   private retryInterval: number
@@ -80,5 +80,3 @@ class PinoramaClient {
     }
   }
 }
-
-export { PinoramaClient }

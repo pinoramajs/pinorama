@@ -3,10 +3,7 @@ import path from "node:path"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
 import { create, insertMultiple, search } from "@orama/orama"
-import {
-  persistToFile,
-  restoreFromFile
-} from "@orama/plugin-data-persistence/server"
+import { persistToFile, restoreFromFile } from "@orama/plugin-data-persistence"
 
 import type { FastifyPluginAsync } from "fastify"
 

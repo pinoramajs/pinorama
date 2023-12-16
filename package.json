@@ -10,7 +10,8 @@
     "author": true
   },
   "scripts": {
-    "build": "turbo build",
+    "build:cjs": "turbo build:cjs",
+    "build:esm": "turbo build:esm",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -23,12 +24,12 @@
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "pinorama-eslint-config": "workspace:*",
-    "pinorama-typescript-config": "workspace:*",
     "husky": "^8.0.0",
     "lint-staged": "^15.1.0",
+    "pinorama-eslint-config": "workspace:*",
+    "pinorama-typescript-config": "workspace:*",
     "prettier": "^3.1.0",
-    "turbo": "^1.10.16"
+    "turbo": "^1.11.2"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
