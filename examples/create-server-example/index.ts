@@ -1,5 +1,5 @@
 import Fastify from "fastify"
-import { createServer } from "../../packages/pinorama-server"
+import { createServer } from "pinorama-server"
 
 const pinoramaServer = createServer({
   filePath: "./db.msp"
@@ -15,13 +15,9 @@ const genericServer = Fastify({
     transport: {
       targets: [
         {
-          target: "../../packages/pino-pinorama",
+          target: "pino-pinorama",
           options: {
-            url: "http://localhost:3001",
-            batchSize: 10, // default: 10
-            flushInterval: 5000, // default: 5000 (ms)
-            maxRetries: 5, // default: 5
-            retryInterval: 1000 // default: 1000
+            url: "http://localhost:3001"
           }
         }
       ]
