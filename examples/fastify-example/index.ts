@@ -1,26 +1,24 @@
 import Fastify from "fastify"
-import { fastifyPinoramaServer } from "../../packages/pinorama-server"
+import { fastifyPinoramaServer } from "pinorama-server"
 
 const fastify = Fastify({
   logger: {
     transport: {
       targets: [
         {
-          target: "../../packages/pino-pinorama",
+          target: "../../packages/pino-pinorama/dist/esm/index.js",
           options: {
-            url: "http://localhost:3000",
-            batchSize: 10, // default: 10
-            flushInterval: 5000, // default: 5000 (ms)
-            maxRetries: 5, // default: 5
-            retryInterval: 1000 // default: 1000
+            url: "http://localhost:3000/pinorama"
           }
-        }
+        },
+        { target: "pino-pretty" }
       ]
     }
   }
 })
 
 fastify.register(fastifyPinoramaServer, {
+  prefix: "/pinorama",
   filePath: "./db.msp"
 })
 

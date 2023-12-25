@@ -1,13 +1,18 @@
 {
   "name": "pinorama-create-server-example",
-  "version": "1.0.0",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
   "scripts": {
     "start": "tsx index.ts"
   },
-  "devDependencies": {
-    "tsx": "^4.6.2"
-  },
   "dependencies": {
-    "fastify": "^4.24.3"
+    "fastify": "^4.24.3",
+    "pinorama-server": "workspace:*"
+  },
+  "devDependencies": {
+    "pino-pinorama": "workspace:*",
+    "pino-pretty": "^10.3.0",
+    "tsx": "^4.6.2"
   }
 }
