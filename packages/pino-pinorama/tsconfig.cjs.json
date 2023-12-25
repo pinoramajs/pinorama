@@ -1,10 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "pinorama-typescript-config/base.json",
   "compilerOptions": {
-    "module":"commonjs",
-    "outDir": "dist/cjs",
-    "declarationDir": "dist/types"
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist/cjs"
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }
