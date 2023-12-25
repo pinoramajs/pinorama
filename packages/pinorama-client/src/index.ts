@@ -1,3 +1,4 @@
+import { URL } from "node:url"
 import { setTimeout } from "node:timers/promises"
 import { Readable } from "stream"
 import { Pool } from "undici"
@@ -8,20 +9,25 @@ type BulkInsertOptions = {
 }
 
 export type PinoramaClientOptions = {
-  baseUrl: string
+  url: string
   maxRetries: number
   retryInterval: number
 }
 
 export class PinoramaClient {
-  private pool: Pool
+  private baseUrl: string
+  private basePath: string
   private maxRetries: number
   private retryInterval: number
+  public pool: Pool
 
   constructor(options: PinoramaClientOptions) {
-    this.pool = new Pool(options.baseUrl)
+    const url = new URL(options.url)
+    this.baseUrl = url.origin
+    this.basePath = url.pathname
     this.maxRetries = options.maxRetries
     this.retryInterval = options.retryInterval
+    this.pool = new Pool(this.baseUrl)
   }
 
   async bulkInsert(
@@ -64,7 +70,7 @@ export class PinoramaClient {
     while (retries < this.maxRetries) {
       try {
         await this.pool.request({
-          path: "/bulk",
+          path: this.basePath + "/bulk",
           method: "POST",
           headers: {
             "content-type": "application/json"
