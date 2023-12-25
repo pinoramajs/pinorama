@@ -14,7 +14,7 @@ export default async function pinoramaTransport(
   opts: PinoramaTransportOptions
 ) {
   const client = new PinoramaClient({
-    baseUrl: opts.url,
+    url: opts.url,
     maxRetries: opts.maxRetries || 5,
     retryInterval: opts.retryInterval || 1000
   })

@@ -1,12 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es2017",
-    "declaration": true,
-    "sourceMap": true,
-    "strict": true,
+    "target": "ESNext",
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true
-  }
+    "skipLibCheck": true,
+    "strict": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules", "dist"]
 }

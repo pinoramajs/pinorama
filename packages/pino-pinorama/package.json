@@ -4,12 +4,15 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/cjs/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/esm/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
     }
+  },
+  "bin": {
+    "pino-pinorama": "./dist/esm/cli.js"
   },
   "files": [
     "dist"
@@ -35,6 +38,7 @@
     "access": "public"
   },
   "dependencies": {
+    "minimist": "^1.2.8",
     "pino-abstract-transport": "^1.1.0"
   }
 }
