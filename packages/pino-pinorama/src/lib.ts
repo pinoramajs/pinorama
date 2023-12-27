@@ -2,7 +2,7 @@ import abstractTransport from "pino-abstract-transport"
 import { PinoramaClient } from "pinorama-client"
 import type { Transform } from "node:stream"
 
-type PinoramaTransportOptions = {
+export type PinoramaTransportOptions = {
   url: string
   batchSize?: number
   flushInterval?: number
@@ -10,9 +10,7 @@ type PinoramaTransportOptions = {
   retryInterval?: number
 }
 
-export default async function pinoramaTransport(
-  opts: PinoramaTransportOptions
-) {
+export default function pinoramaTransport(opts: PinoramaTransportOptions) {
   const client = new PinoramaClient({
     url: opts.url,
     maxRetries: opts.maxRetries || 5,
