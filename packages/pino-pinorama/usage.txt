@@ -1,0 +1,20 @@
+
+  pino-pinorama 
+
+  Description:
+    A tool for send pino logs to Pinorama server.
+
+  Usage:
+    pino-pinorama [options]
+
+  Options:
+    -h, --help                 Display this help message and exit.
+    -v, --version              Show application version.
+    -u, --url <url>            Set Pinorama server URL.
+    -b, --batch-size <size>    Define logs per bulk insert (default: 10).
+    -f, --flush-interval <ms>  Set flush wait time in ms (default: 5000).
+    -m, --max-retries <num>    Max retry attempts for requests (default: 5).
+    -r, --retry-interval <ms>  Interval between retries in ms (default: 1000).
+
+  Example:
+    cat logs | pino-pinorama --url http://localhost:3000

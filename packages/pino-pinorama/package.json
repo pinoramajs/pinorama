@@ -1,36 +1,34 @@
 {
   "name": "pino-pinorama",
   "version": "0.0.1",
-  "license": "MIT",
+  "description": "load pino logs into Pinorama",
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "types": "dist/esm/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    }
-  },
+  "types": "./dist/lib.d.mts",
+  "exports": "./dist/lib.mjs",
   "bin": {
-    "pino-pinorama": "./dist/esm/cli.js"
+    "pino-pinorama": "./dist/cli.mjs"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build:esm": "tsc",
-    "build:cjs": "tsc -p tsconfig.cjs.json"
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsc",
+    "postbuild": "cp usage.txt dist/ && chmod u+x ./dist/cli.mjs"
   },
   "author": {
     "email": "cesconix@me.com",
     "name": "Francesco Pasqua",
     "url": "https://github.com/cesconix"
   },
+  "license": "MIT",
   "devDependencies": {
+    "@types/minimist": "^1.2.5",
     "@types/node": "^20.10.2",
     "pinorama-client": "workspace:*",
     "pinorama-eslint-config": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
+    "rimraf": "^5.0.5",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2"
   },

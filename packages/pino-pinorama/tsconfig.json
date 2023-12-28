@@ -2,9 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "pinorama-typescript-config/base.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "dist/esm"
+    "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["lib.mts", "cli.mts", "package.json"]
 }

@@ -6,7 +6,7 @@ const fastify = Fastify({
     transport: {
       targets: [
         {
-          target: "../../packages/pino-pinorama/dist/esm/index.js",
+          target: "pino-pinorama",
           options: {
             url: "http://localhost:3000/pinorama"
           }
@@ -22,7 +22,7 @@ fastify.register(fastifyPinoramaServer, {
   filePath: "./db.msp"
 })
 
-fastify.post("/logs", async function handler(req: any) {
+fastify.post("/logs", async function handler(req) {
   req.log.info(req.body.message)
   return req.body.message
 })

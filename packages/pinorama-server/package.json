@@ -3,20 +3,14 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "types": "dist/esm/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
-    }
-  },
+  "types": "./dist/index.d.mts",
+  "exports": "./dist/index.mjs",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build:esm": "tsc",
-    "build:cjs": "tsc -p tsconfig.cjs.json"
+    "clean": "rimraf ./dist",
+    "build": "pnpm clean && tsc"
   },
   "author": {
     "email": "cesconix@me.com",
@@ -27,12 +21,12 @@
     "@types/node": "^20.10.2",
     "pinorama-eslint-config": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
+    "rimraf": "^5.0.5",
     "tsx": "^4.6.2",
     "typescript": "^5.2.2"
   },
   "dependencies": {
     "@orama/orama": "2.0.0-beta.10",
-    "@orama/plugin-data-persistence": "2.0.0-beta.10",
     "fastify": "^4.24.3",
     "fastify-plugin": "^4.5.1"
   },

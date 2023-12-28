@@ -25,7 +25,7 @@ const genericServer = Fastify({
   }
 })
 
-genericServer.post("/logs", async function handler(req: any) {
+genericServer.post("/logs", async function handler(req) {
   req.log.info(req.body.message)
   return req.body.message
 })
