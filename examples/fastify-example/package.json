@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "tsx index.ts"
+    "start": "node index.mjs"
   },
   "dependencies": {
     "fastify": "^4.24.3",
@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "pino-pinorama": "workspace:*",
-    "pino-pretty": "^10.3.0",
-    "tsx": "^4.6.2"
+    "pino-pretty": "^10.3.0"
   }
 }
