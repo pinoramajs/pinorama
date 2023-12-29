@@ -1,6 +1,6 @@
 {
   "name": "pino-pinorama",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.1",
   "description": "load pino logs into Pinorama",
   "type": "module",
   "types": "./dist/lib.d.mts",
