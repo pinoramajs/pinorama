@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "pinorama-create-server-example": "0.1.0-alpha.0",
+    "pinorama-fastify-example": "0.1.0-alpha.0",
+    "pinorama-eslint-config": "0.1.0-alpha.0",
+    "pino-pinorama": "0.1.0-alpha.0",
+    "pinorama-client": "0.1.0-alpha.0",
+    "pinorama-server": "0.1.0-alpha.0",
+    "pinorama-typescript-config": "0.1.0-alpha.0"
+  },
+  "changesets": [
+    "rare-rings-learn"
+  ]
+}
