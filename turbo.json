@@ -9,14 +9,6 @@
       "dependsOn": ["^build"],
       "cache": false
     },
-    "build:esm": {
-      "dependsOn": ["^build:esm"],
-      "cache": false
-    },
-    "build:cjs": {
-      "dependsOn": ["^build:cjs"],
-      "cache": false
-    },
     "lint": {
       "dependsOn": ["^lint"]
     },
