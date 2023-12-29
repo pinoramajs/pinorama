@@ -12,8 +12,6 @@
   "scripts": {
     "clean": "turbo clean",
     "build": "turbo build",
-    "build:esm": "turbo build:esm",
-    "build:cjs": "turbo build:cjs",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
