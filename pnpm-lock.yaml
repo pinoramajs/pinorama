@@ -151,8 +151,11 @@ importers:
   packages/pinorama-server:
     dependencies:
       '@orama/orama':
-        specifier: 2.0.0-beta.10
-        version: 2.0.0-beta.10
+        specifier: 2.0.0-beta.12
+        version: 2.0.0-beta.12
+      '@orama/plugin-data-persistence':
+        specifier: 2.0.0-beta.12
+        version: 2.0.0-beta.12
       fastify:
         specifier: ^4.24.3
         version: 4.25.2
@@ -887,6 +890,11 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
+  /@msgpack/msgpack@2.8.0:
+    resolution: {integrity: sha512-h9u4u/jiIRKbq25PM+zymTyW6bhTzELvOoUd+AvYriWOAKpLGnIamaET3pnHYoI5iYphAHBI4ayx0MehR+VVPQ==}
+    engines: {node: '>= 10'}
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -908,9 +916,17 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@orama/orama@2.0.0-beta.10:
-    resolution: {integrity: sha512-gZGuEiOVx1iYJS+qPxHivikViY/3B9YN4nYCPUEdE2XoqsptrjjY4HT82lc4OfXA6gHKp4x/A4fuRTiGHlUktQ==}
+  /@orama/orama@2.0.0-beta.12:
+    resolution: {integrity: sha512-svPT72gxR1zyF7bMz+itmZBdZB1ndI97YdzArCqo5esIfWy1u5Ht/K8EEYJ/EuC35Di3j9czjCzhL1e/zVEARQ==}
     engines: {node: '>= 16.0.0'}
+    dev: false
+
+  /@orama/plugin-data-persistence@2.0.0-beta.12:
+    resolution: {integrity: sha512-u3xjv/IIL1i9+uEViWuEmyy6t/iVrPD+dz7PLO40Fo5cCDZxebW1R6fm9cBYFJ49vYk8pTNViGxlWw2hd4uRWg==}
+    dependencies:
+      '@msgpack/msgpack': 2.8.0
+      '@orama/orama': 2.0.0-beta.12
+      dpack: 0.6.22
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
@@ -1638,6 +1654,10 @@ packages:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /dpack@0.6.22:
+    resolution: {integrity: sha512-WGPNlW2OAE7Bj0eODMpAHUcEqxrlg01e9OFZDxQodminIgC194/cRHT7K04Z1j7AUEWTeeplYGrIv/xRdwU9Hg==}
+    dev: false
 
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
