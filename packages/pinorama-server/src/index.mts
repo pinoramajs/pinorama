@@ -1,10 +1,12 @@
+import fs from "node:fs"
+import path from "node:path"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
 import { create, insertMultiple, search } from "@orama/orama"
-// import {
-//   persistToFile,
-//   restoreFromFile
-// } from "@orama/plugin-data-persistence/server"
+import {
+  persistToFile,
+  restoreFromFile
+} from "@orama/plugin-data-persistence/server"
 
 import type { FastifyPluginAsync, FastifyServerOptions } from "fastify"
 
@@ -30,16 +32,14 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     hostname: "string"
   }
 
-  // const dbFormat = "json"
+  const dbFormat = "json"
 
-  // const dbFilePath = path.resolve(options.filePath || "./pinorama.msp")
-  // const dbExists = fs.existsSync(dbFilePath)
+  const dbFilePath = path.resolve(options.filePath || "./pinorama.msp")
+  const dbExists = fs.existsSync(dbFilePath)
 
-  // const db: any = dbExists
-  //   ? await restoreFromFile(dbFormat, dbFilePath)
-  //   : await create({ schema: dbSchema })
-
-  const db = await create({ schema: dbSchema })
+  const db: any = dbExists
+    ? await restoreFromFile(dbFormat, dbFilePath)
+    : await create({ schema: dbSchema })
 
   fastify.register(
     async (app) => {
@@ -63,24 +63,24 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
         }
       })
 
-      // app.post("/persist", async (req, res) => {
-      //   try {
-      //     await persistToFile(db, dbFormat, dbFilePath)
-      //     res.code(204).send()
-      //   } catch (e) {
-      //     req.log.error(e)
-      //     res.code(500).send({ error: "failed to persist data" })
-      //   }
-      // })
+      app.post("/persist", async (req, res) => {
+        try {
+          await persistToFile(db, dbFormat, dbFilePath)
+          res.code(204).send()
+        } catch (e) {
+          req.log.error(e)
+          res.code(500).send({ error: "failed to persist data" })
+        }
+      })
 
-      // app.addHook("onClose", async (req) => {
-      //   try {
-      //     const savedPath = await persistToFile(db, dbFormat, dbFilePath)
-      //     req.log.info(`database saved to ${savedPath}`)
-      //   } catch (error) {
-      //     req.log.error(`failed to save database: ${error}`)
-      //   }
-      // })
+      app.addHook("onClose", async (req) => {
+        try {
+          const savedPath = await persistToFile(db, dbFormat, dbFilePath)
+          req.log.info(`database saved to ${savedPath}`)
+        } catch (error) {
+          req.log.error(`failed to save database: ${error}`)
+        }
+      })
     },
     { prefix: options.prefix || "pinorama" }
   )
