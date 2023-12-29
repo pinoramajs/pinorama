@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 import { pipeline } from "node:stream"
+import { fileURLToPath } from "node:url"
 import fs from "node:fs"
 import minimist from "minimist"
 import pinoPinorama from "./lib.mjs"
@@ -14,12 +15,14 @@ type PinoramaCliOptions = PinoramaTransportOptions & {
 
 async function start(opts: PinoramaCliOptions) {
   if (opts.help) {
-    console.log(fs.readFileSync("./usage.txt", "utf8"))
+    const filepath = fileURLToPath(new URL("usage.txt", import.meta.url))
+    console.log(fs.readFileSync(filepath, "utf8"))
     return
   }
 
   if (opts.version) {
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"))
+    const filepath = fileURLToPath(new URL("package.json", import.meta.url))
+    const packageJson = JSON.parse(fs.readFileSync(filepath, "utf8"))
     console.log(packageJson.version)
     return
   }
