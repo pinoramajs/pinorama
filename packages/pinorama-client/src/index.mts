@@ -28,20 +28,25 @@ export class PinoramaClient {
     this.maxRetries = options.maxRetries
     this.retryInterval = options.retryInterval
     this.pool = new Pool(this.baseUrl)
+    // console.log(options)
   }
 
   async bulkInsert(
     logStream: Readable,
     options: BulkInsertOptions
   ): Promise<void> {
+    // let count = 0
     let buffer: any[] = []
     let timer: NodeJS.Timeout | null = null
 
     const flush = async () => {
       if (buffer.length === 0) return
       try {
+        // count += buffer.length
+        // console.log(count)
         await this.sendLogs(buffer)
         buffer = []
+        logStream.resume()
       } catch (error) {
         console.error("failed to send logs:", error)
       }
@@ -50,6 +55,7 @@ export class PinoramaClient {
     const onData = (data: any) => {
       buffer.push(data)
       if (buffer.length >= options.batchSize) {
+        logStream.pause()
         if (timer) clearTimeout(timer)
         flush()
       }

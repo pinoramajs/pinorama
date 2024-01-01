@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { pipeline } from "node:stream"
+import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
 import fs from "node:fs"
 import minimist from "minimist"
@@ -46,9 +46,6 @@ start(
       flushInterval: "f",
       maxRetries: "m",
       retryInterval: "r"
-    },
-    default: {
-      url: "http://localhost:6200"
     }
   })
 )
