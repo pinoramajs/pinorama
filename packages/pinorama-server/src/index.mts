@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import os from "node:os"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
 import { create, insertMultiple, search } from "@orama/orama"
@@ -10,7 +11,6 @@ import {
 
 import type { FastifyPluginAsync, FastifyServerOptions } from "fastify"
 
-// TODO: add orama plugin-data-persistence
 // TODO: delete "any"
 // TODO: add request validation
 // TODO: possibility to extend orama schema
@@ -34,7 +34,8 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 
   const dbFormat = "json"
 
-  const dbFilePath = path.resolve(options.filePath || "./pinorama.msp")
+  const defaultDbPath = path.join(os.tmpdir(), "pinorama.msp")
+  const dbFilePath = path.resolve(options.filePath || defaultDbPath)
   const dbExists = fs.existsSync(dbFilePath)
 
   const db: any = dbExists
