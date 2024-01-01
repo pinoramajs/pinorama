@@ -4,23 +4,29 @@ import type { Transform } from "node:stream"
 
 export type PinoramaTransportOptions = {
   url: string
-  batchSize?: number
-  flushInterval?: number
-  maxRetries?: number
-  retryInterval?: number
+  batchSize: number
+  flushInterval: number
+  maxRetries: number
+  retryInterval: number
 }
 
-export default function pinoramaTransport(opts: PinoramaTransportOptions) {
-  const client = new PinoramaClient({
-    url: opts.url,
-    maxRetries: opts.maxRetries || 5,
-    retryInterval: opts.retryInterval || 1000
-  })
+export default function pinoramaTransport(options: PinoramaTransportOptions) {
+  const defaultOptions: PinoramaTransportOptions = {
+    url: "http://localhost:6200",
+    batchSize: 10,
+    flushInterval: 5000,
+    maxRetries: 5,
+    retryInterval: 1000
+  }
+
+  const opts = { ...defaultOptions, ...options }
+
+  const client = new PinoramaClient(opts)
 
   const buildFn = async (source: Transform) => {
     client.bulkInsert(source, {
-      batchSize: opts.batchSize || 10,
-      flushInterval: opts.flushInterval || 5000
+      batchSize: opts.batchSize,
+      flushInterval: opts.flushInterval
     })
   }
 
