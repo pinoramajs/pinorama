@@ -3,12 +3,25 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "bin": {
+    "pinorama": "./cli.mjs"
+  },
+  "files": [
+    "dist",
+    "cli.mjs"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fastify/static": "^6.12.0",
+    "fastify": "^4.25.2",
+    "minimist": "^1.2.8",
+    "open": "^10.0.2",
+    "pino-pinorama": "workspace:*",
+    "pinorama-server": "workspace:*",
     "preact": "^10.19.3"
   },
   "devDependencies": {
