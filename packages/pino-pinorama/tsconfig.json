@@ -4,5 +4,5 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["lib.mts", "cli.mts", "package.json"]
+  "include": ["src"]
 }

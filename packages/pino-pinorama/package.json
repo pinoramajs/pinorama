@@ -14,7 +14,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc",
-    "postbuild": "cp usage.txt dist/ && chmod u+x ./dist/cli.mjs"
+    "postbuild": "chmod u+x ./dist/cli.mjs"
   },
   "author": {
     "email": "cesconix@me.com",

@@ -2,7 +2,7 @@
 
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
-import fs from "node:fs"
+import { readFileSync } from "node:fs"
 import path from "node:path"
 import os from "node:os"
 import fastify from "fastify"
@@ -13,17 +13,55 @@ import open from "open"
 import pinoPinorama from "pino-pinorama"
 import { fastifyPinoramaServer } from "pinorama-server"
 
-async function start(opts) {
+const defaultOptions = {
+  host: "localhost",
+  port: 6200,
+  open: false,
+  logger: false,
+  server: false,
+  "server-prefix": "/pinorama",
+  "server-db-file": path.resolve(os.tmpdir(), "pinorama.msp")
+}
+
+async function start(options) {
+  const opts = { ...defaultOptions, ...options }
+
+  const pj = fileURLToPath(new URL("./package.json", import.meta.url))
+  const { version } = JSON.parse(readFileSync(pj, "utf8"))
+
   if (opts.help) {
-    const filepath = fileURLToPath(new URL("usage.txt", import.meta.url))
-    console.log(fs.readFileSync(filepath, "utf8"))
+    console.log(`
+  pinorama v${version}
+
+  Description:
+    A CLI tool to start the Pinorama Studio tool chain.
+
+  Usage:
+    pinorama [options]
+
+  Options:
+    -h, --help              Display this help message and exit.
+    -v, --version           Show application version.
+    -H, --host              Set server host (default: ${defaultOptions.host}).
+    -P, --port              Set server port (default: ${defaultOptions.port}).
+    -o, --open              Open Pinorama Studio (default: ${defaultOptions.open}).
+    -l, --logger            Enable logging (default: ${defaultOptions.logger}).
+    -s, --server            Start server (default: ${defaultOptions.server}).
+    -p, --server-prefix     Set server path prefix (default: ${defaultOptions["server-prefix"]}).
+    -f, --server-db-file    Set server database file (default: ${defaultOptions["server-db-file"]}).
+
+  Examples:
+    pinorama --open
+    node app.js | pinorama
+    cat logs | pinorama -l -o
+    pinorama --host 192.168.1.1 --port 8080
+    pinorama --server --logger
+`)
     return
   }
 
   if (opts.version) {
-    const filepath = fileURLToPath(new URL("package.json", import.meta.url))
-    const packageJson = JSON.parse(fs.readFileSync(filepath, "utf8"))
-    console.log(packageJson.version)
+    console.log(version)
     return
   }
 
@@ -111,14 +149,6 @@ start(
       "server-db-file": "f"
     },
     boolean: ["server", "open"],
-    default: {
-      host: "localhost",
-      port: 6200,
-      open: false,
-      logger: false,
-      server: false,
-      "server-prefix": "/pinorama",
-      "server-db-file": path.resolve(os.tmpdir(), "pinorama.msp")
-    }
+    default: defaultOptions
   })
 )
