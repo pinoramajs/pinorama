@@ -10,15 +10,15 @@ export type PinoramaTransportOptions = {
   retryInterval: number
 }
 
-export default function pinoramaTransport(options: PinoramaTransportOptions) {
-  const defaultOptions: PinoramaTransportOptions = {
-    url: "http://localhost:6200",
-    batchSize: 10,
-    flushInterval: 5000,
-    maxRetries: 5,
-    retryInterval: 1000
-  }
+export const defaultOptions: PinoramaTransportOptions = {
+  url: "http://localhost:6200",
+  batchSize: 10,
+  flushInterval: 5000,
+  maxRetries: 5,
+  retryInterval: 1000
+}
 
+export default function pinoramaTransport(options: PinoramaTransportOptions) {
   const opts = { ...defaultOptions, ...options }
 
   const client = new PinoramaClient(opts)
