@@ -3,9 +3,12 @@
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
 import fs from "node:fs"
+import path from "node:path"
+import os from "node:os"
 import fastify from "fastify"
 import fastifyStatic from "@fastify/static"
 import minimist from "minimist"
+import c from "chalk"
 import open from "open"
 import pinoPinorama from "pino-pinorama"
 import { fastifyPinoramaServer } from "pinorama-server"
@@ -27,23 +30,40 @@ async function start(opts) {
   const isPiped = !process.stdin.isTTY
   opts.server = isPiped || opts.server
 
-  const app = createServer()
+  const app = createServer(opts)
 
   if (opts.server) {
-    app.register(fastifyPinoramaServer)
+    app.register(fastifyPinoramaServer, {
+      prefix: opts["server-prefix"],
+      filePath: opts["server-db-file"]
+    })
   }
 
-  const localUrl = `http://localhost:${opts.port}`
+  const studioUrl = `http://${opts.host}:${opts.port}`
+  const serverUrl = `${studioUrl}${opts["server-prefix"]}`
 
-  app.listen({ port: opts.port }, async (err) => {
+  app.listen({ host: opts.host, port: opts.port }, async (err) => {
     if (err) throw err
-    console.log(`Pinorama Studio is up to ${localUrl}`)
-    await open(localUrl)
+
+    const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`]
+
+    if (opts.server) {
+      msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
+      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-file"])}`)
+    }
+
+    console.log(msg.join("\n"))
+
+    opts.open && (await open(studioUrl))
   })
 
   if (isPiped) {
+    console.log(
+      c.yellow("Detected piped output. Server mode activated by default.")
+    )
+
     const stream = pinoPinorama({
-      url: `${localUrl}/pinorama`,
+      url: serverUrl,
       batchSize: 1000
     })
 
@@ -55,8 +75,19 @@ async function start(opts) {
   }
 }
 
-function createServer() {
-  const app = fastify()
+function createServer(opts) {
+  const app = fastify({
+    logger: opts.logger
+      ? {
+          transport: {
+            target: "@fastify/one-line-logger",
+            options: {
+              colorize: true
+            }
+          }
+        }
+      : false
+  })
 
   app.register(fastifyStatic, {
     root: fileURLToPath(new URL("dist", import.meta.url))
@@ -70,11 +101,23 @@ start(
     alias: {
       help: "h",
       version: "v",
+      host: "H",
       port: "p",
-      server: "s"
+      open: "o",
+      logger: "l",
+      server: "s",
+      "server-prefix": "e",
+      "server-db-file": "f"
     },
+    boolean: ["server", "open"],
     default: {
-      port: 5000
+      host: "localhost",
+      port: 6200,
+      open: false,
+      logger: false,
+      server: false,
+      "server-prefix": "/pinorama",
+      "server-db-file": path.resolve(os.tmpdir(), "pinorama.msp")
     }
   })
 )

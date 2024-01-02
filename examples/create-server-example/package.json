@@ -7,11 +7,9 @@
     "start": "node index.mjs"
   },
   "dependencies": {
+    "@fastify/one-line-logger": "^1.2.0",
     "fastify": "^4.24.3",
-    "pinorama-server": "workspace:*"
-  },
-  "devDependencies": {
     "pino-pinorama": "workspace:*",
-    "pino-pretty": "^10.3.0"
+    "pinorama-server": "workspace:*"
   }
 }
