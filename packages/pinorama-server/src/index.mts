@@ -9,7 +9,13 @@ import {
   restoreFromFile
 } from "@orama/plugin-data-persistence/server"
 
-import type { FastifyPluginAsync, FastifyServerOptions } from "fastify"
+import type {
+  FastifyPluginAsync,
+  FastifyRegisterOptions,
+  FastifyServerOptions,
+  LogLevel,
+  RegisterOptions
+} from "fastify"
 
 // TODO: delete "any"
 // TODO: add request validation
@@ -18,6 +24,7 @@ import type { FastifyPluginAsync, FastifyServerOptions } from "fastify"
 type PinoramaServerOptions = {
   filePath?: string
   prefix?: string
+  logLevel?: LogLevel
 }
 
 const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
@@ -42,53 +49,60 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     ? await restoreFromFile(dbFormat, dbFilePath)
     : await create({ schema: dbSchema })
 
-  fastify.register(
-    async (app) => {
-      app.post("/bulk", { logLevel: "silent" }, async (req, res) => {
-        try {
-          await insertMultiple(db, req.body as any)
-          res.code(201).send({ success: true })
-        } catch (e) {
-          req.log.error(e)
-          res.code(500).send({ error: "failed to insert data" })
-        }
-      })
+  const registerOpts: RegisterOptions = {}
 
-      app.post("/search", async (req, res) => {
-        try {
-          const result = await search(db, req.body as any)
-          res.code(200).send(result)
-        } catch (e) {
-          req.log.error(e)
-          res.code(500).send({ error: "failed to search data" })
-        }
-      })
+  if (options.prefix) {
+    registerOpts.prefix = options.prefix
+  }
 
-      app.post("/persist", async (req, res) => {
-        try {
-          await persistToFile(db, dbFormat, dbFilePath)
-          res.code(204).send()
-        } catch (e) {
-          req.log.error(e)
-          res.code(500).send({ error: "failed to persist data" })
-        }
-      })
+  if (options.logLevel) {
+    registerOpts.logLevel = options.logLevel
+  }
 
-      app.addHook("onClose", async (req) => {
-        try {
-          const savedPath = await persistToFile(db, dbFormat, dbFilePath)
-          req.log.info(`database saved to ${savedPath}`)
-        } catch (error) {
-          req.log.error(`failed to save database: ${error}`)
-        }
-      })
-    },
-    { prefix: options.prefix || "pinorama" }
-  )
+  fastify.register(async (app) => {
+    app.post("/bulk", async (req, res) => {
+      try {
+        await insertMultiple(db, req.body as any)
+        res.code(201).send({ success: true })
+      } catch (e) {
+        req.log.error(e)
+        res.code(500).send({ error: "failed to insert data" })
+      }
+    })
+
+    app.post("/search", async (req, res) => {
+      try {
+        const result = await search(db, req.body as any)
+        res.code(200).send(result)
+      } catch (e) {
+        req.log.error(e)
+        res.code(500).send({ error: "failed to search data" })
+      }
+    })
+
+    app.post("/persist", async (req, res) => {
+      try {
+        await persistToFile(db, dbFormat, dbFilePath)
+        res.code(204).send()
+      } catch (e) {
+        req.log.error(e)
+        res.code(500).send({ error: "failed to persist data" })
+      }
+    })
+
+    app.addHook("onClose", async (req) => {
+      try {
+        const savedPath = await persistToFile(db, dbFormat, dbFilePath)
+        req.log.info(`database saved to ${savedPath}`)
+      } catch (error) {
+        req.log.error(`failed to save database: ${error}`)
+      }
+    })
+  }, registerOpts)
 }
 
 function createServer(
-  pinoramaOptions: PinoramaServerOptions,
+  pinoramaOptions: FastifyRegisterOptions<PinoramaServerOptions>,
   fastifyOptions?: FastifyServerOptions
 ) {
   const fastify = Fastify(fastifyOptions)

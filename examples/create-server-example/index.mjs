@@ -1,13 +1,25 @@
 import Fastify from "fastify"
 import { createServer } from "pinorama-server"
 
-const pinoramaServer = createServer({
-  filePath: "./db.msp"
-})
+const pinoramaServer = createServer(
+  {
+    // prefix: "/my_pinorama_server",
+    filePath: "./db.msp"
+  },
+  {
+    logger: {
+      transport: {
+        targets: [
+          { target: "@fastify/one-line-logger", options: { colorize: true } }
+        ]
+      }
+    }
+  }
+)
 
-pinoramaServer.listen({ port: 3001 }, (err, address) => {
+pinoramaServer.listen({ port: 6200 }, (err, address) => {
   if (err) throw err
-  console.log(`Pinorama server is listening on ${address}`)
+  console.log(`Pinorama server listening at ${address}`)
 })
 
 const genericServer = Fastify({
@@ -17,9 +29,11 @@ const genericServer = Fastify({
         {
           target: "pino-pinorama",
           options: {
-            url: "http://localhost:3001"
+            // url: "http://localhost:6200/my_pinorama_server"
+            url: "http://localhost:6200"
           }
-        }
+        },
+        { target: "@fastify/one-line-logger" }
       ]
     }
   }
@@ -32,5 +46,5 @@ genericServer.post("/logs", async function handler(req) {
 
 genericServer.listen({ port: 3000 }, (err, address) => {
   if (err) throw err
-  console.log(`Generic server is listening on ${address}`)
+  console.log(`Generic server listening at ${address}`)
 })
