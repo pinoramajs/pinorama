@@ -71,6 +71,7 @@ async function start(opts) {
       console.error(error)
     })
 
+    await app.ready()
     pipeline(process.stdin, stream)
   }
 }
