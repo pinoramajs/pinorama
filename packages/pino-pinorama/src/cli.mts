@@ -28,13 +28,13 @@ async function start(opts: PinoramaCliOptions) {
     pino-pinorama [options]
 
   Options:
-    -h, --help                 Display this help message and exit.
-    -v, --version              Show application version.
-    -u, --url <url>            Set Pinorama server URL.
-    -b, --batch-size <size>    Define logs per bulk insert (default: ${defaultOptions.batchSize}).
-    -f, --flush-interval <ms>  Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
-    -m, --max-retries <num>    Max retry attempts for requests (default: ${defaultOptions.maxRetries}).
-    -r, --retry-interval <ms>  Interval between retries in ms (default: ${defaultOptions.retryInterval}).
+    -h, --help              Display this help message and exit.
+    -v, --version           Show application version.
+    -u, --url               Set Pinorama server URL.
+    -b, --batch-size        Define logs per bulk insert (default: ${defaultOptions.batchSize}).
+    -f, --flush-interval    Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
+    -m, --max-retries       Max retry attempts for requests (default: ${defaultOptions.maxRetries}).
+    -r, --retry-interval    Interval between retries in ms (default: ${defaultOptions.retryInterval}).
 
   Example:
     cat logs | pino-pinorama --url http://localhost:6200

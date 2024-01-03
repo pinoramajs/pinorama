@@ -42,13 +42,13 @@ async function start(options) {
   Options:
     -h, --help              Display this help message and exit.
     -v, --version           Show application version.
-    -H, --host              Set server host (default: ${defaultOptions.host}).
-    -P, --port              Set server port (default: ${defaultOptions.port}).
+    -H, --host              Set web server host (default: ${defaultOptions.host}).
+    -P, --port              Set web server port (default: ${defaultOptions.port}).
     -o, --open              Open Pinorama Studio (default: ${defaultOptions.open}).
     -l, --logger            Enable logging (default: ${defaultOptions.logger}).
-    -s, --server            Start server (default: ${defaultOptions.server}).
-    -p, --server-prefix     Set server path prefix (default: ${defaultOptions["server-prefix"]}).
-    -f, --server-db-file    Set server database file (default: ${defaultOptions["server-db-file"]}).
+    -s, --server            Start Pinorama Server (default: ${defaultOptions.server}).
+    -p, --server-prefix     Set Pinorama Server prefix (default: ${defaultOptions["server-prefix"]}).
+    -f, --server-db-file    Set Pinorama Server db file (default: TMPDIR/pinorama.msp).
 
   Examples:
     pinorama --open
