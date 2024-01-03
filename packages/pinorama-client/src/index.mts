@@ -11,22 +11,30 @@ type BulkInsertOptions = {
 export type PinoramaClientOptions = {
   url: string
   maxRetries: number
-  retryInterval: number
+  backoff: number
+  backoffFactor: number
+  backoffMax: number
 }
 
 export class PinoramaClient {
   private baseUrl: string
   private basePath: string
   private maxRetries: number
-  private retryInterval: number
+  private backoff: number
+  private backoffFactor: number
+  private backoffMax: number
   private client: Client
 
   constructor(options: PinoramaClientOptions) {
     const url = new URL(options.url)
     this.baseUrl = url.origin
     this.basePath = url.pathname.length === 1 ? "" : url.pathname
-    this.maxRetries = options.maxRetries
-    this.retryInterval = options.retryInterval
+
+    this.maxRetries = options.maxRetries || 5
+    this.backoff = options.backoff || 1000
+    this.backoffFactor = options.backoffFactor || 2
+    this.backoffMax = options.backoffMax || 30000
+
     this.client = new Client(this.baseUrl)
     // console.log(options)
   }
@@ -73,6 +81,8 @@ export class PinoramaClient {
 
   private async sendLogs(logs: any[]): Promise<void> {
     let retries = 0
+    let currentBackoff = this.backoff
+
     while (retries < this.maxRetries) {
       try {
         await this.client.request({
@@ -87,8 +97,11 @@ export class PinoramaClient {
       } catch (error) {
         console.error("error sending logs:", error)
         retries++
-        await setTimeout(this.retryInterval)
+        await setTimeout(Math.min(currentBackoff, this.backoffMax))
+        currentBackoff *= this.backoffFactor
       }
     }
+
+    throw new Error("max retries reached in sending logs")
   }
 }
