@@ -34,7 +34,9 @@ async function start(opts: PinoramaCliOptions) {
     -b, --batch-size        Define logs per bulk insert (default: ${defaultOptions.batchSize}).
     -f, --flush-interval    Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
     -m, --max-retries       Max retry attempts for requests (default: ${defaultOptions.maxRetries}).
-    -r, --retry-interval    Interval between retries in ms (default: ${defaultOptions.retryInterval}).
+    -i, --backoff           Initial backoff time in ms for retries (default: ${defaultOptions.backoff}).
+    -d, --backoff-factor    Backoff factor for exponential increase (default: ${defaultOptions.backoffFactor}).
+    -x, --backoff-max       Maximum backoff time in ms (default: ${defaultOptions.backoffMax}).
 
   Example:
     cat logs | pino-pinorama --url http://localhost:6200
@@ -62,10 +64,12 @@ start(
       version: "v",
       help: "h",
       url: "u",
-      batchSize: "b",
-      flushInterval: "f",
-      maxRetries: "m",
-      retryInterval: "r"
+      "batch-size": "b",
+      "flush-interval": "f",
+      "max-retries": "m",
+      backoff: "i",
+      "backoff-factor": "d",
+      "backoff-max": "x"
     }
   })
 )
