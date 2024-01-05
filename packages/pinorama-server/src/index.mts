@@ -1,9 +1,11 @@
 import fs from "node:fs"
+import url from "node:url"
 import path from "node:path"
 import os from "node:os"
 import Fastify from "fastify"
+import FastifyAutoload from "@fastify/autoload"
 import fp from "fastify-plugin"
-import { create, insertMultiple, search } from "@orama/orama"
+import { create } from "@orama/orama"
 import {
   persistToFile,
   restoreFromFile
@@ -16,89 +18,84 @@ import type {
   LogLevel,
   RegisterOptions
 } from "fastify"
+import type { AnyOrama, AnySchema } from "@orama/orama"
 
-// TODO: delete "any"
-// TODO: add request validation
-// TODO: possibility to extend orama schema
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+declare module "fastify" {
+  interface FastifyInstance {
+    pinoramaDb: AnyOrama
+    pinoramaOpts: PinoramaServerOptions
+  }
+}
+
+type PersistenceFormat = "json" | "dpack" | "binary" // orama does not export this type
 
 type PinoramaServerOptions = {
-  filePath?: string
+  dbSchema?: AnySchema
+  dbPath?: string
+  dbFormat?: PersistenceFormat
   prefix?: string
   logLevel?: LogLevel
 }
 
-const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
-  fastify,
-  options
-) => {
-  const dbSchema = {
+export const defaultOptions: PinoramaServerOptions = {
+  dbPath: path.join(os.tmpdir(), "pinorama.msp"),
+  dbSchema: {
     level: "number",
     time: "number",
     msg: "string",
     pid: "number",
     hostname: "string"
   }
+}
 
-  const dbFormat = "json"
+const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
+  fastify,
+  options
+) => {
+  const opts = { ...defaultOptions, ...options }
 
-  const defaultDbPath = path.join(os.tmpdir(), "pinorama.msp")
-  const dbFilePath = path.resolve(options.filePath || defaultDbPath)
-  const dbExists = fs.existsSync(dbFilePath)
+  const db = fs.existsSync(opts.dbPath as string)
+    ? await restoreFromFile("json", opts.dbPath)
+    : await create({ schema: opts.dbSchema })
 
-  const db: any = dbExists
-    ? await restoreFromFile(dbFormat, dbFilePath)
-    : await create({ schema: dbSchema })
+  fastify.decorate("pinoramaOpts", opts)
+  fastify.decorate("pinoramaDb", db)
 
   const registerOpts: RegisterOptions = {}
 
-  if (options.prefix) {
-    registerOpts.prefix = options.prefix
+  if (opts.prefix) {
+    registerOpts.prefix = opts.prefix
   }
 
-  if (options.logLevel) {
-    registerOpts.logLevel = options.logLevel
+  if (opts.logLevel) {
+    registerOpts.logLevel = opts.logLevel
   }
 
-  fastify.register(async (app) => {
-    app.post("/bulk", async (req, res) => {
-      try {
-        await insertMultiple(db, req.body as any)
-        res.code(201).send({ success: true })
-      } catch (e) {
-        req.log.error(e)
-        res.code(500).send({ error: "failed to insert data" })
-      }
-    })
+  fastify.register(FastifyAutoload, {
+    dir: path.join(__dirname, "routes"),
+    options: registerOpts
+  })
 
-    app.post("/search", async (req, res) => {
-      try {
-        const result = await search(db, req.body as any)
-        res.code(200).send(result)
-      } catch (e) {
-        req.log.error(e)
-        res.code(500).send({ error: "failed to search data" })
-      }
-    })
+  fastify.register(FastifyAutoload, {
+    dir: path.join(__dirname, "hooks"),
+    options: registerOpts
+  })
 
-    app.post("/persist", async (req, res) => {
-      try {
-        await persistToFile(db, dbFormat, dbFilePath)
-        res.code(204).send()
-      } catch (e) {
-        req.log.error(e)
-        res.code(500).send({ error: "failed to persist data" })
-      }
-    })
-
-    app.addHook("onClose", async (req) => {
-      try {
-        const savedPath = await persistToFile(db, dbFormat, dbFilePath)
-        req.log.info(`database saved to ${savedPath}`)
-      } catch (error) {
-        req.log.error(`failed to save database: ${error}`)
-      }
-    })
-  }, registerOpts)
+  fastify.addHook("onClose", async (req) => {
+    try {
+      const savedPath = await persistToFile(
+        fastify.pinoramaDb,
+        fastify.pinoramaOpts.dbFormat,
+        fastify.pinoramaOpts.dbPath
+      )
+      req.log.info(`database saved to ${savedPath}`)
+    } catch (error) {
+      req.log.error(`failed to save database: ${error}`)
+    }
+  })
 }
 
 function createServer(
