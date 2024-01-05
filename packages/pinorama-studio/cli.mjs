@@ -87,7 +87,7 @@ async function start(options) {
 
     if (opts.server) {
       msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
-      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-file"])}`)
+      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
     }
 
     console.log(msg.join("\n"))
