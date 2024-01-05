@@ -20,7 +20,7 @@ const defaultOptions = {
   logger: false,
   server: false,
   "server-prefix": "/pinorama",
-  "server-db-file": path.resolve(os.tmpdir(), "pinorama.msp")
+  "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp")
 }
 
 async function start(options) {
@@ -48,7 +48,7 @@ async function start(options) {
     -l, --logger            Enable logging (default: ${defaultOptions.logger}).
     -s, --server            Start Pinorama Server (default: ${defaultOptions.server}).
     -p, --server-prefix     Set Pinorama Server prefix (default: ${defaultOptions["server-prefix"]}).
-    -f, --server-db-file    Set Pinorama Server db file (default: TMPDIR/pinorama.msp).
+    -f, --server-db-path    Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
 
   Examples:
     pinorama --open
@@ -73,7 +73,7 @@ async function start(options) {
   if (opts.server) {
     app.register(fastifyPinoramaServer, {
       prefix: opts["server-prefix"],
-      filePath: opts["server-db-file"]
+      dbPath: opts["server-db-path"]
     })
   }
 
@@ -146,7 +146,7 @@ start(
       logger: "l",
       server: "s",
       "server-prefix": "e",
-      "server-db-file": "f"
+      "server-db-path": "f"
     },
     boolean: ["server", "open"],
     default: defaultOptions

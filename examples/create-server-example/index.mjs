@@ -1,10 +1,11 @@
+import path from "node:path"
 import Fastify from "fastify"
 import { createServer } from "pinorama-server"
 
 const pinoramaServer = createServer(
   {
     // prefix: "/my_pinorama_server",
-    filePath: "./db.msp"
+    dbPath: path.resolve("./db.msp")
   },
   {
     logger: {

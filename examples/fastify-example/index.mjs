@@ -1,3 +1,4 @@
+import path from "node:path"
 import Fastify from "fastify"
 import { fastifyPinoramaServer } from "pinorama-server"
 const fastify = Fastify({
@@ -7,7 +8,7 @@ const fastify = Fastify({
         {
           target: "pino-pinorama",
           options: {
-            url: "http://localhost:3000/my_pinorama_server"
+            url: "http://localhost:6200/my_pinorama_server"
           }
         },
         { target: "@fastify/one-line-logger" }
@@ -18,7 +19,7 @@ const fastify = Fastify({
 
 fastify.register(fastifyPinoramaServer, {
   prefix: "/my_pinorama_server",
-  filePath: "./db.msp",
+  dbPath: path.resolve("./db.msp"),
   logLevel: "silent" // need to avoid loop
 })
 
@@ -27,6 +28,6 @@ fastify.post("/logs", async function handler(req) {
   return req.body.message
 })
 
-fastify.listen({ port: 3000 }, (err) => {
+fastify.listen({ port: 6200 }, (err) => {
   if (err) throw err
 })
