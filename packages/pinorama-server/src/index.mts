@@ -83,19 +83,6 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     dir: path.join(__dirname, "hooks"),
     options: registerOpts
   })
-
-  fastify.addHook("onClose", async (req) => {
-    try {
-      const savedPath = await persistToFile(
-        fastify.pinoramaDb,
-        fastify.pinoramaOpts.dbFormat,
-        fastify.pinoramaOpts.dbPath
-      )
-      req.log.info(`database saved to ${savedPath}`)
-    } catch (error) {
-      req.log.error(`failed to save database: ${error}`)
-    }
-  })
 }
 
 function createServer(
