@@ -105,7 +105,8 @@ async function start(options) {
 
     const stream = pinoPinorama({
       url: serverUrl,
-      batchSize: 1000
+      batchSize: 1000,
+      adminSecret: opts["admin-secret"]
     })
 
     stream.on("error", (error) => {
