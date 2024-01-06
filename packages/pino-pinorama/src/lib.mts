@@ -4,6 +4,7 @@ import type { Transform } from "node:stream"
 
 export type PinoramaTransportOptions = {
   url: string
+  adminSecret: string
   batchSize: number
   flushInterval: number
   maxRetries: number
@@ -14,6 +15,7 @@ export type PinoramaTransportOptions = {
 
 export const defaultOptions: PinoramaTransportOptions = {
   url: "http://localhost:6200",
+  adminSecret: "your-secret",
   batchSize: 100,
   flushInterval: 5000,
   maxRetries: 5,

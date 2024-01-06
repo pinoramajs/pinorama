@@ -20,7 +20,8 @@ const defaultOptions = {
   logger: false,
   server: false,
   "server-prefix": "/pinorama",
-  "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp")
+  "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
+  "admin-secret": "your-secret"
 }
 
 async function start(options) {
@@ -40,15 +41,16 @@ async function start(options) {
     pinorama [options]
 
   Options:
-    -h, --help              Display this help message and exit.
-    -v, --version           Show application version.
-    -H, --host              Set web server host (default: ${defaultOptions.host}).
-    -P, --port              Set web server port (default: ${defaultOptions.port}).
-    -o, --open              Open Pinorama Studio (default: ${defaultOptions.open}).
-    -l, --logger            Enable logging (default: ${defaultOptions.logger}).
-    -s, --server            Start Pinorama Server (default: ${defaultOptions.server}).
-    -p, --server-prefix     Set Pinorama Server prefix (default: ${defaultOptions["server-prefix"]}).
-    -f, --server-db-path    Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
+    -h, --help                 Display this help message and exit.
+    -v, --version              Show application version.
+    -H, --host                 Set web server host (default: ${defaultOptions.host}).
+    -P, --port                 Set web server port (default: ${defaultOptions.port}).
+    -o, --open                 Open Pinorama Studio (default: ${defaultOptions.open}).
+    -l, --logger               Enable logging (default: ${defaultOptions.logger}).
+    -s, --server               Start Pinorama Server (default: ${defaultOptions.server}).
+    -p, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
+    -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
+    -k, --server-admin-secret  Set Pinorama Server admin secret key (default: ${defaultOptions["admin-secret"]}). 
 
   Examples:
     pinorama --open
@@ -72,8 +74,9 @@ async function start(options) {
 
   if (opts.server) {
     app.register(fastifyPinoramaServer, {
-      prefix: opts["server-prefix"],
-      dbPath: opts["server-db-path"]
+      adminSecret: opts["admin-secret"],
+      dbPath: opts["server-db-path"],
+      prefix: opts["server-prefix"]
     })
   }
 
@@ -146,7 +149,8 @@ start(
       logger: "l",
       server: "s",
       "server-prefix": "e",
-      "server-db-path": "f"
+      "server-db-path": "f",
+      "admin-secret": "k"
     },
     boolean: ["server", "open"],
     default: defaultOptions
