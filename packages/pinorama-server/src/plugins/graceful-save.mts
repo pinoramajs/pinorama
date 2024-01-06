@@ -1,7 +1,7 @@
 import { persistToFile } from "@orama/plugin-data-persistence/server"
 import type { FastifyInstance } from "fastify"
 
-export default async function onCloseHook(fastify: FastifyInstance) {
+export default async function gracefulSaveHook(fastify: FastifyInstance) {
   fastify.addHook("onClose", async (req) => {
     try {
       const savedPath = await persistToFile(

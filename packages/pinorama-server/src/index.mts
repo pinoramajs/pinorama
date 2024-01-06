@@ -33,6 +33,7 @@ declare module "fastify" {
 type PersistenceFormat = "json" | "dpack" | "binary" // orama does not export this type
 
 type PinoramaServerOptions = {
+  adminSecret?: string
   dbSchema?: AnySchema
   dbPath?: string
   dbFormat?: PersistenceFormat
@@ -41,6 +42,7 @@ type PinoramaServerOptions = {
 }
 
 export const defaultOptions: PinoramaServerOptions = {
+  adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET || "your-secret",
   dbPath: path.join(os.tmpdir(), "pinorama.msp"),
   dbSchema: {
     level: "number",
@@ -80,8 +82,8 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   })
 
   fastify.register(FastifyAutoload, {
-    dir: path.join(__dirname, "hooks"),
-    options: registerOpts
+    dir: path.join(__dirname, "plugins"),
+    encapsulate: false
   })
 }
 

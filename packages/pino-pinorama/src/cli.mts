@@ -6,11 +6,17 @@ import { readFileSync } from "node:fs"
 import minimist from "minimist"
 import pinoPinorama, { defaultOptions } from "./lib.mjs"
 
-import type { PinoramaTransportOptions } from "./lib.mts"
-
-type PinoramaCliOptions = PinoramaTransportOptions & {
-  help: string
+type PinoramaCliOptions = {
   version: string
+  help: string
+  url: string
+  "admin-secret": string
+  "batch-size": number
+  "flush-interval": number
+  "max-retries": number
+  backoff: number
+  "backoff-factor": number
+  "backoff-max": number
 }
 
 async function start(opts: PinoramaCliOptions) {
@@ -31,6 +37,7 @@ async function start(opts: PinoramaCliOptions) {
     -h, --help              Display this help message and exit.
     -v, --version           Show application version.
     -u, --url               Set Pinorama server URL.
+    -k, --admin-secret      Secret key for authentication (default: ${defaultOptions.adminSecret}).
     -b, --batch-size        Define logs per bulk insert (default: ${defaultOptions.batchSize}).
     -f, --flush-interval    Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
     -m, --max-retries       Max retry attempts for requests (default: ${defaultOptions.maxRetries}).
@@ -49,7 +56,16 @@ async function start(opts: PinoramaCliOptions) {
     return
   }
 
-  const stream = pinoPinorama(opts)
+  const stream = pinoPinorama({
+    url: opts.url || defaultOptions.url,
+    adminSecret: opts["admin-secret"] || defaultOptions.adminSecret,
+    batchSize: opts["batch-size"] || defaultOptions.batchSize,
+    flushInterval: opts["flush-interval"] || defaultOptions.flushInterval,
+    maxRetries: opts["max-retries"] || defaultOptions.maxRetries,
+    backoff: opts["backoff"] || defaultOptions.backoff,
+    backoffFactor: opts["backoff-factor"] || defaultOptions.backoffFactor,
+    backoffMax: opts["backoff-max"] || defaultOptions.backoffMax
+  })
 
   stream.on("error", (error) => {
     console.error("PinoramaClient error:", error)
@@ -64,6 +80,7 @@ start(
       version: "v",
       help: "h",
       url: "u",
+      "admin-secret": "k",
       "batch-size": "b",
       "flush-interval": "f",
       "max-retries": "m",

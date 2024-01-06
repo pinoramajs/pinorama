@@ -2,6 +2,7 @@ import { URL } from "node:url"
 import { setTimeout } from "node:timers/promises"
 import { Readable } from "stream"
 import { Client } from "undici"
+import { IncomingHttpHeaders } from "undici/types/header.js"
 
 type BulkInsertOptions = {
   batchSize: number
@@ -10,6 +11,7 @@ type BulkInsertOptions = {
 
 export type PinoramaClientOptions = {
   url: string
+  adminSecret: string
   maxRetries: number
   backoff: number
   backoffFactor: number
@@ -24,18 +26,21 @@ export class PinoramaClient {
   private backoffFactor: number
   private backoffMax: number
   private client: Client
+  private defaultHeaders: IncomingHttpHeaders
 
   constructor(options: PinoramaClientOptions) {
     const url = new URL(options.url)
     this.baseUrl = url.origin
     this.basePath = url.pathname.length === 1 ? "" : url.pathname
-
     this.maxRetries = options.maxRetries || 5
     this.backoff = options.backoff || 1000
     this.backoffFactor = options.backoffFactor || 2
     this.backoffMax = options.backoffMax || 30000
-
     this.client = new Client(this.baseUrl)
+    this.defaultHeaders = {
+      "content-type": "application/json",
+      "x-pinorama-admin-secret": options.adminSecret || "your-secret"
+    }
     // console.log(options)
   }
 
@@ -85,14 +90,18 @@ export class PinoramaClient {
 
     while (retries < this.maxRetries) {
       try {
-        await this.client.request({
+        const { statusCode, body } = await this.client.request({
           path: this.basePath + "/bulk",
           method: "POST",
-          headers: {
-            "content-type": "application/json"
-          },
+          headers: this.defaultHeaders,
           body: JSON.stringify(logs)
         })
+
+        if (statusCode !== 201) {
+          const json = await body.json()
+          throw new Error((json as { error: string }).error)
+        }
+
         return
       } catch (error) {
         console.error("error sending logs:", error)
