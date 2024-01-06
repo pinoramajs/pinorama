@@ -43,14 +43,15 @@ type PinoramaServerOptions = {
 
 export const defaultOptions: PinoramaServerOptions = {
   adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET || "your-secret",
-  dbPath: path.join(os.tmpdir(), "pinorama.msp"),
   dbSchema: {
     level: "number",
     time: "number",
     msg: "string",
     pid: "number",
     hostname: "string"
-  }
+  },
+  dbPath: path.join(os.tmpdir(), "pinorama.msp"),
+  dbFormat: "json"
 }
 
 const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
@@ -60,7 +61,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   const opts = { ...defaultOptions, ...options }
 
   const db = fs.existsSync(opts.dbPath as string)
-    ? await restoreFromFile("json", opts.dbPath)
+    ? await restoreFromFile(opts.dbFormat, opts.dbPath)
     : await create({ schema: opts.dbSchema })
 
   fastify.decorate("pinoramaOpts", opts)
@@ -76,14 +77,16 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     registerOpts.logLevel = opts.logLevel
   }
 
-  fastify.register(FastifyAutoload, {
-    dir: path.join(__dirname, "routes"),
-    options: registerOpts
-  })
+  fastify.register(async () => {
+    fastify.register(FastifyAutoload, {
+      dir: path.join(__dirname, "routes"),
+      options: registerOpts
+    })
 
-  fastify.register(FastifyAutoload, {
-    dir: path.join(__dirname, "plugins"),
-    encapsulate: false
+    fastify.register(FastifyAutoload, {
+      dir: path.join(__dirname, "plugins"),
+      encapsulate: false
+    })
   })
 }
 
