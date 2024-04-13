@@ -8,9 +8,7 @@
   "bin": {
     "pino-pinorama": "./dist/cli.mjs"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc",
@@ -26,7 +24,6 @@
     "@types/minimist": "^1.2.5",
     "@types/node": "^20.10.2",
     "pinorama-client": "workspace:*",
-    "pinorama-eslint-config": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
     "tsx": "^4.6.2",

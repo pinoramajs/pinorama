@@ -1,6 +1,6 @@
+import type { Transform } from "node:stream"
 import abstractTransport from "pino-abstract-transport"
 import { PinoramaClient } from "pinorama-client"
-import type { Transform } from "node:stream"
 
 export type PinoramaTransportOptions = {
   url: string
