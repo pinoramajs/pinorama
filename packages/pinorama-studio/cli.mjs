@@ -1,14 +1,14 @@
 #! /usr/bin/env node
 
+import { readFileSync } from "node:fs"
+import os from "node:os"
+import path from "node:path"
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
-import { readFileSync } from "node:fs"
-import path from "node:path"
-import os from "node:os"
-import fastify from "fastify"
 import fastifyStatic from "@fastify/static"
-import minimist from "minimist"
 import c from "chalk"
+import fastify from "fastify"
+import minimist from "minimist"
 import open from "open"
 import pinoPinorama from "pino-pinorama"
 import { fastifyPinoramaServer } from "pinorama-server"
@@ -99,9 +99,7 @@ async function start(options) {
   })
 
   if (isPiped) {
-    console.log(
-      c.yellow("Detected piped output. Server mode activated by default.")
-    )
+    console.log(c.yellow("Detected piped output. Server mode activated by default."))
 
     const stream = pinoPinorama({
       url: serverUrl,

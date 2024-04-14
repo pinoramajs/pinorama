@@ -10,9 +10,7 @@ const pinoramaServer = createServer(
   {
     logger: {
       transport: {
-        targets: [
-          { target: "@fastify/one-line-logger", options: { colorize: true } }
-        ]
+        targets: [{ target: "@fastify/one-line-logger", options: { colorize: true } }]
       }
     }
   }

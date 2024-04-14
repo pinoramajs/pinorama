@@ -1,16 +1,14 @@
 import fs from "node:fs"
-import url from "node:url"
-import path from "node:path"
 import os from "node:os"
-import Fastify from "fastify"
+import path from "node:path"
+import url from "node:url"
 import FastifyAutoload from "@fastify/autoload"
-import fp from "fastify-plugin"
 import { create } from "@orama/orama"
-import {
-  persistToFile,
-  restoreFromFile
-} from "@orama/plugin-data-persistence/server"
+import { restoreFromFile } from "@orama/plugin-data-persistence/server"
+import Fastify from "fastify"
+import fp from "fastify-plugin"
 
+import type { AnyOrama, AnySchema } from "@orama/orama"
 import type {
   FastifyPluginAsync,
   FastifyRegisterOptions,
@@ -18,7 +16,6 @@ import type {
   LogLevel,
   RegisterOptions
 } from "fastify"
-import type { AnyOrama, AnySchema } from "@orama/orama"
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

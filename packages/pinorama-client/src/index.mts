@@ -1,8 +1,8 @@
-import { URL } from "node:url"
+import type { Readable } from "node:stream"
 import { setTimeout } from "node:timers/promises"
-import { Readable } from "stream"
+import { URL } from "node:url"
 import { Client } from "undici"
-import { IncomingHttpHeaders } from "undici/types/header.js"
+import type { IncomingHttpHeaders } from "undici/types/header.js"
 
 type BulkInsertOptions = {
   batchSize: number
@@ -44,10 +44,7 @@ export class PinoramaClient {
     // console.log(options)
   }
 
-  async bulkInsert(
-    logStream: Readable,
-    options: BulkInsertOptions
-  ): Promise<void> {
+  async bulkInsert(logStream: Readable, options: BulkInsertOptions): Promise<void> {
     // let count = 0
     let buffer: any[] = []
     let timer: NodeJS.Timeout | null = null
@@ -91,7 +88,7 @@ export class PinoramaClient {
     while (retries < this.maxRetries) {
       try {
         const { statusCode, body } = await this.client.request({
-          path: this.basePath + "/bulk",
+          path: `${this.basePath}/bulk`,
           method: "POST",
           headers: this.defaultHeaders,
           body: JSON.stringify(logs)
