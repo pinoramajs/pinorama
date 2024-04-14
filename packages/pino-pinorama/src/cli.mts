@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
+import { readFileSync } from "node:fs"
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
-import { readFileSync } from "node:fs"
 import minimist from "minimist"
 import pinoPinorama, { defaultOptions } from "./lib.mjs"
 
@@ -62,7 +62,7 @@ async function start(opts: PinoramaCliOptions) {
     batchSize: opts["batch-size"] || defaultOptions.batchSize,
     flushInterval: opts["flush-interval"] || defaultOptions.flushInterval,
     maxRetries: opts["max-retries"] || defaultOptions.maxRetries,
-    backoff: opts["backoff"] || defaultOptions.backoff,
+    backoff: opts.backoff || defaultOptions.backoff,
     backoffFactor: opts["backoff-factor"] || defaultOptions.backoffFactor,
     backoffMax: opts["backoff-max"] || defaultOptions.backoffMax
   })
