@@ -8,7 +8,9 @@
   "bin": {
     "pino-pinorama": "./dist/cli.mjs"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc",
@@ -22,18 +24,18 @@
   "license": "MIT",
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/node": "^20.10.2",
+    "@types/node": "^20.12.7",
     "pinorama-client": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
-    "tsx": "^4.6.2",
-    "typescript": "^5.2.2"
+    "tsx": "^4.7.3",
+    "typescript": "^5.4.5"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
     "minimist": "^1.2.8",
-    "pino-abstract-transport": "^1.1.0"
+    "pino-abstract-transport": "^1.2.0"
   }
 }

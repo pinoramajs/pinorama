@@ -5,7 +5,9 @@
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": "./dist/index.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc"
@@ -16,17 +18,17 @@
     "url": "https://github.com/cesconix"
   },
   "devDependencies": {
-    "@types/node": "^20.10.2",
+    "@types/node": "^20.12.7",
     "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
-    "tsx": "^4.6.2",
-    "typescript": "^5.2.2"
+    "tsx": "^4.7.3",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",
-    "@orama/orama": "2.0.0-beta.12",
-    "@orama/plugin-data-persistence": "2.0.0-beta.12",
-    "fastify": "^4.24.3",
+    "@orama/orama": "2.0.16",
+    "@orama/plugin-data-persistence": "2.0.16",
+    "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1"
   },
   "publishConfig": {

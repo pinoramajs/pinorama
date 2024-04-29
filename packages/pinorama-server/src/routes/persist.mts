@@ -1,4 +1,4 @@
-import { persistToFile } from "@orama/plugin-data-persistence"
+import { persistToFile } from "@orama/plugin-data-persistence/server"
 import type { FastifyInstance } from "fastify"
 
 export default async function persistRoute(fastify: FastifyInstance) {

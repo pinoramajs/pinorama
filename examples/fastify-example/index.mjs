@@ -1,6 +1,7 @@
 import path from "node:path"
 import Fastify from "fastify"
 import { fastifyPinoramaServer } from "pinorama-server"
+
 const fastify = Fastify({
   logger: {
     transport: {
