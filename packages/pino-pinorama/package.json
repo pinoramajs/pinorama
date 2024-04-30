@@ -8,10 +8,10 @@
   "bin": {
     "pino-pinorama": "./dist/cli.mjs"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
+    "test": "vitest",
+    "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc",
     "postbuild": "chmod u+x ./dist/cli.mjs"
@@ -25,17 +25,21 @@
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "@types/node": "^20.12.7",
+    "pino": "^9.0.0",
     "pinorama-client": "workspace:*",
+    "pinorama-server": "workspace:*",
     "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.2"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
     "minimist": "^1.2.8",
-    "pino-abstract-transport": "^1.2.0"
+    "pino-abstract-transport": "^1.2.0",
+    "zod": "^3.23.4"
   }
 }

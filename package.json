@@ -10,6 +10,7 @@
     "author": true
   },
   "scripts": {
+    "test": "turbo test",
     "clean": "turbo clean",
     "build": "turbo build",
     "dev": "turbo dev",

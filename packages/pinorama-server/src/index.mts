@@ -39,7 +39,7 @@ type PinoramaServerOptions = {
 }
 
 export const defaultOptions: PinoramaServerOptions = {
-  adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET || "your-secret",
+  adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET,
   dbSchema: {
     level: "number",
     time: "number",
@@ -47,7 +47,7 @@ export const defaultOptions: PinoramaServerOptions = {
     pid: "number",
     hostname: "string"
   },
-  dbPath: path.join(os.tmpdir(), "pinorama.msp"),
+  // dbPath: path.join(os.tmpdir(), "pinorama.msp"),
   dbFormat: "json"
 }
 
@@ -88,7 +88,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 }
 
 function createServer(
-  pinoramaOptions: FastifyRegisterOptions<PinoramaServerOptions>,
+  pinoramaOptions?: FastifyRegisterOptions<PinoramaServerOptions>,
   fastifyOptions?: FastifyServerOptions
 ) {
   const fastify = Fastify(fastifyOptions)
