@@ -1,21 +1,41 @@
-import type { Readable } from "node:stream"
 import { setTimeout } from "node:timers/promises"
 import { URL } from "node:url"
 import { Client } from "undici"
+import { z } from "zod"
+
+import type { Readable } from "node:stream"
 import type { IncomingHttpHeaders } from "undici/types/header.js"
 
-type BulkInsertOptions = {
-  batchSize: number
-  flushInterval: number
+const clientOptionsSchema = z.object({
+  /* required */
+  url: z.string(),
+  maxRetries: z.number().min(2),
+  backoff: z.number().min(0),
+  backoffFactor: z.number().min(2),
+  backoffMax: z.number().min(1000),
+  /* optional */
+  adminSecret: z.string().optional()
+})
+
+const bulkOptionsSchema = z.object({
+  /* required */
+  batchSize: z.number(),
+  flushInterval: z.number()
+})
+
+export type PinoramaClientOptions = z.infer<typeof clientOptionsSchema>
+export type PinoramaBulkOptions = z.infer<typeof bulkOptionsSchema>
+
+export const defaultClientOptions: Partial<PinoramaClientOptions> = {
+  maxRetries: 5,
+  backoff: 1000,
+  backoffFactor: 2,
+  backoffMax: 30000
 }
 
-export type PinoramaClientOptions = {
-  url: string
-  adminSecret?: string
-  maxRetries?: number
-  backoff?: number
-  backoffFactor?: number
-  backoffMax?: number
+export const defaultBulkOptions: PinoramaBulkOptions = {
+  batchSize: 100,
+  flushInterval: 5000
 }
 
 export class PinoramaClient {
@@ -43,90 +63,104 @@ export class PinoramaClient {
   /** Default headers for HTTP requests */
   private defaultHeaders: IncomingHttpHeaders
 
-  /** Buffer to hold data before bulk insertion */
-  private buffer: any[] = []
+  constructor(options?: Partial<PinoramaClientOptions>) {
+    const opts = clientOptionsSchema.parse({ ...defaultClientOptions, ...options })
 
-  /** Timer handle for managing flush intervals */
-  private timer: NodeJS.Timeout | null = null
-
-  /** Stream for reading log data */
-  private logStream: Readable | undefined
-
-  /**
-   * Constructor to create a new Pinorama client instance.
-   * @param options Configuration options for the client.
-   */
-  constructor(options: PinoramaClientOptions) {
     /* url params */
-    const url = new URL(options.url)
+    const url = new URL(opts.url)
     this.baseUrl = url.origin
     this.basePath = url.pathname.length === 1 ? "" : url.pathname
 
     /* backoff strategy */
-    this.backoff = options.backoff || 1000
-    this.backoffFactor = options.backoffFactor || 2
-    this.backoffMax = options.backoffMax || 30000
+    this.backoff = opts.backoff
+    this.backoffFactor = opts.backoffFactor
+    this.backoffMax = opts.backoffMax
 
     /* http client */
     this.client = new Client(this.baseUrl)
-    this.maxRetries = options.maxRetries || 5
+    this.maxRetries = opts.maxRetries
 
     /* http headers */
     this.defaultHeaders = {
       "content-type": "application/json",
-      ...(options.adminSecret ? { "x-pinorama-admin-secret": options.adminSecret } : {})
+      ...(opts.adminSecret ? { "x-pinorama-admin-secret": opts.adminSecret } : {})
     }
   }
 
-  /**
-   * Begins bulk insertion of logs from a readable stream.
-   * @param logStream A readable stream of log data.
-   * @param options Configuration options for bulk insert operations.
-   */
-  async bulkInsert(logStream: Readable, options: BulkInsertOptions): Promise<void> {
-    this.logStream = logStream
-    this.logStream.on("data", (data) => this.onData(data, options))
-    this.timer = setInterval(() => this.flush(), options.flushInterval)
-  }
-
-  /**
-   * Handles data from the log stream and manages the buffer for insertion.
-   * @param data Data received from the log stream.
-   * @param options Bulk insertion configuration options.
-   */
-  private async onData(data: any, options: BulkInsertOptions) {
-    this.buffer.push(data)
-    if (this.buffer.length >= options.batchSize) {
-      if (this.timer) clearTimeout(this.timer)
-      await this.flush()
+  private async retryOperation(operation: () => Promise<void>): Promise<void> {
+    let retries = 0
+    let currentBackoff = this.backoff
+    while (retries < this.maxRetries) {
+      try {
+        await operation()
+        return
+      } catch (error) {
+        console.error("error during operation:", error)
+        retries++
+        if (retries >= this.maxRetries) throw new Error("max retries reached")
+        await setTimeout(Math.min(currentBackoff, this.backoffMax))
+        currentBackoff *= this.backoffFactor
+      }
     }
   }
 
-  /**
-   * Flushes the buffer by sending its contents to Pinorama server.
-   */
-  public async flush(): Promise<void> {
-    this.logStream?.pause()
+  public async insert(docs: any[]): Promise<void> {
+    await this.retryOperation(async () => {
+      const { statusCode } = await this.client.request({
+        path: `${this.basePath}/bulk`,
+        method: "POST",
+        headers: this.defaultHeaders,
+        body: JSON.stringify(docs)
+      })
 
-    if (this.buffer.length === 0) {
-      return
-    }
-
-    try {
-      await this.sendLogs(this.buffer)
-      this.buffer = []
-    } catch (error) {
-      console.error("Failed to flush logs:", error)
-    }
-
-    this.logStream?.resume()
+      if (statusCode !== 201) {
+        throw new Error("[TODO ERROR]: PinoramaClient.insert failed")
+      }
+    })
   }
 
-  /**
-   * Sends a search request to Pinorama server.
-   * @param payload Payload to be sent in the search request.
-   */
-  async search(payload: any): Promise<any> {
+  public bulkInsert(stream: Readable, options?: Partial<PinoramaBulkOptions>) {
+    const opts = bulkOptionsSchema.parse({ ...defaultBulkOptions, ...options })
+
+    const buffer: any[] = []
+    let flushing = false
+
+    const flush = async () => {
+      if (buffer.length === 0 || flushing) return
+      flushing = true
+
+      try {
+        stream.pause()
+        await this.insert(buffer)
+        buffer.length = 0
+      } catch (error) {
+        console.error("Failed to flush logs:", error)
+      } finally {
+        stream.resume()
+        flushing = false
+      }
+    }
+
+    const intervalId = setInterval(() => {
+      flush()
+    }, opts.flushInterval)
+
+    stream.on("data", async (data) => {
+      buffer.push(data)
+      if (buffer.length >= opts.batchSize) {
+        await flush()
+      }
+    })
+
+    stream.on("end", async () => {
+      clearInterval(intervalId)
+      await flush()
+    })
+
+    return { flush }
+  }
+
+  public async search(payload: unknown): Promise<unknown> {
     try {
       const { statusCode, body } = await this.client.request({
         path: `${this.basePath}/search`,
@@ -135,9 +169,9 @@ export class PinoramaClient {
         body: JSON.stringify(payload)
       })
 
-      const json = await body.json()
+      const json = (await body.json()) as { error: string }
       if (statusCode !== 200) {
-        throw new Error((json as { error: string }).error)
+        throw new Error(json.error)
       }
 
       return json
@@ -145,39 +179,5 @@ export class PinoramaClient {
       console.error("error searching logs:", error)
       throw error
     }
-  }
-
-  /**
-   * Sends logs to Pinorama server using a POST request.
-   * @param logs Array of logs to be sent.
-   */
-  private async sendLogs(logs: any[]): Promise<void> {
-    let retries = 0
-    let currentBackoff = this.backoff
-
-    while (retries < this.maxRetries) {
-      try {
-        const { statusCode, body } = await this.client.request({
-          path: `${this.basePath}/bulk`,
-          method: "POST",
-          headers: this.defaultHeaders,
-          body: JSON.stringify(logs)
-        })
-
-        if (statusCode !== 201) {
-          const json = (await body.json()) as { error: string }
-          throw new Error(json.error)
-        }
-
-        return
-      } catch (error) {
-        console.error("error sending logs:", error)
-        retries++
-        await setTimeout(Math.min(currentBackoff, this.backoffMax))
-        currentBackoff *= this.backoffFactor
-      }
-    }
-
-    throw new Error("max retries reached in sending logs")
   }
 }

@@ -10,6 +10,7 @@ import fp from "fastify-plugin"
 
 import type { AnyOrama, AnySchema } from "@orama/orama"
 import type {
+  FastifyInstance,
   FastifyPluginAsync,
   FastifyRegisterOptions,
   FastifyServerOptions,
@@ -90,7 +91,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 function createServer(
   pinoramaOptions?: FastifyRegisterOptions<PinoramaServerOptions>,
   fastifyOptions?: FastifyServerOptions
-) {
+): FastifyInstance {
   const fastify = Fastify(fastifyOptions)
   fastify.register(fastifyPinoramaServer, pinoramaOptions)
   return fastify

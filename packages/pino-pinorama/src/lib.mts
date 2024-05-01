@@ -1,40 +1,10 @@
-import type { Transform } from "node:stream"
 import abstractTransport from "pino-abstract-transport"
 import { PinoramaClient } from "pinorama-client"
-import { z } from "zod"
 
-const optionsSchema = z.object({
-  url: z.string(),
-  adminSecret: z.string().optional(),
-  batchSize: z.number().min(2),
-  flushInterval: z.number().min(0),
-  maxRetries: z.number().min(2),
-  backoff: z.number().min(0),
-  backoffFactor: z.number().min(2),
-  backoffMax: z.number().min(1000)
-})
+import type { Transform } from "node:stream"
+import type { PinoramaBulkOptions, PinoramaClientOptions } from "pinorama-client"
 
-export type PinoramaTransportOptions = z.infer<typeof optionsSchema>
-
-export const defaultOptions: Partial<PinoramaTransportOptions> = {
-  /** Number of logs per bulk insert. */
-  batchSize: 100,
-
-  /** Time in milliseconds to wait before flushing logs. */
-  flushInterval: 5000,
-
-  /** Maximum number of retry attempts for requests. */
-  maxRetries: 5,
-
-  /** Initial backoff time in milliseconds for retries. */
-  backoff: 1000,
-
-  /** Factor by which the backoff time increases on each retry. */
-  backoffFactor: 2,
-
-  /** Maximum backoff time in milliseconds. */
-  backoffMax: 30000
-}
+export type PinoramaTransportOptions = PinoramaClientOptions & PinoramaBulkOptions
 
 /**
  * Creates a pino transport that sends logs to Pinorama server instance.
@@ -42,28 +12,62 @@ export const defaultOptions: Partial<PinoramaTransportOptions> = {
  * @param {Partial<PinoramaTransportOptions>} options - Optional overrides for default settings.
  * @returns {Transform} Configured transport instance.
  */
-export default function pinoramaTransport(options?: Partial<PinoramaTransportOptions>): Transform {
-  const opts = optionsSchema.parse({ ...defaultOptions, ...options })
+export default function pinoramaTransport(options: Partial<PinoramaTransportOptions>): Transform {
+  const clientOpts: Partial<PinoramaClientOptions> | undefined = initOpts(options, [
+    "url",
+    "maxRetries",
+    "backoff",
+    "backoffFactor",
+    "backoffMax",
+    "adminSecret"
+  ])
 
-  const client = new PinoramaClient({
-    url: opts.url,
-    adminSecret: opts.adminSecret,
-    maxRetries: opts.maxRetries,
-    backoff: opts.backoff,
-    backoffFactor: opts.backoffFactor,
-    backoffMax: opts.backoffMax
-  })
+  const bulkOpts: Partial<PinoramaBulkOptions> | undefined = initOpts(options, [
+    "batchSize",
+    "flushInterval"
+  ])
 
-  const buildFn = async (source: Transform) => {
-    client.bulkInsert(source, {
-      batchSize: opts.batchSize,
-      flushInterval: opts.flushInterval
-    })
+  const client = new PinoramaClient(clientOpts)
+
+  let flushFn: () => Promise<void>
+  const buildFn = async (stream: Transform) => {
+    const { flush } = client.bulkInsert(stream, bulkOpts)
+    flushFn = flush
   }
 
   const closeFn = async () => {
-    client.flush()
+    if (flushFn) {
+      await flushFn()
+    }
   }
 
-  return abstractTransport(buildFn, { close: closeFn })
+  const parseLineFn = (line: string) => {
+    const obj = JSON.parse(line)
+
+    if (Object.prototype.toString.call(obj) !== "[object Object]") {
+      throw new Error("not a plain object.")
+    }
+
+    if (Object.keys(obj).length === 0) {
+      throw new Error("object is empty.")
+    }
+
+    return obj
+  }
+
+  return abstractTransport(buildFn, { close: closeFn, parseLine: parseLineFn })
+}
+
+function initOpts<T extends object>(
+  options: Partial<T>,
+  keys: (keyof T)[]
+): Partial<T> | undefined {
+  let result: Partial<T> | undefined = undefined
+  for (const key of keys) {
+    if (key in options) {
+      result = result || {}
+      result[key] = options[key]
+    }
+  }
+  return result
 }

@@ -1,58 +1,17 @@
 #! /usr/bin/env node
 
 import { readFileSync } from "node:fs"
+import type { Transform } from "node:stream"
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
 import minimist from "minimist"
-import pinoramaTransport, { type PinoramaTransportOptions, defaultOptions } from "./lib.mjs"
+import { defaultBulkOptions, defaultClientOptions } from "pinorama-client"
+import pinoramaTransport from "./lib.mjs"
+import type { PinoramaTransportOptions } from "./lib.mjs"
 
-type PinoramaCliOptions = {
+type PinoramaCliOptions = PinoramaTransportOptions & {
   version: string
   help: string
-  url: string
-  "admin-secret": string
-  "batch-size": number
-  "flush-interval": number
-  "max-retries": number
-  backoff: number
-  "backoff-factor": number
-  "backoff-max": number
-}
-
-/**
- * Converts CLI options to Pinorama Transport options.
- *
- * @param {Partial<PinoramaCliOptions>} cliOptions - The CLI options provided by the user.
- * @returns {Partial<PinoramaTransportOptions>} The Pinorama Transport options.
- */
-function convertToTransportOptions(
-  cliOptions: Partial<PinoramaCliOptions>
-): Partial<PinoramaTransportOptions> {
-  const transportOptions: Partial<PinoramaTransportOptions> = {}
-
-  const keyMap: Record<
-    Exclude<keyof PinoramaCliOptions, "version" | "help">,
-    keyof PinoramaTransportOptions
-  > = {
-    url: "url",
-    "admin-secret": "adminSecret",
-    "batch-size": "batchSize",
-    "flush-interval": "flushInterval",
-    "max-retries": "maxRetries",
-    backoff: "backoff",
-    "backoff-factor": "backoffFactor",
-    "backoff-max": "backoffMax"
-  }
-
-  for (const key of Object.keys(cliOptions)) {
-    const castedKey = key as keyof typeof keyMap
-    const newKey = keyMap[castedKey]
-    if (newKey) {
-      transportOptions[newKey] = cliOptions[castedKey] as any
-    }
-  }
-
-  return transportOptions
 }
 
 /**
@@ -60,7 +19,7 @@ function convertToTransportOptions(
  *
  * @param {Partial<PinoramaCliOptions>} argv - The set of CLI options.
  */
-async function start(argv: Partial<PinoramaCliOptions>) {
+async function main(argv: Partial<PinoramaCliOptions>) {
   const pj = fileURLToPath(new URL("../package.json", import.meta.url))
   const { version } = JSON.parse(readFileSync(pj, "utf8"))
 
@@ -78,13 +37,13 @@ async function start(argv: Partial<PinoramaCliOptions>) {
     -h, --help              Display this help message and exit.
     -v, --version           Show application version.
     -u, --url               Set Pinorama server URL.
-    -k, --admin-secret      Secret key for authentication.
-    -b, --batch-size        Define logs per bulk insert (default: ${defaultOptions.batchSize}).
-    -f, --flush-interval    Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
-    -m, --max-retries       Max retry attempts for requests (default: ${defaultOptions.maxRetries}).
-    -i, --backoff           Initial backoff time in ms for retries (default: ${defaultOptions.backoff}).
-    -d, --backoff-factor    Backoff factor for exponential increase (default: ${defaultOptions.backoffFactor}).
-    -x, --backoff-max       Maximum backoff time in ms (default: ${defaultOptions.backoffMax}).
+    -k, --adminSecret       Secret key for authentication.
+    -b, --batchSize         Define logs per bulk insert (default: ${defaultBulkOptions.batchSize}).
+    -f, --flushInterval     Set flush wait time in ms (default: ${defaultBulkOptions.flushInterval}).
+    -m, --maxRetries        Max retry attempts for requests (default: ${defaultClientOptions.maxRetries}).
+    -i, --backoff           Initial backoff time in ms for retries (default: ${defaultClientOptions.backoff}).
+    -d, --backoffFactor     Backoff factor for exponential increase (default: ${defaultClientOptions.backoffFactor}).
+    -x, --backoffMax        Maximum backoff time in ms (default: ${defaultClientOptions.backoffMax}).
 
   Example:
     cat logs | pino-pinorama --url http://localhost:6200
@@ -98,12 +57,30 @@ async function start(argv: Partial<PinoramaCliOptions>) {
   }
 
   if (!argv.url) {
-    console.error(`Error: the '--url' parameter is required.`)
+    console.error(
+      "Error: missing required argument '--url'.\n" +
+        "For more information, use the '--help' argument."
+    )
     process.exit(1)
   }
 
-  const options = convertToTransportOptions(argv)
-  const transport = pinoramaTransport(options)
+  let transport: Transform
+
+  try {
+    transport = pinoramaTransport({
+      url: argv.url,
+      adminSecret: argv.adminSecret,
+      batchSize: argv.batchSize,
+      flushInterval: argv.flushInterval,
+      maxRetries: argv.maxRetries,
+      backoff: argv.backoff,
+      backoffFactor: argv.backoffFactor,
+      backoffMax: argv.backoffMax
+    })
+  } catch (e: any) {
+    console.error(`Error: ${e.message}`)
+    process.exit(1)
+  }
 
   transport.on("error", (error) => {
     console.error("pinoramaTransport error:", error)
@@ -116,26 +93,25 @@ const cliOptions = minimist<PinoramaCliOptions>(process.argv.slice(2), {
   alias: {
     v: "version",
     h: "help",
-    k: "admin-secret",
+    k: "adminSecret",
     u: "url",
-    b: "batch-size",
-    f: "flush-interval",
-    m: "max-retries",
+    b: "batchSize",
+    f: "flushInterval",
+    m: "maxRetries",
     i: "backoff",
-    d: "backoff-factor",
-    x: "backoff-max"
+    d: "backoffFactor",
+    x: "backoffMax"
   },
   default: {
-    url: defaultOptions.url,
-    "batch-size": defaultOptions.batchSize,
-    "flush-interval": defaultOptions.flushInterval,
-    "max-retries": defaultOptions.maxRetries,
-    backoff: defaultOptions.backoff,
-    "backoff-factor": defaultOptions.backoffFactor,
-    "backoff-max": defaultOptions.backoffMax
+    batchSize: defaultBulkOptions.batchSize,
+    flushInterval: defaultBulkOptions.flushInterval,
+    maxRetries: defaultClientOptions.maxRetries,
+    backoff: defaultClientOptions.backoff,
+    backoffFactor: defaultClientOptions.backoffFactor,
+    backoffMax: defaultClientOptions.backoffMax
   },
   boolean: ["version", "help"],
-  string: ["admin-secret", "url"]
+  string: ["adminSecret", "url"]
 })
 
-start(cliOptions)
+main(cliOptions)
