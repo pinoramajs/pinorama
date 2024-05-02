@@ -2,6 +2,7 @@ import { defineConfig } from "vitepress"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: "/pinorama/",
   title: "Pinorama",
   description: "Simple, Log Search for Pino",
   themeConfig: {
