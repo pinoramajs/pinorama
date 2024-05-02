@@ -1,6 +1,6 @@
 {
-  "name": "pino-pinorama",
-  "version": "0.1.0-alpha.1",
+  "name": "pino-pinorama-transport",
+  "version": "0.1.0",
   "description": "load pino logs into Pinorama",
   "type": "module",
   "types": "./dist/lib.d.mts",
@@ -28,7 +28,6 @@
     "pino": "^9.0.0",
     "pinorama-client": "workspace:*",
     "pinorama-server": "workspace:*",
-    "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.3",
     "typescript": "^5.4.5",

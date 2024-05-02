@@ -1,6 +1,6 @@
 {
   "name": "pinorama-server",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "license": "MIT",
   "type": "module",
   "types": "./dist/index.d.mts",
@@ -17,7 +17,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.3",
     "typescript": "^5.4.5"

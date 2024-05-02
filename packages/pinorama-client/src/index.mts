@@ -7,18 +7,15 @@ import type { Readable } from "node:stream"
 import type { IncomingHttpHeaders } from "undici/types/header.js"
 
 const clientOptionsSchema = z.object({
-  /* required */
   url: z.string(),
   maxRetries: z.number().min(2),
   backoff: z.number().min(0),
   backoffFactor: z.number().min(2),
   backoffMax: z.number().min(1000),
-  /* optional */
   adminSecret: z.string().optional()
 })
 
 const bulkOptionsSchema = z.object({
-  /* required */
   batchSize: z.number(),
   flushInterval: z.number()
 })
@@ -39,9 +36,6 @@ export const defaultBulkOptions: Partial<PinoramaBulkOptions> = {
 }
 
 export class PinoramaClient {
-  /** Base URL for API requests */
-  private baseUrl: string
-
   /** Base path derived from the URL */
   private basePath: string
 
@@ -69,21 +63,15 @@ export class PinoramaClient {
       ...options
     })
 
-    /* url params */
-    const url = new URL(opts.url)
-    this.baseUrl = url.origin
-    this.basePath = url.pathname.length === 1 ? "" : url.pathname
+    const { origin, pathname } = new URL(opts.url)
+    this.basePath = pathname.length === 1 ? "" : pathname
 
-    /* backoff strategy */
+    this.client = new Client(origin)
+    this.maxRetries = opts.maxRetries
     this.backoff = opts.backoff
     this.backoffFactor = opts.backoffFactor
     this.backoffMax = opts.backoffMax
 
-    /* http client */
-    this.client = new Client(this.baseUrl)
-    this.maxRetries = opts.maxRetries
-
-    /* http headers */
     this.defaultHeaders = this.getDefaultHeaders(opts)
   }
 

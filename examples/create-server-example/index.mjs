@@ -28,7 +28,7 @@ const genericServer = Fastify({
     transport: {
       targets: [
         {
-          target: "pino-pinorama",
+          target: "pino-pinorama-transport",
           options: {
             // url: "http://localhost:6200/my_pinorama_server"
             url: "http://localhost:6200"

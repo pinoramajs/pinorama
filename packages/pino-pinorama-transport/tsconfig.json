@@ -15,7 +15,17 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "lib": ["ES2022"]
+    "lib": [
+      "ES2022"
+    ],
+    "outDir": "dist"
   },
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ]
 }
