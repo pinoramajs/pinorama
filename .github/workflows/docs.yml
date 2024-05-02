@@ -43,7 +43,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: packages/docs/.vitepress/dist
+          path: packages/pinorama-docs/.vitepress/dist
 
   deploy:
     environment:
@@ -51,7 +51,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
-    name: Deploy
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
