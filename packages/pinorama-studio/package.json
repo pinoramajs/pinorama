@@ -6,10 +6,7 @@
   "bin": {
     "pinorama": "./cli.mjs"
   },
-  "files": [
-    "dist",
-    "cli.mjs"
-  ],
+  "files": ["dist", "cli.mjs"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -22,7 +19,7 @@
     "fastify": "^4.26.2",
     "minimist": "^1.2.8",
     "open": "^10.1.0",
-    "pino-pinorama": "workspace:*",
+    "pino-pinorama-transport": "workspace:*",
     "pinorama-server": "workspace:*",
     "preact": "^10.20.2"
   },

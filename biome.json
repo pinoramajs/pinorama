@@ -15,7 +15,7 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "lineWidth": 100
+    "lineWidth": 80
   },
   "javascript": {
     "formatter": {
@@ -25,6 +25,6 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["node_modules/**", "**/dist"]
+    "ignore": ["node_modules/**", "**/dist", "cache/**"]
   }
 }

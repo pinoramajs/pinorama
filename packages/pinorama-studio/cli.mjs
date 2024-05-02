@@ -99,7 +99,9 @@ async function start(options) {
   })
 
   if (isPiped) {
-    console.log(c.yellow("Detected piped output. Server mode activated by default."))
+    console.log(
+      c.yellow("Detected piped output. Server mode activated by default.")
+    )
 
     const stream = pinoPinorama({
       url: serverUrl,

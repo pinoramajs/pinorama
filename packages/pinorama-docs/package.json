@@ -1,0 +1,14 @@
+{
+  "name": "pinorama-docs",
+  "version": "0.1.0",
+  "description": "Documentation for Pinorama",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.1.4"
+  }
+}

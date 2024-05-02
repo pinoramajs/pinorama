@@ -1,13 +1,11 @@
 {
   "name": "pinorama-client",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "license": "MIT",
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": "./dist/index.mjs",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc"
@@ -19,13 +17,13 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "pinorama-typescript-config": "workspace:*",
     "rimraf": "^5.0.5",
     "tsx": "^4.7.3",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "undici": "^6.14.1"
+    "undici": "^6.14.1",
+    "zod": "^3.23.4"
   },
   "publishConfig": {
     "access": "public"
