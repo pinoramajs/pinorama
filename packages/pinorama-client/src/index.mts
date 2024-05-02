@@ -33,7 +33,7 @@ export const defaultClientOptions: Partial<PinoramaClientOptions> = {
   backoffMax: 30000
 }
 
-export const defaultBulkOptions: PinoramaBulkOptions = {
+export const defaultBulkOptions: Partial<PinoramaBulkOptions> = {
   batchSize: 100,
   flushInterval: 5000
 }
@@ -64,7 +64,10 @@ export class PinoramaClient {
   private defaultHeaders: IncomingHttpHeaders
 
   constructor(options?: Partial<PinoramaClientOptions>) {
-    const opts = clientOptionsSchema.parse({ ...defaultClientOptions, ...options })
+    const opts = clientOptionsSchema.parse({
+      ...defaultClientOptions,
+      ...options
+    })
 
     /* url params */
     const url = new URL(opts.url)
@@ -81,10 +84,19 @@ export class PinoramaClient {
     this.maxRetries = opts.maxRetries
 
     /* http headers */
-    this.defaultHeaders = {
-      "content-type": "application/json",
-      ...(opts.adminSecret ? { "x-pinorama-admin-secret": opts.adminSecret } : {})
+    this.defaultHeaders = this.getDefaultHeaders(opts)
+  }
+
+  private getDefaultHeaders(options: Partial<PinoramaClientOptions>) {
+    const headers: IncomingHttpHeaders = {
+      "content-type": "application/json"
     }
+
+    if (options.adminSecret) {
+      headers["x-pinorama-admin-secret"] = options.adminSecret
+    }
+
+    return headers
   }
 
   private async retryOperation(operation: () => Promise<void>): Promise<void> {

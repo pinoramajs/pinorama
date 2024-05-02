@@ -2,18 +2,24 @@ import abstractTransport from "pino-abstract-transport"
 import { PinoramaClient } from "pinorama-client"
 
 import type { Transform } from "node:stream"
-import type { PinoramaBulkOptions, PinoramaClientOptions } from "pinorama-client"
+import type {
+  PinoramaBulkOptions,
+  PinoramaClientOptions
+} from "pinorama-client"
 
-export type PinoramaTransportOptions = PinoramaClientOptions & PinoramaBulkOptions
+export type PinoramaTransportOptions = PinoramaClientOptions &
+  PinoramaBulkOptions
 
 /**
- * Creates a pino transport that sends logs to Pinorama server instance.
+ * Creates a pino transport that sends logs to a Pinorama server.
  *
- * @param {Partial<PinoramaTransportOptions>} options - Optional overrides for default settings.
+ * @param {Partial<PinoramaTransportOptions>} options - Optional settings overrides.
  * @returns {Transform} Configured transport instance.
  */
-export default function pinoramaTransport(options: Partial<PinoramaTransportOptions>): Transform {
-  const clientOpts: Partial<PinoramaClientOptions> | undefined = initOpts(options, [
+export default function pinoramaTransport(
+  options: Partial<PinoramaTransportOptions>
+): Transform {
+  const clientOpts = filterOptions(options, [
     "url",
     "maxRetries",
     "backoff",
@@ -22,25 +28,22 @@ export default function pinoramaTransport(options: Partial<PinoramaTransportOpti
     "adminSecret"
   ])
 
-  const bulkOpts: Partial<PinoramaBulkOptions> | undefined = initOpts(options, [
-    "batchSize",
-    "flushInterval"
-  ])
+  const bulkOpts = filterOptions(options, ["batchSize", "flushInterval"])
 
   const client = new PinoramaClient(clientOpts)
 
   let flushFn: () => Promise<void>
+
+  /* build */
   const buildFn = async (stream: Transform) => {
     const { flush } = client.bulkInsert(stream, bulkOpts)
     flushFn = flush
   }
 
-  const closeFn = async () => {
-    if (flushFn) {
-      await flushFn()
-    }
-  }
+  /* close */
+  const closeFn = async () => flushFn && (await flushFn())
 
+  /* parseLine */
   const parseLineFn = (line: string) => {
     const obj = JSON.parse(line)
 
@@ -58,11 +61,14 @@ export default function pinoramaTransport(options: Partial<PinoramaTransportOpti
   return abstractTransport(buildFn, { close: closeFn, parseLine: parseLineFn })
 }
 
-function initOpts<T extends object>(
+/**
+ * Filters and returns options specified by keys.
+ */
+function filterOptions<T extends object>(
   options: Partial<T>,
   keys: (keyof T)[]
 ): Partial<T> | undefined {
-  let result: Partial<T> | undefined = undefined
+  let result: Partial<T> | undefined
   for (const key of keys) {
     if (key in options) {
       result = result || {}
