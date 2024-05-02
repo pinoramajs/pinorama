@@ -1,0 +1,3 @@
+.vuepress/dist
+.vitepress/dist
+.vitepress/cache

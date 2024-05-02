@@ -1,6 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "test": {
+      "cache": false
+    },
     "clean": {
       "dependsOn": ["^clean"],
       "cache": false
