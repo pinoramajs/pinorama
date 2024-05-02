@@ -3,7 +3,8 @@ name: Deploy Docs
 on:
   push:
     branches: [main]
-
+    paths:
+      - 'packages/pinorama-docs/**'
   workflow_dispatch:
 
 permissions:
