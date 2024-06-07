@@ -10,8 +10,9 @@
   },
   "files": ["dist"],
   "scripts": {
-    "test": "vitest",
-    "test:cov": "vitest run --coverage",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:debug": "vitest --inspect-brk --no-file-parallelism",
     "clean": "rimraf ./dist",
     "build": "pnpm clean && tsc",
