@@ -16,14 +16,13 @@
     "url": "https://github.com/cesconix"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "rimraf": "^5.0.5",
-    "tsx": "^4.7.3",
+    "@types/node": "^20.14.2",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "undici": "^6.14.1",
-    "zod": "^3.23.4"
+    "undici": "^6.18.2",
+    "zod": "^3.23.8"
   },
   "publishConfig": {
     "access": "public"
