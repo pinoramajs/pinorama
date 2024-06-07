@@ -1,5 +1,12 @@
-import "./app.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { ModeToggle } from "./components/mode-toggle"
 
-export function App() {
-  return <h1>Pinorama</h1>
+function App() {
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ModeToggle />
+    </ThemeProvider>
+  )
 }
+
+export default App
