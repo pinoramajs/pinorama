@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify"
 
-export default async function authHook(fastify: FastifyInstance) {
+export async function authHook(fastify: FastifyInstance) {
   fastify.addHook("preHandler", async (req, res) => {
     const { adminSecret } = fastify.pinoramaOpts
 

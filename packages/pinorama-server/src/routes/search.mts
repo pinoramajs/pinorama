@@ -1,7 +1,7 @@
 import { search } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
 
-export default async function searchRoute(fastify: FastifyInstance) {
+export async function searchRoute(fastify: FastifyInstance) {
   fastify.route({
     url: "/search",
     method: "post",

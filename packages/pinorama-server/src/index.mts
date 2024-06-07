@@ -1,12 +1,13 @@
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
 import url from "node:url"
-import FastifyAutoload from "@fastify/autoload"
 import { create } from "@orama/orama"
 import { restoreFromFile } from "@orama/plugin-data-persistence/server"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
+
+import * as plugins from "./plugins/index.mjs"
+import * as routes from "./routes/index.mjs"
 
 import type { AnyOrama, AnySchema } from "@orama/orama"
 import type {
@@ -75,17 +76,12 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     registerOpts.logLevel = opts.logLevel
   }
 
-  fastify.register(async () => {
-    fastify.register(FastifyAutoload, {
-      dir: path.join(__dirname, "routes"),
-      options: registerOpts
-    })
+  fastify.register(routes.bulkRoute)
+  fastify.register(routes.persistRoute)
+  fastify.register(routes.searchRoute)
 
-    fastify.register(FastifyAutoload, {
-      dir: path.join(__dirname, "plugins"),
-      encapsulate: false
-    })
-  })
+  fastify.register(plugins.gracefulSaveHook)
+  fastify.register(plugins.authHook)
 }
 
 function createServer(

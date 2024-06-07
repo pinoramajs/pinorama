@@ -10,8 +10,8 @@ import c from "chalk"
 import fastify from "fastify"
 import minimist from "minimist"
 import open from "open"
-import pinoPinorama from "pino-pinorama"
 import { fastifyPinoramaServer } from "pinorama-server"
+import pinoramaTransport from "pinorama-transport"
 
 const defaultOptions = {
   host: "localhost",
@@ -103,7 +103,7 @@ async function start(options) {
       c.yellow("Detected piped output. Server mode activated by default.")
     )
 
-    const stream = pinoPinorama({
+    const stream = pinoramaTransport({
       url: serverUrl,
       batchSize: 1000,
       adminSecret: opts["admin-secret"]

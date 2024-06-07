@@ -25,13 +25,12 @@
   "license": "MIT",
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/node": "^20.12.11",
+    "@types/node": "^20.14.2",
     "@vitest/coverage-v8": "^1.6.0",
-    "pino": "^9.0.0",
+    "pino": "^9.1.0",
     "pinorama-client": "workspace:*",
     "pinorama-server": "workspace:*",
-    "rimraf": "^5.0.6",
-    "tsx": "^4.10.0",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },

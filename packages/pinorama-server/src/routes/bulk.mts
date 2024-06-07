@@ -1,7 +1,7 @@
 import { insertMultiple } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
 
-export default async function bulkRoute(fastify: FastifyInstance) {
+export async function bulkRoute(fastify: FastifyInstance) {
   fastify.route({
     url: "/bulk",
     method: "post",
