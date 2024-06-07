@@ -19,7 +19,7 @@
     "fastify": "^4.26.2",
     "minimist": "^1.2.8",
     "open": "^10.1.0",
-    "pino-pinorama-transport": "workspace:*",
+    "pinorama-transport": "workspace:*",
     "pinorama-server": "workspace:*",
     "preact": "^10.20.2"
   },

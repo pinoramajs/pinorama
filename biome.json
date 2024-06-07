@@ -19,12 +19,12 @@
   },
   "javascript": {
     "formatter": {
-      "trailingComma": "none",
+      "trailingCommas": "none",
       "semicolons": "asNeeded"
     }
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["node_modules/**", "**/dist", "cache/**"]
+    "ignore": ["node_modules/**", "**/dist", "cache/**", "coverage/**"]
   }
 }
