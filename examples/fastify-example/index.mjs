@@ -7,7 +7,7 @@ const fastify = Fastify({
     transport: {
       targets: [
         {
-          target: "pino-pinorama-transport",
+          target: "pinorama-transport",
           options: {
             url: "http://localhost:6200/my_pinorama_server"
           }
