@@ -1,31 +1,17 @@
-# Pinorama
+# Pinorama 🌀
 
-Welcome to **Pinorama**, an open-source project designed to enhance log analysis and navigation. This project, currently in its embryonic stage, aims to integrate the power of Pino Logger and Orama Search into a comprehensive logging dashboard. The vision is to eventually attach it to a Fastify endpoint through a plugin.
+![CI Badge](https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main)
 
-## Current Stage
+⚠️ **Warning: This project is currently under development and not ready for production use.**
 
-At present, I'm in the initial phase of developing the `pinorama-server`. This component is crucial as it lays the foundation for the entire Pinorama ecosystem.
+Pinorama is a suite of node.js packages that allow you to store and explore [pino](https://getpino.io) logs. It contains:
 
-### pinorama-server (in development)
-
-- **Objective**: To create an HTTP server that wraps an Orama instance.
-- **Functionality**: It will listen on a specific port, similar to Elasticsearch, focusing on processing incoming log data efficiently.
-
-## Future Scope
-
-Once the `pinorama-server` is operational, I plan to expand the project with the following additional components:
-
-- **pinorama-client**: A client for the server, specialized in handling large volumes of log data through HTTP streams.
-- **pino-pinorama**: A transport layer that integrates Pino Logger with Orama Search.
-- **pinorama-dashboard**: A React-based user interface for interactive log data visualization and analysis.
-
-## Contact and Support
-
-For any queries or support, feel free to open an issue on GitHub or contact us directly. Your input is crucial in shaping Pinorama into a robust and user-friendly tool for log management.
-
-Thank you for your interest and support in bringing this project to life!
+- **server:** http server that stores logs using [orama](https://askorama.ai) and exposes rest api using [fastify](https://fastify.dev).
+- **client:** http client that streams and retrieves logs from the pinorama-server.
+- **transport:** pino logger transport that streams logs to the pinorama-server.
+- **docs:** project documentation available online at [pinorama.dev](https://pinorama.dev) powered by [vitepress](https://vitepress.dev).
+- **studio:** standalone app that allows you to explore the logs using [react](https://react.dev) and [shadcn/ui](https://ui.shadcn.com).
 
 ---
 
-I'm look forward to your contributions and collaboration in making Pinorama a good project!
- 
+This README will be updated as the project evolves.
