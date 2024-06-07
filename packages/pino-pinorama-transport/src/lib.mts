@@ -41,7 +41,9 @@ export default function pinoramaTransport(
   }
 
   /* close */
-  const closeFn = async () => flushFn && (await flushFn())
+  const closeFn = async () => {
+    return flushFn && (await flushFn())
+  }
 
   /* parseLine */
   const parseLineFn = (line: string) => {
@@ -64,7 +66,7 @@ export default function pinoramaTransport(
 /**
  * Filters and returns options specified by keys.
  */
-function filterOptions<T extends object>(
+export function filterOptions<T extends object>(
   options: Partial<T>,
   keys: (keyof T)[]
 ): Partial<T> | undefined {
