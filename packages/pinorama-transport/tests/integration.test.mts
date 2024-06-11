@@ -42,7 +42,7 @@ describe("pinoramaTransport", async () => {
     expect(response.hits[0].document.msg).toBe("hello world")
   })
 
-  it.skip("should store a deeply nested log line to pinorama server", async () => {
+  it("should store a deeply nested log line to pinorama server", async () => {
     const transport = pinoramaTransport({ url: pinoramaServerUrl })
     const log = pino(transport)
 
@@ -63,7 +63,7 @@ describe("pinoramaTransport", async () => {
     expect(response.hits[0].document.deeply.nested.hello).toBe("world")
   })
 
-  it.skip("should store log lines in bulk", async () => {
+  it("should store log lines in bulk", async () => {
     const transport = pinoramaTransport({ url: pinoramaServerUrl })
     const log = pino(transport)
 
@@ -84,7 +84,7 @@ describe("pinoramaTransport", async () => {
     }
   })
 
-  it.skip("should ignore all values except non-empty plain objects", async () => {
+  it("should ignore all values except non-empty plain objects", async () => {
     const transport = pinoramaTransport({ url: pinoramaServerUrl })
 
     // act

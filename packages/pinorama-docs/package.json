@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "clean": "rimraf .vitepress/cache .vitepress/dist node_modules"
   },
   "devDependencies": {
+    "rimraf": "^5.0.7",
     "vitepress": "^1.2.3"
   }
 }

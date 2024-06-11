@@ -4,12 +4,16 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node index.mjs"
+    "start": "node index.mjs",
+    "clean": "rimraf node_modules"
   },
   "dependencies": {
     "@fastify/one-line-logger": "^1.3.0",
     "fastify": "^4.26.2",
-    "pinorama-transport": "workspace:*",
-    "pinorama-server": "workspace:*"
+    "pinorama-server": "workspace:*",
+    "pinorama-transport": "workspace:*"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.7"
   }
 }

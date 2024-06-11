@@ -1,5 +1,8 @@
+import { useLogs } from "@/hooks"
+
 function App() {
-  return <div className="p-4">Pinorama Studio</div>
+  const { data } = useLogs()
+  return <div className="p-4">{JSON.stringify(data)}</div>
 }
 
 export default App

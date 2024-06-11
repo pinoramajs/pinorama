@@ -2,26 +2,47 @@
   "name": "pinorama-client",
   "version": "0.1.0",
   "license": "MIT",
-  "type": "module",
-  "types": "./dist/index.d.mts",
-  "exports": "./dist/index.mjs",
-  "files": ["dist"],
+  "main": "./dist/node/pinorama-client.cjs",
+  "module": "./dist/node/pinorama-client.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/types/pinorama-client.d.ts",
+      "require": "./dist/node/pinorama-client.cjs",
+      "import": "./dist/node/pinorama-client.mjs"
+    },
+    "./node": {
+      "types": "./dist/types/pinorama-client.d.ts",
+      "require": "./dist/node/pinorama-client.cjs",
+      "import": "./dist/node/pinorama-client.mjs"
+    },
+    "./browser": {
+      "types": "./dist/types/pinorama-client.d.ts",
+      "import": "./dist/browser/pinorama-client.esm.js"
+    }
+  },
+  "types": "./dist/types/pinorama-client.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "pnpm clean && tsc"
+    "clean": "rimraf dist node_modules",
+    "build": "rollup --config"
   },
-  "author": {
-    "email": "cesconix@me.com",
-    "name": "Francesco Pasqua",
-    "url": "https://github.com/cesconix"
-  },
+  "author": "Francesco Pasqua <cesconix@me.com>",
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.14.2",
     "rimraf": "^5.0.7",
+    "rollup": "^4.18.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "tslib": "^2.6.3",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "undici": "^6.18.2",
     "zod": "^3.23.8"
   },
   "publishConfig": {
