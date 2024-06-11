@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'packages/pinorama-docs/**'
+      - "packages/pinorama-docs/**"
   workflow_dispatch:
 
 permissions:
@@ -35,11 +35,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Install 
-        run: pnpm install --no-frozen-lockfile
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
-      - name: Build 
-        run: pnpm build --scope pinorama-docs
+      - name: Build
+        run: pnpm --filter pinorama-docs build
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
