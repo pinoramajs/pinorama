@@ -5,10 +5,12 @@
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": "./dist/index.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "pnpm clean && tsc"
+    "clean": "rimraf dist node_modules",
+    "build": "tsc"
   },
   "author": {
     "email": "cesconix@me.com",
@@ -17,7 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.7",
     "typescript": "^5.4.5"
   },
   "dependencies": {

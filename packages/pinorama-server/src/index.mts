@@ -1,6 +1,4 @@
 import fs from "node:fs"
-import path from "node:path"
-import url from "node:url"
 import { create } from "@orama/orama"
 import { restoreFromFile } from "@orama/plugin-data-persistence/server"
 import Fastify from "fastify"
@@ -18,9 +16,6 @@ import type {
   LogLevel,
   RegisterOptions
 } from "fastify"
-
-const __filename = url.fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -76,9 +71,9 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     registerOpts.logLevel = opts.logLevel
   }
 
-  fastify.register(routes.bulkRoute)
-  fastify.register(routes.persistRoute)
-  fastify.register(routes.searchRoute)
+  fastify.register(routes.bulkRoute, registerOpts)
+  fastify.register(routes.persistRoute, registerOpts)
+  fastify.register(routes.searchRoute, registerOpts)
 
   fastify.register(plugins.gracefulSaveHook)
   fastify.register(plugins.authHook)

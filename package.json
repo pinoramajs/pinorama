@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "turbo test",
-    "clean": "turbo clean",
+    "clean": "turbo clean && rimraf node_modules .turbo",
     "build": "turbo build",
     "dev": "turbo dev",
     "biome": "biome check --write --no-errors-on-unmatched",
@@ -26,6 +26,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "husky": "^9.0.11",
+    "rimraf": "^5.0.7",
     "turbo": "^2.0.3"
   },
   "packageManager": "pnpm@9.2.0",

@@ -1,14 +1,21 @@
-import abstractTransport from "pino-abstract-transport"
-import { PinoramaClient } from "pinorama-client"
+import { setInterval } from "node:timers";
+import abstractTransport from "pino-abstract-transport";
+import { PinoramaClient } from "pinorama-client/node";
 
-import type { Transform } from "node:stream"
-import type {
-  PinoramaBulkOptions,
-  PinoramaClientOptions
-} from "pinorama-client"
+import type { Transform } from "node:stream";
+import type { PinoramaClientOptions } from "pinorama-client/node";
 
-export type PinoramaTransportOptions = PinoramaClientOptions &
-  PinoramaBulkOptions
+type BulkOptions = {
+  batchSize: number;
+  flushInterval: number;
+};
+
+export const defaultBulkOptions: BulkOptions = {
+  batchSize: 100,
+  flushInterval: 5000,
+};
+
+export type PinoramaTransportOptions = PinoramaClientOptions & BulkOptions;
 
 /**
  * Creates a pino transport that sends logs to a Pinorama server.
@@ -25,42 +32,73 @@ export default function pinoramaTransport(
     "backoff",
     "backoffFactor",
     "backoffMax",
-    "adminSecret"
-  ])
+    "adminSecret",
+  ]);
 
-  const bulkOpts = filterOptions(options, ["batchSize", "flushInterval"])
+  const bulkOpts = filterOptions(options, ["batchSize", "flushInterval"]);
 
-  const client = new PinoramaClient(clientOpts)
-
-  let flushFn: () => Promise<void>
+  const client = new PinoramaClient(clientOpts);
 
   /* build */
   const buildFn = async (stream: Transform) => {
-    const { flush } = client.bulkInsert(stream, bulkOpts)
-    flushFn = flush
-  }
+    const buffer: unknown[] = [];
+    let flushing = false;
 
-  /* close */
-  const closeFn = async () => {
-    return flushFn && (await flushFn())
-  }
+    const opts: BulkOptions = {
+      batchSize: bulkOpts?.batchSize ?? defaultBulkOptions.batchSize,
+      flushInterval:
+        bulkOpts?.flushInterval ?? defaultBulkOptions.flushInterval,
+    };
+
+    const flush = async () => {
+      if (buffer.length === 0 || flushing) return;
+      flushing = true;
+
+      try {
+        stream.pause();
+        await client.insert(buffer);
+        buffer.length = 0;
+      } catch (error) {
+        console.error("Failed to flush logs:", error);
+      } finally {
+        stream.resume();
+        flushing = false;
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      flush();
+    }, opts.flushInterval);
+
+    stream.on("data", async (data) => {
+      buffer.push(data);
+      if (buffer.length >= opts.batchSize) {
+        await flush();
+      }
+    });
+
+    stream.on("end", async () => {
+      clearInterval(intervalId);
+      await flush();
+    });
+  };
 
   /* parseLine */
   const parseLineFn = (line: string) => {
-    const obj = JSON.parse(line)
+    const obj = JSON.parse(line);
 
     if (Object.prototype.toString.call(obj) !== "[object Object]") {
-      throw new Error("not a plain object.")
+      throw new Error("not a plain object.");
     }
 
     if (Object.keys(obj).length === 0) {
-      throw new Error("object is empty.")
+      throw new Error("object is empty.");
     }
 
-    return obj
-  }
+    return obj;
+  };
 
-  return abstractTransport(buildFn, { close: closeFn, parseLine: parseLineFn })
+  return abstractTransport(buildFn, { parseLine: parseLineFn });
 }
 
 /**
@@ -70,12 +108,12 @@ export function filterOptions<T extends object>(
   options: Partial<T>,
   keys: (keyof T)[]
 ): Partial<T> | undefined {
-  let result: Partial<T> | undefined
+  let result: Partial<T> | undefined;
   for (const key of keys) {
     if (key in options) {
-      result = result || {}
-      result[key] = options[key]
+      result = result || {};
+      result[key] = options[key];
     }
   }
-  return result
+  return result;
 }

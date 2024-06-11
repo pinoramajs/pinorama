@@ -5,8 +5,8 @@ import type { Transform } from "node:stream"
 import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
 import minimist from "minimist"
-import { defaultBulkOptions, defaultClientOptions } from "pinorama-client"
-import pinoramaTransport from "./lib.mjs"
+import { defaultClientOptions } from "pinorama-client"
+import pinoramaTransport, { defaultBulkOptions } from "./lib.mjs"
 import type { PinoramaTransportOptions } from "./lib.mjs"
 
 type PinoramaCliOptions = PinoramaTransportOptions & {

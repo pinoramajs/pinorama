@@ -2,23 +2,6 @@ import { PinoramaClient } from "pinorama-client"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import pinoramaTransport, { filterOptions } from "../src/lib.mts"
 
-vi.mock("pinorama-client", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("pinorama-client")>()
-  return {
-    ...mod,
-    PinoramaClient: vi.fn(function () {
-      this.isFlushed = false
-      this.bulkInsert = vi.fn(() => {
-        return {
-          flush: () => {
-            this.isFlushed = true
-          }
-        }
-      })
-    })
-  }
-})
-
 const exampleOptions = {
   url: "http://example.com",
   maxRetries: 3,
@@ -30,6 +13,14 @@ const exampleOptions = {
   flushInterval: 2000 // not a client option
 }
 
+vi.mock("pinorama-client", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("pinorama-client")>()
+  return {
+    ...mod,
+    PinoramaClient: vi.fn()
+  }
+})
+
 describe("pinoramaTransport", () => {
   const mockedClient = vi.mocked(PinoramaClient)
 
@@ -37,10 +28,10 @@ describe("pinoramaTransport", () => {
     vi.restoreAllMocks()
   })
 
-  it("should initialize client with correct filtered options", async () => {
+  it("should initialize client with correct options", async () => {
     pinoramaTransport(exampleOptions)
 
-    expect(PinoramaClient).toHaveBeenCalledWith({
+    expect(mockedClient).toHaveBeenCalledWith({
       url: "http://example.com",
       maxRetries: 3,
       backoff: 500,
@@ -48,27 +39,6 @@ describe("pinoramaTransport", () => {
       backoffMax: 10000,
       adminSecret: "secret123"
     })
-  })
-
-  it("should properly call the bulkInsert client function", async () => {
-    const stream = pinoramaTransport(exampleOptions)
-
-    expect(mockedClient.mock.instances[0].bulkInsert).toHaveBeenCalledWith(
-      stream,
-      {
-        batchSize: exampleOptions.batchSize,
-        flushInterval: exampleOptions.flushInterval
-      }
-    )
-  })
-
-  it("should call the flush client function on destroy stream", async () => {
-    const stream = pinoramaTransport(exampleOptions)
-
-    stream.write('{"msg":"hello world"}\n')
-    stream.destroy()
-
-    expect(mockedClient.mock.instances[0].isFlushed).toBe(true)
   })
 })
 
