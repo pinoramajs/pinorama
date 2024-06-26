@@ -1,19 +1,19 @@
-import alias from "@rollup/plugin-alias";
-import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
-import typescript from "@rollup/plugin-typescript";
-import { dts } from "rollup-plugin-dts";
+import alias from "@rollup/plugin-alias"
+import commonjs from "@rollup/plugin-commonjs"
+import resolve from "@rollup/plugin-node-resolve"
+import terser from "@rollup/plugin-terser"
+import typescript from "@rollup/plugin-typescript"
+import { dts } from "rollup-plugin-dts"
 
-const inputFile = "src/index.ts";
-const outputFileName = "pinorama-client";
+const inputFile = "src/index.ts"
+const outputFileName = "pinorama-client"
 
 export default [
   // Declaration file
   {
     input: inputFile,
     output: [{ file: "dist/types/pinorama-client.d.ts", format: "es" }],
-    plugins: [dts()],
+    plugins: [dts()]
   },
 
   // Browser ESM build
@@ -23,21 +23,21 @@ export default [
       {
         file: `dist/browser/${outputFileName}.esm.js`,
         format: "es",
-        sourcemap: true,
-      },
+        sourcemap: true
+      }
     ],
     plugins: [
       alias({
         entries: [
-          { find: "./platform/node.js", replacement: "./platform/browser.js" },
-        ],
+          { find: "./platform/node.js", replacement: "./platform/browser.js" }
+        ]
       }),
       resolve({ browser: true }),
       commonjs(),
       typescript(),
-      terser(),
+      terser()
     ],
-    external: ["zod"],
+    external: ["zod"]
   },
 
   // // Browser UMD build
@@ -92,11 +92,11 @@ export default [
       {
         file: `dist/node/${outputFileName}.mjs`,
         format: "es",
-        sourcemap: true,
-      },
+        sourcemap: true
+      }
     ],
     plugins: [resolve(), commonjs(), typescript()],
-    external: ["zod"],
+    external: ["zod"]
   },
 
   // Node.js CJS build
@@ -106,10 +106,10 @@ export default [
       {
         file: `dist/node/${outputFileName}.cjs`,
         format: "cjs",
-        sourcemap: true,
-      },
+        sourcemap: true
+      }
     ],
     plugins: [resolve(), commonjs(), typescript()],
-    external: ["zod"],
-  },
-];
+    external: ["zod"]
+  }
+]

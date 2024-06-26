@@ -1,18 +1,18 @@
 #! /usr/bin/env node
 
-import { readFileSync } from "node:fs";
-import os from "node:os";
-import path from "node:path";
-import { pipeline } from "node:stream/promises";
-import { fileURLToPath } from "node:url";
-import fastifyCors from "@fastify/cors";
-import fastifyStatic from "@fastify/static";
-import c from "chalk";
-import fastify from "fastify";
-import minimist from "minimist";
-import open from "open";
-import { fastifyPinoramaServer } from "pinorama-server";
-import pinoramaTransport from "pinorama-transport";
+import { readFileSync } from "node:fs"
+import os from "node:os"
+import path from "node:path"
+import { pipeline } from "node:stream/promises"
+import { fileURLToPath } from "node:url"
+import fastifyCors from "@fastify/cors"
+import fastifyStatic from "@fastify/static"
+import c from "chalk"
+import fastify from "fastify"
+import minimist from "minimist"
+import open from "open"
+import { fastifyPinoramaServer } from "pinorama-server"
+import pinoramaTransport from "pinorama-transport"
 
 const defaultOptions = {
   host: "localhost",
@@ -22,14 +22,14 @@ const defaultOptions = {
   server: false,
   "server-prefix": "/pinorama",
   "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
-  "admin-secret": "your-secret",
-};
+  "admin-secret": "your-secret"
+}
 
 async function start(options) {
-  const opts = { ...defaultOptions, ...options };
+  const opts = { ...defaultOptions, ...options }
 
-  const pj = fileURLToPath(new URL("./package.json", import.meta.url));
-  const { version } = JSON.parse(readFileSync(pj, "utf8"));
+  const pj = fileURLToPath(new URL("./package.json", import.meta.url))
+  const { version } = JSON.parse(readFileSync(pj, "utf8"))
 
   if (opts.help) {
     console.log(`
@@ -59,63 +59,63 @@ async function start(options) {
     cat logs | pinorama -l -o
     pinorama --host 192.168.1.1 --port 8080
     pinorama --server --logger
-`);
-    return;
+`)
+    return
   }
 
   if (opts.version) {
-    console.log(version);
-    return;
+    console.log(version)
+    return
   }
 
-  const isPiped = !process.stdin.isTTY;
-  opts.server = isPiped || opts.server;
+  const isPiped = !process.stdin.isTTY
+  opts.server = isPiped || opts.server
 
-  const app = createServer(opts);
+  const app = createServer(opts)
 
   if (opts.server) {
     app.register(fastifyPinoramaServer, {
       adminSecret: opts["admin-secret"],
       dbPath: opts["server-db-path"],
-      prefix: opts["server-prefix"],
-    });
+      prefix: opts["server-prefix"]
+    })
   }
 
-  const studioUrl = `http://${opts.host}:${opts.port}`;
-  const serverUrl = `${studioUrl}${opts["server-prefix"]}`;
+  const studioUrl = `http://${opts.host}:${opts.port}`
+  const serverUrl = `${studioUrl}${opts["server-prefix"]}`
 
   app.listen({ host: opts.host, port: opts.port }, async (err) => {
-    if (err) throw err;
+    if (err) throw err
 
-    const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`];
+    const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`]
 
     if (opts.server) {
-      msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`);
-      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`);
+      msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
+      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
     }
 
-    console.log(msg.join("\n"));
+    console.log(msg.join("\n"))
 
-    opts.open && (await open(studioUrl));
-  });
+    opts.open && (await open(studioUrl))
+  })
 
   if (isPiped) {
     console.log(
       c.yellow("Detected piped output. Server mode activated by default.")
-    );
+    )
 
     const stream = pinoramaTransport({
       url: serverUrl,
       batchSize: 1000,
-      adminSecret: opts["admin-secret"],
-    });
+      adminSecret: opts["admin-secret"]
+    })
 
     stream.on("error", (error) => {
-      console.error(error);
-    });
+      console.error(error)
+    })
 
-    await app.ready();
-    pipeline(process.stdin, stream);
+    await app.ready()
+    pipeline(process.stdin, stream)
   }
 }
 
@@ -126,20 +126,20 @@ function createServer(opts) {
           transport: {
             target: "@fastify/one-line-logger",
             options: {
-              colorize: true,
-            },
-          },
+              colorize: true
+            }
+          }
         }
-      : false,
-  });
+      : false
+  })
 
-  app.register(fastifyCors);
+  app.register(fastifyCors)
 
   app.register(fastifyStatic, {
-    root: fileURLToPath(new URL("dist", import.meta.url)),
-  });
+    root: fileURLToPath(new URL("dist", import.meta.url))
+  })
 
-  return app;
+  return app
 }
 
 start(
@@ -154,9 +154,9 @@ start(
       server: "s",
       "server-prefix": "e",
       "server-db-path": "f",
-      "admin-secret": "k",
+      "admin-secret": "k"
     },
     boolean: ["server", "open"],
-    default: defaultOptions,
+    default: defaultOptions
   })
-);
+)
