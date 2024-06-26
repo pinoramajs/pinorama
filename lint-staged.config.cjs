@@ -1,3 +1,3 @@
 module.exports = {
-  "*": ["pnpm biome", "pnpm test"]
+  "*": ["pnpm biome"]
 }
