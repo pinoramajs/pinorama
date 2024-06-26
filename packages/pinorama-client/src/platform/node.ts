@@ -1,3 +1,3 @@
-import { setTimeout } from "node:timers/promises";
+import { setTimeout } from "node:timers/promises"
 
-export { setTimeout };
+export { setTimeout }

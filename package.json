@@ -14,7 +14,7 @@
     "clean": "turbo clean && rimraf node_modules .turbo",
     "build": "turbo build",
     "dev": "turbo dev",
-    "biome": "biome check --write --no-errors-on-unmatched",
+    "biome": "biome check --no-errors-on-unmatched",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:release": "changeset publish",
@@ -26,6 +26,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "rimraf": "^5.0.7",
     "turbo": "^2.0.3"
   },

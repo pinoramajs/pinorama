@@ -13,17 +13,8 @@
     "moduleResolution": "Node",
     "module": "ESNext",
     "sourceMap": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "tests"]
 }

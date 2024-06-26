@@ -7,8 +7,10 @@ export const useLogs = () => {
   const query = useQuery({
     queryKey: ["logs"],
     queryFn: async () => {
-      const response: any = await client?.search({})
-      response.json()
+      const response: any = await client?.search({
+        limit: 200000
+      })
+      return response.hits.map((hit) => hit.document)
     }
   })
 
