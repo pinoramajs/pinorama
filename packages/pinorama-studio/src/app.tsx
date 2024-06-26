@@ -13,7 +13,7 @@ function LogLine({ log }: { log: any }) {
     10: { label: "trace", className: "text-gray-500" }
   }
 
-  const { label, className } = levels[log.level]
+  const { label, className } = levels[log.level as keyof typeof levels]
 
   return (
     <>

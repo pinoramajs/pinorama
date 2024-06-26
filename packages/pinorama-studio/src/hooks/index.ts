@@ -10,7 +10,7 @@ export const useLogs = () => {
       const response: any = await client?.search({
         limit: 200000
       })
-      return response.hits.map((hit) => hit.document)
+      return response.hits.map((hit: { document: unknown }) => hit.document)
     }
   })
 
