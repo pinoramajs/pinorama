@@ -23,8 +23,9 @@
       "semicolons": "asNeeded"
     }
   },
-  "files": {
-    "ignoreUnknown": true,
-    "ignore": ["node_modules/**", "**/dist", "cache/**", "coverage/**"]
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }
