@@ -33,19 +33,66 @@ type PinoramaServerOptions = {
   dbFormat?: PersistenceFormat
   prefix?: string
   logLevel?: LogLevel
+  ui: any
 }
 
 export const defaultOptions: PinoramaServerOptions = {
   adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET,
+  dbFormat: "json",
   dbSchema: {
-    level: "number",
+    level: "enum",
     time: "number",
     msg: "string",
-    pid: "number",
+    pid: "enum",
     hostname: "string"
   },
-  // dbPath: path.join(os.tmpdir(), "pinorama.msp"),
-  dbFormat: "json"
+  ui: {}
+  // ui: {
+  //   props: {
+  //     level: {
+  //       label: "Level",
+  //       type: "enum",
+  //     }
+  //   },
+  //   labels: {
+  //     level: "Level",
+  //     time: "Time",
+  //     msg: "Message",
+  //     pid: "PID",
+  //     hostname: "Host"
+  //   },
+  //   enumLabels: {
+  //     level: {
+  //       10: "TRACE",
+  //       20: "DEBUG",
+  //       30: "INFO",
+  //       40: "WARN",
+  //       50: "ERROR",
+  //       60: "FATAL"
+  //     }
+  //   },
+  //   formatters: {
+  //     time: "timestamp"
+  //   },
+  //   styles: {
+  //     time: {
+  //       default: { opacity: "0.5" }
+  //     },
+  //     level: {
+  //       byValue: {
+  //         10: { color: "var(--color-gray-500)" },
+  //         20: { color: "var(--color-purple-500)" },
+  //         30: { color: "var(--color-lime-500)" },
+  //         40: { color: "var(--color-yellow-500)" },
+  //         50: { color: "var(--color-red-500)" },
+  //         60: { color: "var(--color-red-500)" }
+  //       }
+  //     }
+  //   },
+  //   defaultColumns: ["time", "level", "msg", "hostname", "pid"],
+  //   defaultFacets: ["level", "hostname", "pid"]
+  //   // facets: [["level", { search: false }], "hostname", "pid"],
+  // }
 }
 
 const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
@@ -72,8 +119,10 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   }
 
   fastify.register(routes.bulkRoute, registerOpts)
+  fastify.register(routes.introspectionRoute, registerOpts)
   fastify.register(routes.persistRoute, registerOpts)
   fastify.register(routes.searchRoute, registerOpts)
+  fastify.register(routes.stylesRoute, registerOpts)
 
   fastify.register(plugins.gracefulSaveHook)
   fastify.register(plugins.authHook)

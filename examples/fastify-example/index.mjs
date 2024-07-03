@@ -1,4 +1,5 @@
 import path from "node:path"
+import fastifyCors from "@fastify/cors"
 import Fastify from "fastify"
 import { fastifyPinoramaServer } from "pinorama-server"
 
@@ -18,13 +19,15 @@ const fastify = Fastify({
   }
 })
 
+fastify.register(fastifyCors)
+
 fastify.register(fastifyPinoramaServer, {
   prefix: "/my_pinorama_server",
   dbPath: path.resolve("./db.msp"),
   logLevel: "silent" // need to avoid loop
 })
 
-fastify.post("/logs", async function handler(req) {
+fastify.post("/docs", async function handler(req) {
   req.log.info(req.body.message)
   return req.body.message
 })

@@ -111,7 +111,45 @@ export class PinoramaClient {
 
       return json
     } catch (error) {
-      console.error("error searching logs:", error)
+      console.error("error searching docs:", error)
+      throw error
+    }
+  }
+
+  public async styles(): Promise<string> {
+    try {
+      const response = await fetch(`${this.url}/styles.css`, {
+        method: "GET",
+        headers: { ...this.defaultHeaders, contentType: "text/css" }
+      })
+
+      if (response.status !== 200) {
+        throw new Error("[TODO ERROR]: PinoramaClient.styles failed")
+      }
+
+      const css = await response.text()
+      return css
+    } catch (error) {
+      console.error("error fetching styles:", error)
+      throw error
+    }
+  }
+
+  public async introspection(): Promise<unknown> {
+    try {
+      const response = await fetch(`${this.url}/introspection`, {
+        method: "GET",
+        headers: this.defaultHeaders
+      })
+
+      const json = await response.json()
+      if (response.status !== 200) {
+        throw new Error(json.error)
+      }
+
+      return json
+    } catch (error) {
+      console.error("error fetching introspection:", error)
       throw error
     }
   }
