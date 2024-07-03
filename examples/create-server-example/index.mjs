@@ -1,4 +1,5 @@
 import path from "node:path"
+import fastifyCors from "@fastify/cors"
 import Fastify from "fastify"
 import { createServer } from "pinorama-server"
 
@@ -17,6 +18,8 @@ const pinoramaServer = createServer(
     }
   }
 )
+
+pinoramaServer.register(fastifyCors)
 
 pinoramaServer.listen({ port: 6200 }, (err, address) => {
   if (err) throw err
@@ -40,7 +43,7 @@ const genericServer = Fastify({
   }
 })
 
-genericServer.post("/logs", async function handler(req) {
+genericServer.post("/docs", async function handler(req) {
   req.log.info(req.body.message)
   return req.body.message
 })

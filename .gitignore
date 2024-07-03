@@ -37,6 +37,7 @@ yarn-error.log*
 .DS_Store
 *.pem
 cache
+logs
 
 # Orama
 orama_bump_*.json
