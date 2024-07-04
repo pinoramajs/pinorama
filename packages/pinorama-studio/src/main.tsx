@@ -1,10 +1,10 @@
+import "./styles/globals.css"
+
 import React from "react"
 import ReactDOM from "react-dom/client"
 
-import { PinoramaClientProvider } from "@/components/pinorama-client-provider"
-import { ThemeProvider } from "@/components/theme-provider"
-import App from "./app.tsx"
-import "./globals.css"
+import { PinoramaClientProvider, ThemeProvider } from "@/contexts"
+import App from "./app"
 
 ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
   <React.StrictMode>
