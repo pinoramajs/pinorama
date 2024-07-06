@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
+import type React from "react"
 
 type FacetHeaderProps = {
   name: string
@@ -7,7 +8,7 @@ type FacetHeaderProps = {
   count: number
   open: boolean
   onClick: () => void
-  onCountClick: () => void
+  onCountClick: (e: React.MouseEvent) => void
 }
 
 export function FacetHeader(props: FacetHeaderProps) {

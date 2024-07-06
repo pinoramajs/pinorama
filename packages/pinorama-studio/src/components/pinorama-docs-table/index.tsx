@@ -2,7 +2,8 @@ import { useMemo, useRef } from "react"
 
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { LoaderIcon } from "lucide-react"
+import { ErrorState } from "../error-state/error-state"
+import { Loading } from "../loading/loading"
 import type { SearchFilters } from "../pinorama-facets/types"
 import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
@@ -16,7 +17,7 @@ type PinoramaDocsTableProps = {
 
 export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
   const columns = useColumns()
-  const { data, status } = useDocs(props.searchText, props.filters)
+  const { data, status, error } = useDocs(props.searchText, props.filters)
 
   const docs = useMemo(() => data ?? [], [data])
 
@@ -39,6 +40,10 @@ export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
     overscan: 100
   })
 
+  const isLoading = status === "pending"
+  const hasError = status === "error"
+  const hasNoData = data?.length === 0 || false
+
   return (
     <div
       ref={tableContainerRef}
@@ -46,15 +51,17 @@ export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
     >
       <table className="text-sm w-full">
         <TableHead table={table} />
-        {status === "pending" ? (
+        {isLoading || hasNoData || hasError ? (
           <tbody>
             <tr>
-              <td
-                colSpan={columns.length}
-                className="h-10 px-3 text-muted-foreground flex items-center"
-              >
-                <LoaderIcon className="w-4 h-4 mr-2 animate-spin" />
-                Loading...
+              <td className="h-10 px-3 text-muted-foreground">
+                {isLoading ? (
+                  <Loading />
+                ) : hasError ? (
+                  <ErrorState error={error} />
+                ) : hasNoData ? (
+                  "No logs found"
+                ) : null}
               </td>
             </tr>
           </tbody>

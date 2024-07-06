@@ -1,3 +1,4 @@
+import { ErrorState } from "@/components/error-state/error-state"
 import { useCallback, useMemo, useState } from "react"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
@@ -21,21 +22,26 @@ type FacetProps = {
 export function Facet(props: FacetProps) {
   const [open, setOpen] = useState(true)
 
-  const { data: facet, fetchStatus } = useFacet(
-    props.name,
-    props.searchText,
-    props.filters
-  )
+  const {
+    data: facet,
+    fetchStatus,
+    status,
+    error
+  } = useFacet(props.name, props.searchText, props.filters)
 
   const operations: any = facetFilterOperationsFactory(props.type)
   const criteria = props.filters[props.name] || operations.create()
   const selelectedOptionCount = operations.length(criteria)
 
-  const handleReset = useCallback(() => {
-    const filters = { ...props.filters }
-    delete filters[props.name]
-    props.onFiltersChange(filters)
-  }, [props.onFiltersChange, props.name, props.filters])
+  const handleReset = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation()
+      const filters = { ...props.filters }
+      delete filters[props.name]
+      props.onFiltersChange(filters)
+    },
+    [props.onFiltersChange, props.name, props.filters]
+  )
 
   const selected: FacetValue[] = useMemo(() => {
     return operations
@@ -80,13 +86,17 @@ export function Facet(props: FacetProps) {
         onCountClick={handleReset}
       />
       {open ? (
-        <FacetBody
-          name={props.name}
-          type={props.type}
-          values={values}
-          filters={props.filters}
-          onFiltersChange={props.onFiltersChange}
-        />
+        status === "error" ? (
+          <ErrorState error={error} />
+        ) : (
+          <FacetBody
+            name={props.name}
+            type={props.type}
+            values={values}
+            filters={props.filters}
+            onFiltersChange={props.onFiltersChange}
+          />
+        )
       ) : null}
     </div>
   )
