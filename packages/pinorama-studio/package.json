@@ -32,6 +32,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "debounce": "^2.1.0",
     "fastify": "^4.27.0",
     "lucide-react": "^0.390.0",
     "minimist": "^1.2.8",
