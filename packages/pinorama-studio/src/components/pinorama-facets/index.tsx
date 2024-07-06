@@ -1,6 +1,8 @@
 import { usePinoramaIntrospection } from "@/hooks"
 import { Facet } from "./components/facet"
 
+import { ErrorState } from "../error-state/error-state"
+import { Loading } from "../loading/loading"
 import type { SearchFilters } from "./types"
 
 const ALLOWED_TYPES = ["string", "enum", "boolean"]
@@ -15,11 +17,11 @@ export function PinoramaFacets(props: PinoramaFacetsProps) {
   const { data: introspection, status, error } = usePinoramaIntrospection()
 
   if (status === "pending") {
-    return null
+    return <Loading />
   }
 
   if (status === "error") {
-    return <div>Error: {error.message}</div>
+    return <ErrorState error={error} />
   }
 
   return Object.keys(introspection.dbSchema)

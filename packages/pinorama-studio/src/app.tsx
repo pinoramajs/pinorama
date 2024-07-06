@@ -27,14 +27,14 @@ function App() {
       <ResizablePanel defaultSize={20}>
         <div className="flex flex-col h-screen p-3 overflow-auto">
           <div className="flex text-sm whitespace-nowrap justify-between items-center mb-0.5 h-[40px]">
-            <div className="font-medium">🌀 Pinorama</div>
+            <div className="font-medium px-2">Filters</div>
             {hasFilters ? (
               <Button
                 variant="outline"
                 className="text-muted-foreground"
                 onClick={handleResetFilters}
               >
-                Reset Filters
+                Reset
               </Button>
             ) : null}
           </div>
