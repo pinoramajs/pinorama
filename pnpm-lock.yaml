@@ -207,6 +207,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      debounce:
+        specifier: ^2.1.0
+        version: 2.1.0
       fastify:
         specifier: ^4.27.0
         version: 4.28.0
@@ -1974,6 +1977,10 @@ packages:
 
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
+
+  debounce@2.1.0:
+    resolution: {integrity: sha512-OkL3+0pPWCqoBc/nhO9u6TIQNTK44fnBnzuVtJAbp13Naxw9R6u21x+8tVTka87AhDZ3htqZ2pSSsZl9fqL2Wg==}
+    engines: {node: '>=18'}
 
   debug@4.3.5:
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
@@ -5341,6 +5348,8 @@ snapshots:
   date-fns@3.6.0: {}
 
   dateformat@4.6.3: {}
+
+  debounce@2.1.0: {}
 
   debug@4.3.5:
     dependencies:

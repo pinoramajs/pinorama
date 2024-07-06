@@ -1,25 +1,47 @@
 import { usePinoramaClient } from "@/contexts"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
-export const useFacet = (property: string, searchText?: string) => {
+import type { SearchFilters } from "../types"
+
+type OramaFacetValue = {
+  count: number
+  values: Record<string | number, number>
+}
+
+export const useFacet = (
+  name: string,
+  searchText: string,
+  filters: SearchFilters
+) => {
   const client = usePinoramaClient()
 
-  const query = useQuery({
-    queryKey: ["facets", property],
-    queryFn: async () => {
+  const query = useQuery<OramaFacetValue>({
+    queryKey: ["facets", name, searchText, filters],
+    queryFn: async ({ signal }) => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      if (signal.aborted) {
+        return
+      }
+
       const payload: any = {
         preflight: true,
-        facets: { [property]: {} }
+        facets: { [name]: {} }
       }
 
       if (searchText) {
         payload.term = searchText
-        payload.properties = [property]
+        // payload.properties = [name]
+      }
+
+      if (filters) {
+        payload.where = filters
       }
 
       const response: any = await client?.search(payload)
-      return response.facets[property]
-    }
+      return response.facets[name]
+    },
+    placeholderData: keepPreviousData
   })
 
   return query
