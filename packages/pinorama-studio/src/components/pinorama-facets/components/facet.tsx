@@ -1,7 +1,3 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import { useCallback, useMemo, useState } from "react"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
@@ -11,7 +7,8 @@ import type {
   OramaPropType,
   SearchFilters
 } from "../types"
-import { FacetFactoryInput } from "./facet-factory-input"
+import { FacetBody } from "./facet-body"
+import { FacetHeader } from "./facet-header"
 
 type FacetProps = {
   name: string
@@ -23,6 +20,7 @@ type FacetProps = {
 
 export function Facet(props: FacetProps) {
   const [open, setOpen] = useState(true)
+
   const { data: facet, fetchStatus } = useFacet(
     props.name,
     props.searchText,
@@ -71,72 +69,24 @@ export function Facet(props: FacetProps) {
     [selected, unselected]
   )
 
-  const ChevronIcon = open ? ChevronDown : ChevronRight
-
   return (
     <div>
-      <Button
-        variant={"ghost"}
+      <FacetHeader
+        name={props.name}
+        loading={fetchStatus === "fetching"}
+        count={selelectedOptionCount}
+        open={open}
         onClick={() => setOpen((value) => !value)}
-        className={`w-full text-left justify-between text-sm font-normal px-2 ${open ? "hover:bg-transparent" : "text-muted-foreground"}`}
-      >
-        <div className="flex items-center">
-          <ChevronIcon className="mr-2 w-5 h-5" />
-          {props.name}
-          {fetchStatus === "fetching" ? (
-            <LoaderIcon className="w-4 h-4 ml-2 animate-spin text-muted-foreground" />
-          ) : null}
-        </div>
-        {selelectedOptionCount > 0 ? (
-          <div>
-            <Button
-              variant={"outline"}
-              size={"badge"}
-              className="flex text-muted-foreground"
-              onClick={handleReset}
-            >
-              <CircleX className="w-4 h-4" />
-              <div className="px-1.5 text-xs">
-                {selelectedOptionCount as string}
-              </div>
-            </Button>
-          </div>
-        ) : null}
-      </Button>
+        onCountClick={handleReset}
+      />
       {open ? (
-        <div className="my-2">
-          <div className="border border-muted rounded-md overflow-auto max-h-[241px] my-2">
-            {values?.map(({ value, count }) => {
-              return (
-                <div
-                  key={value}
-                  className="flex items-center space-x-3 h-10 px-3 border-b last:border-b-0"
-                >
-                  <FacetFactoryInput
-                    id={value as string}
-                    type={props.type}
-                    name={props.name}
-                    value={value}
-                    filters={props.filters}
-                    onFiltersChange={props.onFiltersChange}
-                  />
-                  <Label
-                    htmlFor={value as string}
-                    className="whitespace-nowrap text-muted-foreground font-normal cursor-pointer flex-grow text-ellipsis w-full overflow-hidden leading-tight"
-                  >
-                    {value}
-                  </Label>
-                  <Badge
-                    variant={"secondary"}
-                    className="font-normal text-muted-foreground cursor-pointer"
-                  >
-                    {count}
-                  </Badge>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        <FacetBody
+          name={props.name}
+          type={props.type}
+          values={values}
+          filters={props.filters}
+          onFiltersChange={props.onFiltersChange}
+        />
       ) : null}
     </div>
   )

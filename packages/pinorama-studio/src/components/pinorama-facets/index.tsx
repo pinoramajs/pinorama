@@ -15,7 +15,7 @@ export function PinoramaFacets(props: PinoramaFacetsProps) {
   const { data: introspection, status, error } = usePinoramaIntrospection()
 
   if (status === "pending") {
-    return <div>Loading...</div>
+    return null
   }
 
   if (status === "error") {
