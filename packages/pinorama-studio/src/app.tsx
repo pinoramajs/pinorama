@@ -1,8 +1,8 @@
 import { Search } from "lucide-react"
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import type { ImperativePanelHandle } from "react-resizable-panels"
 import { PinoramaDocsTable } from "./components/pinorama-docs-table"
 import { PinoramaFacets } from "./components/pinorama-facets"
-import type { SearchFilters } from "./components/pinorama-facets/types"
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import {
@@ -12,13 +12,21 @@ import {
 } from "./components/ui/resizable"
 
 function App() {
-  const [searchText, setSearchText] = useState("")
-  const [filters, setFilters] = useState<SearchFilters>({})
+  const panelRef = useRef<ImperativePanelHandle>()
 
-  const handleResetFilters = () => {
+  const [searchText, setSearchText] = useState("")
+  const [filters, setFilters] = useState({})
+  const [rowSelection, setRowSelection] = useState(null)
+
+  useEffect(() => {
+    const panel = panelRef.current
+    rowSelection ? panel?.expand(20) : panel?.collapse()
+  }, [rowSelection])
+
+  const handleResetFilters = useCallback(() => {
     setFilters({})
     setSearchText("")
-  }
+  }, [])
 
   const hasFilters = Object.keys(filters).length > 0 || searchText.length > 0
 
@@ -31,6 +39,7 @@ function App() {
             {hasFilters ? (
               <Button
                 variant="outline"
+                size={"sm"}
                 className="text-muted-foreground"
                 onClick={handleResetFilters}
               >
@@ -60,7 +69,17 @@ function App() {
               />
             </div>
           </div>
-          <PinoramaDocsTable searchText={searchText} filters={filters} />
+          <PinoramaDocsTable
+            searchText={searchText}
+            filters={filters}
+            onRowSelectionChange={setRowSelection}
+          />
+        </div>
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel ref={panelRef} defaultSize={0} collapsible={true}>
+        <div className="flex flex-col h-screen p-3 overflow-auto">
+          <pre className="text-sm">{JSON.stringify(rowSelection, null, 2)}</pre>
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>

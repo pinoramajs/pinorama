@@ -1,3 +1,4 @@
+import { EmptyState } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { useCallback, useMemo, useState } from "react"
 import { useFacet } from "../hooks/use-facet"
@@ -75,6 +76,9 @@ export function Facet(props: FacetProps) {
     [selected, unselected]
   )
 
+  const hasError = status === "error"
+  const hasNoData = values.length === 0
+
   return (
     <div>
       <FacetHeader
@@ -86,8 +90,10 @@ export function Facet(props: FacetProps) {
         onCountClick={handleReset}
       />
       {open ? (
-        status === "error" ? (
+        hasError ? (
           <ErrorState error={error} />
+        ) : hasNoData ? (
+          <EmptyState message={"No results found"} />
         ) : (
           <FacetBody
             name={props.name}
