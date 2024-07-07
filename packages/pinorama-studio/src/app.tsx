@@ -12,7 +12,7 @@ import {
 } from "./components/ui/resizable"
 
 function App() {
-  const panelRef = useRef<ImperativePanelHandle>()
+  const panelRef = useRef<ImperativePanelHandle | null>(null)
 
   const [searchText, setSearchText] = useState("")
   const [filters, setFilters] = useState({})
