@@ -1,9 +1,14 @@
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import {
+  type RowSelectionState,
+  getCoreRowModel,
+  useReactTable
+} from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { EmptyState } from "../empty-state/empty-state"
 import { ErrorState } from "../error-state/error-state"
-import { Loading } from "../loading/loading"
+import { LoadingState } from "../loading-state/loading-state"
 import type { SearchFilters } from "../pinorama-facets/types"
 import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
@@ -13,11 +18,13 @@ import { useDocs } from "./hooks/use-docs"
 type PinoramaDocsTableProps = {
   searchText: string
   filters: SearchFilters
+  onRowSelectionChange: (row: any) => void
 }
 
 export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
   const columns = useColumns()
   const { data, status, error } = useDocs(props.searchText, props.filters)
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const docs = useMemo(() => data ?? [], [data])
 
@@ -26,8 +33,24 @@ export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
     columns,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
+    enableMultiRowSelection: false,
+    state: { rowSelection },
+    enableRowSelection: true
   })
+
+  // biome-ignore lint: I need to pop up the selected row
+  useEffect(() => {
+    const rowModel = table.getSelectedRowModel()
+    const original = rowModel.rows[0]?.original
+    props.onRowSelectionChange(original)
+  }, [table.getSelectedRowModel()])
+
+  // biome-ignore lint: I need to reset row selection on filters change
+  useEffect(() => {
+    table.setRowSelection({})
+  }, [props.filters, props.searchText])
 
   const { rows } = table.getRowModel()
 
@@ -56,11 +79,11 @@ export function PinoramaDocsTable(props: PinoramaDocsTableProps) {
             <tr>
               <td className="h-10 px-3 text-muted-foreground">
                 {isLoading ? (
-                  <Loading />
+                  <LoadingState />
                 ) : hasError ? (
                   <ErrorState error={error} />
                 ) : hasNoData ? (
-                  "No logs found"
+                  <EmptyState message={"No logs found"} />
                 ) : null}
               </td>
             </tr>

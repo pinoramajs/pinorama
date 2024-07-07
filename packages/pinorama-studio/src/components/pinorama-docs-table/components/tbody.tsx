@@ -3,7 +3,7 @@ import type { Virtualizer } from "@tanstack/react-virtual"
 
 type TableBodyProps = {
   virtualizer: Virtualizer<Element, Element>
-  rows: any
+  rows: Row<unknown>[]
 }
 
 export function TableBody({ virtualizer, rows }: TableBodyProps) {
@@ -13,18 +13,19 @@ export function TableBody({ virtualizer, rows }: TableBodyProps) {
       style={{ height: `${virtualizer.getTotalSize()}px` }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {
-        const doc = rows[virtualItem.index] as Row<unknown>
+        const row = rows[virtualItem.index] as Row<unknown>
+        const cells = row.getVisibleCells()
+
         return (
           <tr
+            key={row.id}
             data-index={virtualItem.index}
-            key={doc.id}
-            className="select-none flex absolute hover:bg-muted/50 odd:bg-muted/20"
-            style={{
-              width: "100%",
-              transform: `translateY(${virtualItem.start}px)`
-            }}
+            onClick={row.getToggleSelectedHandler()}
+            onKeyDown={() => {}}
+            className={`select-none cursor-pointer flex absolute hover:bg-muted/50 odd:bg-muted/20 w-full ${row.getIsSelected() ? "bg-muted/75 hover:bg-muted/75 odd:bg-muted/75" : ""}`}
+            style={{ transform: `translateY(${virtualItem.start}px)` }}
           >
-            {doc.getVisibleCells().map((cell) => {
+            {cells.map((cell) => {
               return (
                 <td
                   key={cell.id}
