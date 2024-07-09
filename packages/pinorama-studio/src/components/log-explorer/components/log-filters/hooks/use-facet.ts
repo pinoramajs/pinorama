@@ -41,7 +41,8 @@ export const useFacet = (
       const response: any = await client?.search(payload)
       return response.facets[name]
     },
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    refetchInterval: 3000
   })
 
   return query

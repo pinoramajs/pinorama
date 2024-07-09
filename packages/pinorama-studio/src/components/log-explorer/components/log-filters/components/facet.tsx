@@ -91,9 +91,9 @@ export function Facet(props: FacetProps) {
       />
       {open ? (
         hasError ? (
-          <ErrorState error={error} />
+          <ErrorState error={error} className="my-2 mx-0" />
         ) : hasNoData ? (
-          <EmptyState message={"No results found"} />
+          <EmptyState message={"No results found"} className="my-2 mx-0" />
         ) : (
           <FacetBody
             name={props.name}

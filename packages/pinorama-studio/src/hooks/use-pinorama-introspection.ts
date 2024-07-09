@@ -11,7 +11,7 @@ export const usePinoramaIntrospection = () => {
       return response
     },
     enabled: !!client,
-    staleTime: Number.POSITIVE_INFINITY
+    refetchInterval: 3000
   })
 
   return query

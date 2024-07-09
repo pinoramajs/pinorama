@@ -1,12 +1,13 @@
-import type { SearchFilters } from "@/components/pinorama-facets/types"
 import { usePinoramaClient } from "@/contexts"
 import { useQuery } from "@tanstack/react-query"
 
-export const useDocs = (searchText?: string, filters?: SearchFilters) => {
+import type { SearchFilters } from "../../log-filters/types"
+
+export const useLogs = (searchText?: string, filters?: SearchFilters) => {
   const client = usePinoramaClient()
 
   const query = useQuery({
-    queryKey: ["docs", searchText, filters],
+    queryKey: ["logs", searchText, filters],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -29,7 +30,8 @@ export const useDocs = (searchText?: string, filters?: SearchFilters) => {
       const response: any = await client?.search(payload)
 
       return response.hits.map((hit: { document: unknown }) => hit.document)
-    }
+    },
+    refetchInterval: 3000
   })
 
   return query
