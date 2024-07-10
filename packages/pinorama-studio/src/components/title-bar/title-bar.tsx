@@ -1,8 +1,14 @@
 import { ConnectionStatus } from "../connection-status/connection-status"
 import { PinoramaLogo } from "../pinorama-logo/pinorama-logo"
 import { ThemeToggle } from "../theme-toggle/theme-toggle"
+import { Button } from "../ui/button"
 
-export function TitleBar() {
+type TitleBarProps = {
+  hasFilters: boolean
+  onResetFilters: () => void
+}
+
+export function TitleBar(props: TitleBarProps) {
   return (
     <div className="border-b bg-muted/20">
       <div className="relative flex items-center justify-between text-sm font-normale h-full px-3">
@@ -17,7 +23,16 @@ export function TitleBar() {
         </div>
 
         {/* Right */}
-        <div className="flex items-center">
+        <div className="flex items-center space-x-1.5">
+          {props.hasFilters && (
+            <Button
+              variant={"outline2"}
+              size={"sm"}
+              onClick={props.onResetFilters}
+            >
+              Reset Filters
+            </Button>
+          )}
           <ThemeToggle />
         </div>
       </div>

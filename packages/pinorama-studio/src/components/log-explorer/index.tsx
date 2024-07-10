@@ -12,12 +12,17 @@ import { LogViewer } from "./components/log-viewer"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import type { SearchFilters } from "./components/log-filters/types"
 
-export function LogExplorer() {
+type LogExplorerProps = {
+  searchText: string
+  filters: SearchFilters
+  onSearchTextChange: (searchText: string) => void
+  onFiltersChange: (filters: SearchFilters) => void
+}
+
+export function LogExplorer(props: LogExplorerProps) {
   const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
   const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
 
-  const [searchText, setSearchText] = useState<string>("")
-  const [filters, setFilters] = useState<SearchFilters>({})
   const [rowSelection, setRowSelection] = useState(null)
 
   const handleFilterPanelToggle = useCallback(() => {
@@ -35,17 +40,17 @@ export function LogExplorer() {
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel ref={filtersPanelRef} defaultSize={20} collapsible>
         <LogFilters
-          searchText={searchText}
-          filters={filters}
-          onFiltersChange={setFilters}
+          searchText={props.searchText}
+          filters={props.filters}
+          onFiltersChange={props.onFiltersChange}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={80} className="bg-muted/20">
         <LogViewer
-          searchText={searchText}
-          filters={filters}
-          onSearchTextChange={setSearchText}
+          searchText={props.searchText}
+          filters={props.filters}
+          onSearchTextChange={props.onSearchTextChange}
           onRowSelectionChange={setRowSelection}
           onFiltersPanelToggle={handleFilterPanelToggle}
         />
