@@ -3,7 +3,7 @@ import { TitleBar } from "./components/title-bar/title-bar"
 
 function App() {
   return (
-    <div className="h-screen w-full grid grid-rows-[40px_1fr]">
+    <div className="h-screen w-full grid grid-rows-[48px_1fr]">
       <TitleBar />
       <LogExplorer />
     </div>

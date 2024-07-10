@@ -14,7 +14,7 @@ type FacetItemProps = {
 
 export function FacetItem(props: FacetItemProps) {
   return (
-    <div className="flex items-center space-x-3 h-[38px] px-3 border-b last:border-b-0">
+    <div className="flex items-center space-x-3 h-[38px] px-3 border-b last:border-b-0 bg-muted/20">
       <FacetFactoryInput
         id={props.value as string}
         type={props.type}

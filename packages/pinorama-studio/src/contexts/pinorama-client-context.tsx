@@ -1,23 +1,25 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import {
-  PinoramaClient,
-  type PinoramaClientOptions
-} from "pinorama-client/browser"
 import { createContext, useContext } from "react"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { PinoramaClient } from "pinorama-client/browser"
+import { useAppConfig } from "./app-config-context"
+
 type PinoramaClientProviderProps = {
-  options: Partial<PinoramaClientOptions>
   children: React.ReactNode
 }
 
 const PinoramaClientContext = createContext<PinoramaClient | null>(null)
 
 export function PinoramaClientProvider({
-  options,
   children
 }: PinoramaClientProviderProps) {
   const queryClient = new QueryClient()
-  const pinoramaClient = new PinoramaClient(options)
+
+  const appConfig = useAppConfig()
+
+  const pinoramaClient = new PinoramaClient({
+    url: appConfig?.config.serverUrl
+  })
 
   return (
     <QueryClientProvider client={queryClient}>
