@@ -11,7 +11,7 @@ type FacetBodyProps = {
 
 export function FacetBody(props: FacetBodyProps) {
   return (
-    <div className="border border-muted box-border rounded-md overflow-auto max-h-[241px] my-2">
+    <div className="border box-border rounded-md overflow-auto max-h-[241px] my-2">
       {props.values?.map(({ value, count }) => {
         return (
           <FacetItem
