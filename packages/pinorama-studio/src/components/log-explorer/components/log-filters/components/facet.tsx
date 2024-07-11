@@ -44,8 +44,8 @@ export function Facet(props: FacetProps) {
     [props.onFiltersChange, props.name, props.filters]
   )
 
-  const selected: FacetValue[] = useMemo(() => {
-    return operations
+  const selectedValuesNotInDataSource = useMemo(() => {
+    const selectedItems: FacetValue[] = operations
       .values(props.filters[props.name] as FacetFilter)
       .map((value: string | number) => {
         return {
@@ -53,31 +53,30 @@ export function Facet(props: FacetProps) {
           count: facet?.values[value] || 0
         }
       })
-  }, [facet?.values, props.filters, props.name, operations.values])
 
-  const unselected: FacetValue[] = useMemo(() => {
-    return Object.entries(facet?.values || {})
-      .map(([value, count]) => {
+    return selectedItems.filter(
+      (item) => !(item.value in (facet?.values || {}))
+    )
+  }, [props.filters, props.name, facet?.values, operations])
+
+  const allValues = useMemo(() => {
+    const currentValues = Object.entries(facet?.values || {}).map(
+      ([value, count]) => {
         // If the value is a number of type string,
-        // convert it to a number.
+        // we need to parse it to a number.
         let parsedValue: string | number = value
         if (props.type === "enum" && Number.isFinite(+value)) {
           parsedValue = Number(value)
         }
         return { value: parsedValue, count }
-      })
-      .filter(
-        ({ value }) => !selected.some((selected) => selected.value === value)
-      )
-  }, [facet?.values, props.type, selected])
+      }
+    )
 
-  const values = useMemo(
-    () => selected.concat(unselected),
-    [selected, unselected]
-  )
+    return [...selectedValuesNotInDataSource, ...currentValues]
+  }, [selectedValuesNotInDataSource, facet?.values, props.type])
 
   const hasError = status === "error"
-  const hasNoData = values.length === 0
+  const hasNoData = allValues.length === 0
 
   return (
     <div>
@@ -98,7 +97,7 @@ export function Facet(props: FacetProps) {
           <FacetBody
             name={props.name}
             type={props.type}
-            values={values}
+            values={allValues}
             filters={props.filters}
             onFiltersChange={props.onFiltersChange}
           />
