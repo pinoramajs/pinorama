@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 
 export type AppConfig = {
-  serverUrl: string
+  connectionStatus: "connected" | "disconnected"
+  connectionUrl?: string | null
 }
 
 type AppConfigContextType = {
@@ -9,32 +10,36 @@ type AppConfigContextType = {
   setConfig: (config: AppConfig) => void
 }
 
-type AppConfigProviderProps = {
-  children: React.ReactNode
-}
-
 const DEFAULT_CONFIG: AppConfig = {
-  serverUrl: "http://localhost:6200"
+  connectionStatus: "disconnected",
+  connectionUrl: "http://localhost:6200"
 }
 
-const getQueryParams = (): Partial<AppConfig> => {
+const getAppConfigFromQueryParams = () => {
+  const appConfig: Partial<AppConfig> = {}
   const params = new URLSearchParams(window.location.search)
-  return {
-    serverUrl: params.get("url") || DEFAULT_CONFIG.serverUrl
+
+  const connectionUrl = params.get("connectionUrl")
+  if (connectionUrl) {
+    appConfig.connectionUrl = connectionUrl
   }
+
+  return appConfig
 }
 
 const AppConfigContext = createContext<AppConfigContextType | null>(null)
 
-export function AppConfigProvider(props: AppConfigProviderProps) {
-  const queryConfig = getQueryParams()
-
-  const [config, setConfig] = useState<AppConfig>({
-    serverUrl: queryConfig.serverUrl || DEFAULT_CONFIG.serverUrl
-  })
+export function AppConfigProvider(props: { children: React.ReactNode }) {
+  const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG)
 
   useEffect(() => {
-    const queryConfig = getQueryParams()
+    const queryConfig = getAppConfigFromQueryParams()
+
+    const autoConnect = !!queryConfig.connectionUrl
+    if (autoConnect) {
+      queryConfig.connectionStatus = "connected"
+    }
+
     setConfig((prevConfig) => ({ ...prevConfig, ...queryConfig }))
   }, [])
 

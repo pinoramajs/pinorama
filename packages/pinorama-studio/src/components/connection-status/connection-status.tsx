@@ -18,7 +18,7 @@ import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 const formSchema = z.object({
-  serverUrl: z.string().url("Invalid URL")
+  connectionUrl: z.string().url("Invalid URL")
 })
 
 export function ConnectionStatus() {
@@ -30,14 +30,14 @@ export function ConnectionStatus() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      serverUrl: appConfig?.config.serverUrl
+      connectionUrl: appConfig?.config.connectionUrl || ""
     }
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     appConfig?.setConfig({
       ...appConfig.config,
-      serverUrl: values.serverUrl
+      connectionUrl: values.connectionUrl
     })
 
     setOpen(false)
@@ -46,7 +46,13 @@ export function ConnectionStatus() {
   let statusColor = ""
   let statusText = ""
 
+  const connectionStatus = appConfig?.config.connectionStatus
+
   switch (true) {
+    case connectionStatus === "disconnected":
+      statusColor = "bg-gray-500"
+      statusText = "Disconnected"
+      break
     case status === "pending" && fetchStatus === "fetching":
       statusColor = "bg-orange-500"
       statusText = "Connecting..."
@@ -59,6 +65,10 @@ export function ConnectionStatus() {
       statusColor = "bg-red-500"
       statusText = "Connection failed"
       break
+    default:
+      statusColor = "bg-gray-500"
+      statusText = "Unknown"
+      break
   }
 
   return (
@@ -68,7 +78,7 @@ export function ConnectionStatus() {
           <div className={`w-2 h-2 rounded-full ${statusColor}`} />
           <span className="">{statusText}</span>
           <span className="text-muted-foreground">
-            {appConfig?.config.serverUrl ?? "Unknown"}
+            {appConfig?.config.connectionUrl ?? "Unknown"}
           </span>
         </Button>
       </PopoverTrigger>
@@ -77,10 +87,10 @@ export function ConnectionStatus() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
-              name="serverUrl"
+              name="connectionUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pinorama Server URL</FormLabel>
+                  <FormLabel>Server URL</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -99,7 +109,7 @@ export function ConnectionStatus() {
                 Reset
               </Button>
               <Button type="submit" className="w-full">
-                Connect
+                Save
               </Button>
             </div>
           </form>

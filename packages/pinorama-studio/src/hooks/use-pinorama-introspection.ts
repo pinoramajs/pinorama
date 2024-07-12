@@ -10,7 +10,6 @@ export const usePinoramaIntrospection = () => {
       const response: any = await client?.introspection()
       return response
     },
-    enabled: !!client,
     refetchInterval: 3000
   })
 

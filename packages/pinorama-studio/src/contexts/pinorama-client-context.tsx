@@ -13,13 +13,22 @@ const PinoramaClientContext = createContext<PinoramaClient | null>(null)
 export function PinoramaClientProvider({
   children
 }: PinoramaClientProviderProps) {
-  const queryClient = new QueryClient()
-
   const appConfig = useAppConfig()
 
-  const pinoramaClient = new PinoramaClient({
-    url: appConfig?.config.serverUrl
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        enabled: appConfig?.config.connectionStatus === "connected"
+      }
+    }
   })
+
+  let pinoramaClient: PinoramaClient | null = null
+  if (appConfig?.config.connectionUrl) {
+    pinoramaClient = new PinoramaClient({
+      url: appConfig?.config.connectionUrl
+    })
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
