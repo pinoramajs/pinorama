@@ -105,19 +105,19 @@ export function LogViewer(props: LogViewerProps) {
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
-      <div
-        ref={tableContainerRef}
-        className="h-full overflow-auto relative w-full"
-      >
-        <LogViewerHeader
-          table={table}
-          searchText={props.searchText}
-          filters={props.filters}
-          filtersPanelCollapsed={props.filtersPanelCollapsed}
-          onSearchTextChange={props.onSearchTextChange}
-          onFiltersPanelToggle={props.onFiltersPanelToggle}
-        />
+      <LogViewerHeader
+        table={table}
+        searchText={props.searchText}
+        filters={props.filters}
+        filtersPanelCollapsed={props.filtersPanelCollapsed}
+        onSearchTextChange={props.onSearchTextChange}
+        onFiltersPanelToggle={props.onFiltersPanelToggle}
+      />
 
+      <div
+        className="h-full overflow-auto relative w-full"
+        ref={tableContainerRef}
+      >
         <table className="text-sm w-full">
           <TableHead table={table} />
           {isLoading || hasNoData || hasError ? (
