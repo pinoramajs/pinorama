@@ -1,4 +1,5 @@
 import { ConnectionStatus } from "../connection-status/connection-status"
+import { ConnectionToggle } from "../connection-toggle/connection-toggle"
 import { PinoramaLogo } from "../pinorama-logo/pinorama-logo"
 import { ThemeToggle } from "../theme-toggle/theme-toggle"
 import { Button } from "../ui/button"
@@ -33,6 +34,7 @@ export function TitleBar(props: TitleBarProps) {
               Reset Filters
             </Button>
           )}
+          <ConnectionToggle />
           <ThemeToggle />
         </div>
       </div>

@@ -11,7 +11,6 @@ export const usePinoramaStyles = () => {
       const response: any = await client?.styles()
       return response
     },
-    enabled: !!client,
     staleTime: Number.POSITIVE_INFINITY
   })
 
