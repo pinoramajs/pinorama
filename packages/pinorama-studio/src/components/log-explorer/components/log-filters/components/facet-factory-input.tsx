@@ -31,6 +31,7 @@ export function FacetFactoryInput(props: {
 
   return (
     <Checkbox
+      aria-label={props.value as string}
       id={props.id}
       className="hover:bg-muted border-muted-foreground"
       checked={checked}
