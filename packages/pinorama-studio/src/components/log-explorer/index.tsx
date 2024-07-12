@@ -19,44 +19,79 @@ type LogExplorerProps = {
   onFiltersChange: (filters: SearchFilters) => void
 }
 
+const PANEL_SIZES = {
+  filters: { base: 20, min: 10 },
+  details: { base: 20, min: 10 }
+}
+
 export function LogExplorer(props: LogExplorerProps) {
+  const [rowSelection, setRowSelection] = useState(null)
+
   const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
   const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
 
-  const [rowSelection, setRowSelection] = useState(null)
+  const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
+  const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
 
-  const handleFilterPanelToggle = useCallback(() => {
+  const handleFiltersPanelToggle = useCallback(() => {
     const panel = filtersPanelRef.current
-    const method = panel?.isCollapsed() ? "expand" : "collapse"
-    panel?.[method]()
+
+    if (panel?.isCollapsed()) {
+      panel?.expand(PANEL_SIZES.filters.base)
+    } else {
+      panel?.collapse()
+    }
   }, [])
 
   useEffect(() => {
     const panel = detailsPanelRef.current
-    rowSelection ? panel?.expand(20) : panel?.collapse()
+    rowSelection ? panel?.expand(PANEL_SIZES.details.base) : panel?.collapse()
   }, [rowSelection])
 
   return (
     <ResizablePanelGroup direction="horizontal">
-      <ResizablePanel ref={filtersPanelRef} defaultSize={20} collapsible>
+      <ResizablePanel
+        ref={filtersPanelRef}
+        collapsible
+        order={1}
+        minSize={PANEL_SIZES.filters.min}
+        defaultSize={0}
+        onCollapse={() => setFiltersPanelCollapsed(true)}
+        onExpand={() => setFiltersPanelCollapsed(false)}
+      >
         <LogFilters
           searchText={props.searchText}
           filters={props.filters}
           onFiltersChange={props.onFiltersChange}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={80} className="bg-muted/20">
+      <ResizableHandle
+        withHandle
+        className={filtersPanelCollapsed ? "hidden" : ""}
+      />
+      <ResizablePanel order={2} className="bg-muted/20">
         <LogViewer
           searchText={props.searchText}
           filters={props.filters}
           onSearchTextChange={props.onSearchTextChange}
           onRowSelectionChange={setRowSelection}
-          onFiltersPanelToggle={handleFilterPanelToggle}
+          filtersPanelCollapsed={filtersPanelCollapsed}
+          onFiltersPanelToggle={handleFiltersPanelToggle}
         />
       </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel ref={detailsPanelRef} defaultSize={0} collapsible>
+      <ResizableHandle
+        withHandle
+        className={detailsPanelCollapsed ? "hidden" : ""}
+      />
+      <ResizablePanel
+        ref={detailsPanelRef}
+        collapsible
+        order={3}
+        minSize={PANEL_SIZES.details.min}
+        defaultSize={0}
+        onCollapse={() => setDetailsPanelCollapsed(true)}
+        onExpand={() => setDetailsPanelCollapsed(false)}
+      >
         <LogDetails data={rowSelection} />
       </ResizablePanel>
     </ResizablePanelGroup>
