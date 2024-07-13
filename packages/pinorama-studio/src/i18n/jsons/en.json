@@ -9,5 +9,11 @@
   "actions.connect": "Connect",
   "actions.disconnect": "Disconnect",
   "labels.error": "Error:",
-  "labels.loading": "Loading..."
+  "labels.loading": "Loading...",
+  "labels.searchLogs": "Search logs...",
+  "filters.show": "Show filters",
+  "filters.hide": "Hide filters",
+  "columns": "Columns",
+  "columns.toggle": "Toggle Columns",
+  "columns.reset": "Reset Columns"
 }
