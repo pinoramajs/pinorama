@@ -4,6 +4,7 @@ import { useAppConfig } from "@/contexts"
 import { usePinoramaIntrospection } from "@/hooks"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { FormattedMessage } from "react-intl"
 import { z } from "zod"
 import { Button } from "../ui/button"
 import {
@@ -16,7 +17,6 @@ import {
 } from "../ui/form"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { FormattedMessage } from "react-intl"
 
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
@@ -113,10 +113,10 @@ export function ConnectionStatus() {
                 onClick={() => form.reset()}
                 className="w-full"
               >
-                <FormattedMessage id='actions.reset' />
+                <FormattedMessage id="actions.reset" />
               </Button>
               <Button type="submit" className="w-full">
-                <FormattedMessage id='actions.save' />
+                <FormattedMessage id="actions.save" />
               </Button>
             </div>
           </form>
