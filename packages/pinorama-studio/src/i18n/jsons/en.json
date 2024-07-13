@@ -13,8 +13,9 @@
   "labels.error": "Error:",
   "labels.loading": "Loading...",
   "labels.searchLogs": "Search logs...",
-  "filters.show": "Show filters",
-  "filters.hide": "Hide filters",
+  "filters.show": "Show Filters",
+  "filters.hide": "Hide Filters",
+  "filters.reset": "Reset Filters",
   "columns": "Columns",
   "columns.toggle": "Toggle Columns",
   "columns.reset": "Reset Columns"

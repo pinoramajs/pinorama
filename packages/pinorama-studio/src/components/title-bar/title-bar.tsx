@@ -1,3 +1,4 @@
+import { FormattedMessage } from "react-intl"
 import { ConnectionStatus } from "../connection-status/connection-status"
 import { ConnectionToggle } from "../connection-toggle/connection-toggle"
 import { PinoramaLogo } from "../pinorama-logo/pinorama-logo"
@@ -31,7 +32,7 @@ export function TitleBar(props: TitleBarProps) {
               size={"sm"}
               onClick={props.onResetFilters}
             >
-              Reset Filters
+              <FormattedMessage id="filters.reset" />
             </Button>
           )}
           <ConnectionToggle />
