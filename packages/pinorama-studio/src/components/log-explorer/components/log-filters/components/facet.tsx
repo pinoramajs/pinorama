@@ -1,6 +1,7 @@
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { useCallback, useMemo, useState } from "react"
+import { useIntl } from "react-intl"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
 import type {
@@ -21,6 +22,8 @@ type FacetProps = {
 }
 
 export function Facet(props: FacetProps) {
+  const intl = useIntl()
+
   const [open, setOpen] = useState(true)
 
   const {
@@ -93,7 +96,7 @@ export function Facet(props: FacetProps) {
           <ErrorState error={error} className="my-2 mx-0" />
         ) : hasNoData ? (
           <EmptyStateInline
-            message={"No results found"}
+            message={intl.formatMessage({ id: "labels.noResultFound" })}
             className="my-2 mx-0"
           />
         ) : (

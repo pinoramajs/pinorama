@@ -11,12 +11,17 @@
   "actions.connect": "Connetti",
   "actions.disconnect": "Disconnetti",
   "labels.error": "Errore:",
-  "labels.loading": "Caricamento in corso...",
+  "labels.loading": "Caricamento...",
   "labels.searchLogs": "Cerca nei log...",
-  "filters.show": "Mostra filtri",
-  "filters.hide": "Nascondi filtri",
-  "filters.reset": "Reimposta filtri",
+  "labels.noLogsFound": "Nessun log trovato. Controlla i filtri.",
+  "labels.noResultFound": "Nessun risultato trovato.",
+  "filters.show": "Mostra Filtri",
+  "filters.hide": "Nascondi Filtri",
+  "filters.clear": "Cancella Filtri",
   "columns": "Colonne",
-  "columns.toggle": "Attiva/Disattiva colonne",
-  "columns.reset": "Reimposta colonne"
+  "columns.toggle": "Visibilità Colonne",
+  "columns.reset": "Reimposta Colonne",
+  "state.notConnected.title": "Non connesso",
+  "state.notConnected.message": "Attualmente sei disconnesso. Connetti per visualizzare i log.",
+  "state.notConnected.action": "Connetti"
 }

@@ -13,10 +13,15 @@
   "labels.error": "Error:",
   "labels.loading": "Loading...",
   "labels.searchLogs": "Search logs...",
+  "labels.noLogsFound": "No logs found. Please check filters.",
+  "labels.noResultFound": "No result found.",
   "filters.show": "Show Filters",
   "filters.hide": "Hide Filters",
-  "filters.reset": "Reset Filters",
+  "filters.clear": "Clear Filters",
   "columns": "Columns",
-  "columns.toggle": "Toggle Columns",
-  "columns.reset": "Reset Columns"
+  "columns.toggle": "Columns Visibility",
+  "columns.reset": "Reset Columns",
+  "state.notConnected.title": "Not connected",
+  "state.notConnected.message": "You are currently disconnected. Please connect to view logs.",
+  "state.notConnected.action": "Connect"
 }

@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
-import {
-  EmptyStateBlock,
-  EmptyStateInline
-} from "@/components/empty-state/empty-state"
+import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
 import { usePinoramaIntrospection } from "@/hooks"
@@ -14,7 +11,7 @@ import {
   useReactTable
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { SearchX } from "lucide-react"
+import { useIntl } from "react-intl"
 import type { SearchFilters } from "../log-filters/types"
 import { LogViewerHeader } from "./components/header"
 import { TableBody } from "./components/tbody"
@@ -33,6 +30,8 @@ type LogViewerProps = {
 }
 
 export function LogViewer(props: LogViewerProps) {
+  const intl = useIntl()
+
   const {
     data: introspection,
     status: introspectionStatus,
@@ -136,7 +135,7 @@ export function LogViewer(props: LogViewerProps) {
                     <ErrorState error={error} />
                   ) : hasNoData ? (
                     <EmptyStateInline
-                      message={"No logs found. Please check filters."}
+                      message={intl.formatMessage({ id: "labels.noLogsFound" })}
                     />
                   ) : null}
                 </td>
