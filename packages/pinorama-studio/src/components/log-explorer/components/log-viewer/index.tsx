@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
-import { EmptyState } from "@/components/empty-state/empty-state"
+import {
+  EmptyStateBlock,
+  EmptyStateInline
+} from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
 import { usePinoramaIntrospection } from "@/hooks"
@@ -11,6 +14,7 @@ import {
   useReactTable
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { SearchX } from "lucide-react"
 import type { SearchFilters } from "../log-filters/types"
 import { LogViewerHeader } from "./components/header"
 import { TableBody } from "./components/tbody"
@@ -24,6 +28,8 @@ type LogViewerProps = {
   onSearchTextChange: (searchText: string) => void
   onRowSelectionChange: (row: any) => void
   onFiltersPanelToggle: () => void
+  hasFilters: boolean
+  onClearFilters: () => void
 }
 
 export function LogViewer(props: LogViewerProps) {
@@ -121,15 +127,17 @@ export function LogViewer(props: LogViewerProps) {
         <table className="text-sm w-full">
           <TableHead table={table} />
           {isLoading || hasNoData || hasError ? (
-            <tbody>
+            <tbody className="relative">
               <tr>
-                <td className="h-10 text-muted-foreground">
+                <td className="text-muted-foreground">
                   {isLoading ? (
                     <LoadingState />
                   ) : hasError ? (
                     <ErrorState error={error} />
                   ) : hasNoData ? (
-                    <EmptyState message={"No logs found"} />
+                    <EmptyStateInline
+                      message={"No logs found. Please check filters."}
+                    />
                   ) : null}
                 </td>
               </tr>

@@ -17,6 +17,8 @@ type LogExplorerProps = {
   filters: SearchFilters
   onSearchTextChange: (searchText: string) => void
   onFiltersChange: (filters: SearchFilters) => void
+  hasFilters: boolean
+  onClearFilters: () => void
 }
 
 const PANEL_SIZES = {
@@ -77,6 +79,8 @@ export function LogExplorer(props: LogExplorerProps) {
           onRowSelectionChange={setRowSelection}
           filtersPanelCollapsed={filtersPanelCollapsed}
           onFiltersPanelToggle={handleFiltersPanelToggle}
+          hasFilters={props.hasFilters}
+          onClearFilters={props.onClearFilters}
         />
       </ResizablePanel>
       <ResizableHandle
