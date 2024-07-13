@@ -1,0 +1,22 @@
+{
+  "app.name": "Pinorama",
+  "app.version": "v{version}",
+  "connectionStatus.disconnected": "Disconnesso",
+  "connectionStatus.connecting": "Connessione in corso...",
+  "connectionStatus.connected": "Connesso",
+  "connectionStatus.connectionFailed": "Connessione fallita",
+  "connectionStatus.unknown": "Sconosciuto",
+  "actions.reset": "Reimposta",
+  "actions.save": "Salva",
+  "actions.connect": "Connetti",
+  "actions.disconnect": "Disconnetti",
+  "labels.error": "Errore:",
+  "labels.loading": "Caricamento in corso...",
+  "labels.searchLogs": "Cerca nei log...",
+  "filters.show": "Mostra filtri",
+  "filters.hide": "Nascondi filtri",
+  "filters.reset": "Reimposta filtri",
+  "columns": "Colonne",
+  "columns.toggle": "Attiva/Disattiva colonne",
+  "columns.reset": "Reimposta colonne"
+}
