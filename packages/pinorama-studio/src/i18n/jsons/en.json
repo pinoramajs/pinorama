@@ -8,5 +8,6 @@
   "actions.save": "Save",
   "actions.connect": "Connect",
   "actions.disconnect": "Disconnect",
-  "labels.error": "Error:"
+  "labels.error": "Error:",
+  "labels.loading": "Loading..."
 }
