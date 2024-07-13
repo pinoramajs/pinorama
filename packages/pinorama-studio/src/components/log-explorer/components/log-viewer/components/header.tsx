@@ -63,7 +63,7 @@ function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <Button
           aria-label={label}
           variant="outline2"

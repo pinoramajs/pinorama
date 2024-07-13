@@ -30,8 +30,8 @@ export const useLogs = (searchText?: string, filters?: SearchFilters) => {
       const response: any = await client?.search(payload)
 
       return response.hits.map((hit: { document: unknown }) => hit.document)
-    },
-    refetchInterval: 3000
+    }
+    // refetchInterval: 3000
   })
 
   return query

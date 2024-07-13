@@ -50,11 +50,6 @@ export function AppConfigProvider(props: { children: React.ReactNode }) {
   )
 }
 
-export const useIsConnected = () => {
-  const appConfig = useAppConfig()
-  return appConfig?.config.connectionStatus === "connected"
-}
-
 export const useAppConfig = () => {
   const context = useContext(AppConfigContext)
 

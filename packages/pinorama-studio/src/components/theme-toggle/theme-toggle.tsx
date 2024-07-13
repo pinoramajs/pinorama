@@ -20,10 +20,10 @@ export function ThemeToggle() {
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <Button
           aria-label={ariaLabel}
-          variant={"outline2"}
+          variant={"secondary"}
           size={"sm"}
           onClick={handleClick}
         >

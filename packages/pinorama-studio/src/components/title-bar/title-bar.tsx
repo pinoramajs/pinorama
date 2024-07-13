@@ -7,7 +7,7 @@ import { Button } from "../ui/button"
 
 type TitleBarProps = {
   hasFilters: boolean
-  onResetFilters: () => void
+  onClearFilters: () => void
 }
 
 export function TitleBar(props: TitleBarProps) {
@@ -28,9 +28,9 @@ export function TitleBar(props: TitleBarProps) {
         <div className="flex items-center space-x-1.5">
           {props.hasFilters && (
             <Button
-              variant={"outline2"}
+              variant={"secondary"}
               size={"sm"}
-              onClick={props.onResetFilters}
+              onClick={props.onClearFilters}
             >
               <FormattedMessage id="filters.reset" />
             </Button>

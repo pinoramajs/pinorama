@@ -1,4 +1,4 @@
-import { EmptyState } from "@/components/empty-state/empty-state"
+import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { useCallback, useMemo, useState } from "react"
 import { useFacet } from "../hooks/use-facet"
@@ -92,7 +92,10 @@ export function Facet(props: FacetProps) {
         hasError ? (
           <ErrorState error={error} className="my-2 mx-0" />
         ) : hasNoData ? (
-          <EmptyState message={"No results found"} className="my-2 mx-0" />
+          <EmptyStateInline
+            message={"No results found"}
+            className="my-2 mx-0"
+          />
         ) : (
           <FacetBody
             name={props.name}
