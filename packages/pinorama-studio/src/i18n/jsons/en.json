@@ -7,5 +7,6 @@
   "actions.reset": "Reset",
   "actions.save": "Save",
   "actions.connect": "Connect",
-  "actions.disconnect": "Disconnect"
+  "actions.disconnect": "Disconnect",
+  "labels.error": "Error:"
 }
