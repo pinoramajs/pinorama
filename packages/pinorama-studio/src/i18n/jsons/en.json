@@ -5,5 +5,7 @@
   "connectionStatus.connectionFailed": "Connection failed",
   "connectionStatus.unknown": "Unknown",
   "actions.reset": "Reset",
-  "actions.save": "Save"
+  "actions.save": "Save",
+  "actions.connect": "Connect",
+  "actions.disconnect": "Disconnect"
 }
