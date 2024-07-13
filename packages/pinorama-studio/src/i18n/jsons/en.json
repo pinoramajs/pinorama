@@ -1,0 +1,9 @@
+{
+    "connectionStatus.disconnected": "Disconnected",
+    "connectionStatus.connecting": "Connecting...",
+    "connectionStatus.connected": "Connected",
+    "connectionStatus.connectionFailed": "Connection failed",
+    "connectionStatus.unknown": "Unknown",
+    "actions.reset": "Reset",
+    "actions.save": "Save"
+}
