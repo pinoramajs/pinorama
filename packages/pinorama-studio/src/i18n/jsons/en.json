@@ -1,4 +1,6 @@
 {
+  "app.name": "Pinorama ",
+  "app.version": "v{version}",
   "connectionStatus.disconnected": "Disconnected",
   "connectionStatus.connecting": "Connecting...",
   "connectionStatus.connected": "Connected",
