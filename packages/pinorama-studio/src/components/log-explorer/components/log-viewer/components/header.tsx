@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/tooltip"
 import type { Table } from "@tanstack/react-table"
 import { EllipsisVertical, Search, SlidersVertical } from "lucide-react"
+import { FormattedMessage, useIntl } from "react-intl"
 import type { SearchFilters } from "../../log-filters/types"
 
 type LogViewerHeaderProps = {
@@ -29,6 +30,8 @@ type LogViewerHeaderProps = {
 }
 
 export function LogViewerHeader(props: LogViewerHeaderProps) {
+  const intl = useIntl()
+
   return (
     <div className="flex items-center p-3 pb-1 bg-background space-x-1.5">
       <ToggleFiltersButton
@@ -39,7 +42,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
         <Search className="h-4 w-4 absolute left-3 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Search logs..."
+          placeholder={intl.formatMessage({ id: "labels.searchLogs" })}
           className="pl-9"
           value={props.searchText}
           onChange={(e) => props.onSearchTextChange(e.target.value)}
@@ -56,7 +59,7 @@ type ToggleFiltersButtonProps = {
 }
 
 function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
-  const label = props.isPanelCollapsed ? "Show Filters" : "Hide Filters"
+  const label = props.isPanelCollapsed ? "show" : "hide"
 
   return (
     <Tooltip>
@@ -71,7 +74,9 @@ function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
         </Button>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent>{label}</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage id={`filters.${label}`} />
+        </TooltipContent>
       </TooltipPortal>
     </Tooltip>
   )
@@ -92,12 +97,16 @@ function ColumnsButton(props: ColumnsVisibilityButtonProps) {
             </Button>
           </TooltipTrigger>
           <TooltipPortal>
-            <TooltipContent>Columns</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="columns" />
+            </TooltipContent>
           </TooltipPortal>
         </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
-        <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <FormattedMessage id="columns.toggle" />
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {props.table
           .getAllColumns()
@@ -122,7 +131,7 @@ function ColumnsButton(props: ColumnsVisibilityButtonProps) {
           })}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => props.table.resetColumnVisibility()}>
-          Reset Columns
+          <FormattedMessage id="columns.reset" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

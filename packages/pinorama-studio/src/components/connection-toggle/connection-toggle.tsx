@@ -1,4 +1,5 @@
 import { useAppConfig } from "@/contexts"
+import { FormattedMessage } from "react-intl"
 import { Button } from "../ui/button"
 
 export function ConnectionToggle() {
@@ -16,10 +17,12 @@ export function ConnectionToggle() {
   return (
     <Button
       variant={`${!isConnected ? "default" : "outline2"}`}
-      size={"sm"}
+      size="sm"
       onClick={handleClick}
     >
-      {isConnected ? "Disconnect" : "Connect"}
+      <FormattedMessage
+        id={`actions.${isConnected ? "disconnect" : "connect"}`}
+      />
     </Button>
   )
 }
