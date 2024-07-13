@@ -32,7 +32,7 @@ export function TitleBar(props: TitleBarProps) {
               size={"sm"}
               onClick={props.onClearFilters}
             >
-              <FormattedMessage id="filters.reset" />
+              <FormattedMessage id="filters.clear" />
             </Button>
           )}
           <ConnectionToggle />

@@ -1,5 +1,6 @@
 import { Unplug } from "lucide-react"
 import { useState } from "react"
+import { useIntl } from "react-intl"
 import { useConnectionToggle } from "./components/connection-toggle/connection-toggle"
 import { EmptyStateBlock } from "./components/empty-state/empty-state"
 import { LogExplorer } from "./components/log-explorer"
@@ -7,6 +8,8 @@ import type { SearchFilters } from "./components/log-explorer/components/log-fil
 import { TitleBar } from "./components/title-bar/title-bar"
 
 function App() {
+  const intl = useIntl()
+
   const { isConnected, toggleConnection } = useConnectionToggle()
 
   const [searchText, setSearchText] = useState<string>("")
@@ -37,11 +40,11 @@ function App() {
       ) : (
         <EmptyStateBlock
           icon={Unplug}
-          title="Not Connected"
-          message="You are currently disconnected. Please connect to view logs."
+          title={intl.formatMessage({ id: "state.notConnected.title" })}
+          message={intl.formatMessage({ id: "state.notConnected.message" })}
           buttons={[
             {
-              text: "Connect",
+              text: intl.formatMessage({ id: "state.notConnected.action" }),
               onClick: toggleConnection
             }
           ]}
