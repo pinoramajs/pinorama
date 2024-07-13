@@ -16,6 +16,7 @@ import {
 } from "../ui/form"
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { FormattedMessage } from "react-intl"
 
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
@@ -51,23 +52,23 @@ export function ConnectionStatus() {
   switch (true) {
     case connectionStatus === "disconnected":
       statusColor = "bg-gray-500"
-      statusText = "Disconnected"
+      statusText = "disconnected"
       break
     case status === "pending" && fetchStatus === "fetching":
       statusColor = "bg-orange-500"
-      statusText = "Connecting..."
+      statusText = "connecting"
       break
     case status === "success":
       statusColor = "bg-green-500"
-      statusText = "Connected"
+      statusText = "connected"
       break
     case status === "error":
       statusColor = "bg-red-500"
-      statusText = "Connection failed"
+      statusText = "connectionFailed"
       break
     default:
       statusColor = "bg-gray-500"
-      statusText = "Unknown"
+      statusText = "unknown"
       break
   }
 
@@ -80,7 +81,9 @@ export function ConnectionStatus() {
           className="flex h-8 items-center space-x-1.5"
         >
           <div className={`w-2 h-2 rounded-full ${statusColor}`} />
-          <span className="">{statusText}</span>
+          <span className="">
+            <FormattedMessage id={`connectionStatus.${statusText}`} />
+          </span>
           <span className="text-muted-foreground">
             {appConfig?.config.connectionUrl ?? "Unknown"}
           </span>
@@ -110,10 +113,10 @@ export function ConnectionStatus() {
                 onClick={() => form.reset()}
                 className="w-full"
               >
-                Reset
+                <FormattedMessage id='actions.reset' />
               </Button>
               <Button type="submit" className="w-full">
-                Save
+                <FormattedMessage id='actions.save' />
               </Button>
             </div>
           </form>
