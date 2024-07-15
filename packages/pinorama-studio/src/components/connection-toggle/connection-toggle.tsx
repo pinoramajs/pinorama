@@ -6,7 +6,7 @@ export function ConnectionToggle() {
   const { isConnected, toggleConnection } = useConnectionToggle()
 
   return (
-    <Button variant={"secondary"} size={"sm"} onClick={toggleConnection}>
+    <Button variant="secondary" size="sm" onClick={toggleConnection}>
       <FormattedMessage
         id={`actions.${isConnected ? "disconnect" : "connect"}`}
       />
