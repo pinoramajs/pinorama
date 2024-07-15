@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label"
 import type { OramaPropType, SearchFilters } from "../types"
 import { FacetFactoryInput } from "./facet-factory-input"
 
-import style from './facet-item.module.css';
+import style from "./facet-item.module.css"
 
 type FacetItemProps = {
   name: string
@@ -25,10 +25,7 @@ export function FacetItem(props: FacetItemProps) {
         filters={props.filters}
         onFiltersChange={props.onFiltersChange}
       />
-      <Label
-        htmlFor={props.value as string}
-        className={style.label}
-      >
+      <Label htmlFor={props.value as string} className={style.label}>
         {props.value}
       </Label>
       <Badge variant="secondary" className={style.badge}>

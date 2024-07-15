@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import type React from "react"
 
-import style from './facet-header.module.css'
+import style from "./facet-header.module.css"
 
 type FacetHeaderProps = {
   name: string
@@ -24,9 +24,7 @@ export function FacetHeader(props: FacetHeaderProps) {
       <div className={style.loaderContainer}>
         <ChevronIcon className={style.chevron} />
         {props.name}
-        {props.loading ? (
-          <LoaderIcon className={style.loaderIcon} />
-        ) : null}
+        {props.loading ? <LoaderIcon className={style.loaderIcon} /> : null}
       </div>
       {props.count > 0 ? (
         <div>

@@ -19,7 +19,7 @@ import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 import { cn } from "@/lib/utils"
-import style from './connection-status.module.css'
+import style from "./connection-status.module.css"
 
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
@@ -78,11 +78,7 @@ export function ConnectionStatus() {
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={style.popoverTrigger}
-        >
+        <Button variant="ghost" size="sm" className={style.popoverTrigger}>
           <div className={cn(style.statusIndicator, statusColor)} />
           <span className="">
             <FormattedMessage id={`connectionStatus.${statusText}`} />

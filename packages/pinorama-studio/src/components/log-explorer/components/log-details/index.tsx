@@ -1,4 +1,4 @@
-import style from './log-details.module.css';
+import style from "./log-details.module.css"
 
 type LogDetailsProps = {
   data: any

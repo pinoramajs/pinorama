@@ -1,7 +1,7 @@
 import type { FacetValue, OramaPropType, SearchFilters } from "../types"
 import { FacetItem } from "./facet-item"
 
-import style from './facet-body.module.css'
+import style from "./facet-body.module.css"
 
 type FacetBodyProps = {
   name: string

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import type { ElementType } from "react"
 import { Button } from "../ui/button"
 
-import style from './empty-state.module.css';
+import style from "./empty-state.module.css"
 
 type EmptyStateProps = {
   message: string

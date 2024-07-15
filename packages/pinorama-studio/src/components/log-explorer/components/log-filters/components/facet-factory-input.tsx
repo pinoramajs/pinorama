@@ -1,8 +1,8 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { facetFilterOperationsFactory } from "../lib/operations";
-import type { OramaPropType, SearchFilters } from "../types";
+import { Checkbox } from "@/components/ui/checkbox"
+import { facetFilterOperationsFactory } from "../lib/operations"
+import type { OramaPropType, SearchFilters } from "../types"
 
-import style from './facet-factory-input.module.css';
+import style from "./facet-factory-input.module.css"
 
 export function FacetFactoryInput(props: {
   id: string
