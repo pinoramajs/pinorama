@@ -1,0 +1,19 @@
+.headerContainer {
+  @apply flex items-center p-3 pb-1 bg-background space-x-1.5;
+}
+
+.searchContainer {
+  @apply relative flex items-center w-full;
+}
+
+.search {
+  @apply h-4 w-4 absolute left-3 text-muted-foreground;
+}
+
+.sliders {
+  @apply h-[18px] w-[18px];
+}
+
+.ellipsis {
+  @apply h-[18px] w-[18px];
+}

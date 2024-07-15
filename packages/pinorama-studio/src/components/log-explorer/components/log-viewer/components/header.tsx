@@ -20,6 +20,8 @@ import { EllipsisVertical, Search, SlidersVertical } from "lucide-react"
 import { FormattedMessage, useIntl } from "react-intl"
 import type { SearchFilters } from "../../log-filters/types"
 
+import style from "./header.module.css"
+
 type LogViewerHeaderProps = {
   table: Table<unknown>
   searchText: string
@@ -33,13 +35,13 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
   const intl = useIntl()
 
   return (
-    <div className="flex items-center p-3 pb-1 bg-background space-x-1.5">
+    <div className={style.headerContainer}>
       <ToggleFiltersButton
         onClick={props.onFiltersPanelToggle}
         isPanelCollapsed={props.filtersPanelCollapsed}
       />
-      <div className="relative flex items-center w-full">
-        <Search className="h-4 w-4 absolute left-3 text-muted-foreground" />
+      <div className={style.searchContainer}>
+        <Search className={style.search} />
         <Input
           type="text"
           placeholder={intl.formatMessage({ id: "labels.searchLogs" })}
@@ -70,7 +72,7 @@ function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
           className="px-2.5"
           onClick={props.onClick}
         >
-          <SlidersVertical className="h-[18px] w-[18px]" />
+          <SlidersVertical className={style.sliders} />
         </Button>
       </TooltipTrigger>
       <TooltipPortal>
@@ -87,13 +89,19 @@ type ColumnsVisibilityButtonProps = {
 }
 
 function ColumnsButton(props: ColumnsVisibilityButtonProps) {
+  const intl = useIntl()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Tooltip>
           <TooltipTrigger>
-            <Button aria-label="Columns" variant="outline2" className="px-2.5">
-              <EllipsisVertical className="h-[18px] w-[18px]" />
+            <Button
+              aria-label={intl.formatMessage({ id: "columns" })}
+              variant="outline2"
+              className="px-2.5"
+            >
+              <EllipsisVertical className={style.ellipsis} />
             </Button>
           </TooltipTrigger>
           <TooltipPortal>
