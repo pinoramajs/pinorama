@@ -1,6 +1,9 @@
 import { type Row, flexRender } from "@tanstack/react-table"
 import type { Virtualizer } from "@tanstack/react-virtual"
 
+import clsx from "clsx"
+import style from "./tbody.module.css"
+
 type TableBodyProps = {
   virtualizer: Virtualizer<Element, Element>
   rows: Row<unknown>[]
@@ -9,7 +12,7 @@ type TableBodyProps = {
 export function TableBody({ virtualizer, rows }: TableBodyProps) {
   return (
     <tbody
-      className="relative font-mono"
+      className={style.body}
       style={{ height: `${virtualizer.getTotalSize()}px` }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {
@@ -22,16 +25,14 @@ export function TableBody({ virtualizer, rows }: TableBodyProps) {
             data-index={virtualItem.index}
             onClick={row.getToggleSelectedHandler()}
             onKeyDown={() => {}}
-            className={`select-none cursor-pointer flex absolute hover:bg-muted/50 odd:bg-muted/20 w-full ${row.getIsSelected() ? "bg-muted/75 hover:bg-muted/75 odd:bg-muted/75" : ""}`}
+            className={clsx(style.row, row.getIsSelected() && style.rowMuted)}
             style={{ transform: `translateY(${virtualItem.start}px)` }}
           >
             {cells.map((cell) => {
               return (
                 <td
                   key={cell.id}
-                  className={
-                    "overflow-hidden overflow-ellipsis whitespace-nowrap h-[24px] px-3"
-                  }
+                  className={style.data}
                   style={{ width: cell.column.getSize() }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

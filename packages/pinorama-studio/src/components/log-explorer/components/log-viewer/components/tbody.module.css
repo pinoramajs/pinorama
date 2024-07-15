@@ -1,0 +1,15 @@
+.body {
+  @apply relative font-mono;
+}
+
+.row {
+  @apply select-none cursor-pointer flex absolute hover:bg-muted/50 odd:bg-muted/20 w-full;
+}
+
+.rowMuted {
+  @apply "bg-muted/75 hover:bg-muted/75 odd:bg-muted/75";
+}
+
+.data {
+  @apply overflow-hidden overflow-ellipsis whitespace-nowrap h-[24px] px-3;
+}
