@@ -13,6 +13,8 @@ import type {
 import { FacetBody } from "./facet-body"
 import { FacetHeader } from "./facet-header"
 
+import style from "./facet.module.css"
+
 type FacetProps = {
   name: string
   type: OramaPropType
@@ -93,11 +95,11 @@ export function Facet(props: FacetProps) {
       />
       {open ? (
         hasError ? (
-          <ErrorState error={error} className="my-2 mx-0" />
+          <ErrorState error={error} className={style.error} />
         ) : hasNoData ? (
           <EmptyStateInline
             message={intl.formatMessage({ id: "labels.noResultFound" })}
-            className="my-2 mx-0"
+            className={style.error}
           />
         ) : (
           <FacetBody
