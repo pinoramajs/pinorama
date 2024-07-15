@@ -1,10 +1,12 @@
 import { LoaderIcon } from "lucide-react"
 import { FormattedMessage } from "react-intl"
 
+import style from "./loading-state.module.css"
+
 export function LoadingState() {
   return (
-    <div className="flex items-center h-10 p-3 m-2 text-sm text-muted-foreground">
-      <LoaderIcon className="w-4 h-4 mr-2 animate-spin" />
+    <div className={style.container}>
+      <LoaderIcon className={style.icon} />
       <FormattedMessage id="labels.loading" />
     </div>
   )
