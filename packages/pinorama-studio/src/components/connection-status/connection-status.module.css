@@ -10,10 +10,6 @@
   @apply w-2 h-2 rounded-full;
 }
 
-.disconnected {
-  @apply bg-gray-500;
-}
-
 .connecting {
   @apply bg-orange-500;
 }
@@ -26,6 +22,6 @@
   @apply bg-red-500;
 }
 
-.unknown {
+.disconnected, .unknown {
   @apply bg-gray-500;
 }
