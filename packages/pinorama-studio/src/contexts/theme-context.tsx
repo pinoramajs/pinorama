@@ -20,7 +20,7 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
-export const THEME: Record<string, Theme> = {
+export const THEME: Record<Uppercase<Theme>, Theme> = {
   DARK: "dark",
   LIGHT: "light",
   SYSTEM: "system"

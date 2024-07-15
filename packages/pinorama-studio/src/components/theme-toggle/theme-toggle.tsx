@@ -16,7 +16,7 @@ export function ThemeToggle() {
   const intl = useIntl()
 
   const handleClick = () => {
-    setTheme(theme === THEME.LIGH ? THEME.DARK : THEME.LIGH)
+    setTheme(theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT)
   }
 
   const Icon = theme === THEME.DARK ? MoonStar : Sun
