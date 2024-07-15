@@ -5,6 +5,8 @@ import { PinoramaLogo } from "../pinorama-logo/pinorama-logo"
 import { ThemeToggle } from "../theme-toggle/theme-toggle"
 import { Button } from "../ui/button"
 
+import style from "./title-bar.module.css"
+
 type TitleBarProps = {
   hasFilters: boolean
   onClearFilters: () => void
@@ -12,24 +14,24 @@ type TitleBarProps = {
 
 export function TitleBar(props: TitleBarProps) {
   return (
-    <div className="border-b bg-muted/20">
-      <div className="relative flex items-center justify-between text-sm font-normale h-full px-3">
+    <div className={style.container}>
+      <div className={style.content}>
         {/* Left */}
-        <div className="flex items-center">
+        <div className={style.left}>
           <PinoramaLogo />
         </div>
 
         {/* Center */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
+        <div className={style.center}>
           <ConnectionStatus />
         </div>
 
         {/* Right */}
-        <div className="flex items-center space-x-1.5">
+        <div className={style.right}>
           {props.hasFilters && (
             <Button
-              variant={"secondary"}
-              size={"sm"}
+              variant="secondary"
+              size="sm"
               onClick={props.onClearFilters}
             >
               <FormattedMessage id="filters.clear" />

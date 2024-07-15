@@ -1,0 +1,19 @@
+.container {
+  @apply border-b bg-muted/20;
+}
+
+.content {
+  @apply relative flex items-center justify-between text-sm font-normal h-full px-3;
+}
+
+.left {
+  @apply flex items-center;
+}
+
+.center {
+  @apply absolute left-1/2 transform -translate-x-1/2;
+}
+
+.right {
+  @apply flex items-center space-x-1.5;
+}
