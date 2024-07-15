@@ -1,0 +1,27 @@
+.blockContainer {
+  @apply flex items-center justify-center h-full w-full text-center text-sm text-foreground;
+}
+
+.blockContent {
+  @apply w-60 flex flex-col items-center -mt-[10%];
+}
+
+.iconContainer {
+  @apply bg-muted-foreground/15 p-1.5 rounded-md mb-4;
+}
+
+.icon {
+  @apply h-[18px] w-[18px];
+}
+
+.titleContainer {
+  @apply font-medium mb-1;
+}
+
+.messageContainer {
+  @apply text-muted-foreground mb-3;
+}
+
+.buttonsContainer {
+  @apply flex flex-col items-center;
+}

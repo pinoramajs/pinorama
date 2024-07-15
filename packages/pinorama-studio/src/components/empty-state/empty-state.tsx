@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils"
 import type { ElementType } from "react"
 import { Button } from "../ui/button"
 
+import style from './empty-state.module.css';
+
 type EmptyStateProps = {
   message: string
   className?: string
@@ -39,14 +41,14 @@ export function EmptyStateBlock({
   buttons
 }: EmptyStateBlockProps) {
   return (
-    <div className="flex items-center justify-center h-full w-full text-center text-sm text-foreground">
-      <div className="w-60 flex flex-col items-center -mt-[10%]">
-        <div className="bg-muted-foreground/15 p-1.5 rounded-md mb-4">
-          <Icon className="h-[18px] w-[18px]" />
+    <div className={style.blockContainer}>
+      <div className={style.blockContent}>
+        <div className={style.iconContainer}>
+          <Icon className={style.icon} />
         </div>
-        <div className="font-medium mb-1">{title}</div>
-        <div className="text-muted-foreground mb-3">{message}</div>
-        <div className="flex flex-col items-center">
+        <div className={style.titleContainer}>{title}</div>
+        <div className={style.messageContainer}>{message}</div>
+        <div className={style.buttonsContainer}>
           {buttons?.map((button) => (
             <Button
               key={button.text}
