@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils"
 import { FormattedMessage } from "react-intl"
 
+import style from "./error-state.module.css"
+
 type ErrorStateProps = {
   error: Error
   className?: string
@@ -14,7 +16,7 @@ export function ErrorState(props: ErrorStateProps) {
         props.className
       )}
     >
-      <div className="flex items-center text-red-500 mr-2">
+      <div className={style.messageContainer}>
         <span className="font-medium">
           <FormattedMessage id="labels.error" />
         </span>

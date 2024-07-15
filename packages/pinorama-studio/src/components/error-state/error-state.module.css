@@ -1,0 +1,3 @@
+.messageContainer {
+  @apply flex items-center text-red-500 mr-2;
+}
