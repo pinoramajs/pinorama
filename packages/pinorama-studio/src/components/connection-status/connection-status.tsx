@@ -47,31 +47,25 @@ export function ConnectionStatus() {
     setOpen(false)
   }
 
-  let statusColor = ""
-  let statusText = ""
+  let derivedStatus = ""
 
   const connectionStatus = appConfig?.config.connectionStatus
 
   switch (true) {
     case connectionStatus === "disconnected":
-      statusColor = "bg-gray-500"
-      statusText = "disconnected"
+      derivedStatus = "disconnected"
       break
     case status === "pending" && fetchStatus === "fetching":
-      statusColor = "bg-orange-500"
-      statusText = "connecting"
+      derivedStatus = "connecting"
       break
     case status === "success":
-      statusColor = "bg-green-500"
-      statusText = "connected"
+      derivedStatus = "connected"
       break
     case status === "error":
-      statusColor = "bg-red-500"
-      statusText = "connectionFailed"
+      derivedStatus = "connectionFailed"
       break
     default:
-      statusColor = "bg-gray-500"
-      statusText = "unknown"
+      derivedStatus = "unknown"
       break
   }
 
@@ -79,9 +73,9 @@ export function ConnectionStatus() {
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className={style.popoverTrigger}>
-          <div className={cn(style.statusIndicator, statusColor)} />
+          <div className={cn(style.statusIndicator, style[derivedStatus])} />
           <span className="">
-            <FormattedMessage id={`connectionStatus.${statusText}`} />
+            <FormattedMessage id={`connectionStatus.${derivedStatus}`} />
           </span>
           <span className="text-muted-foreground">
             {appConfig?.config.connectionUrl ?? "Unknown"}
