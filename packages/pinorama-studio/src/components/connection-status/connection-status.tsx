@@ -18,7 +18,7 @@ import {
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
-import clsx from "clsx"
+import { cn } from "@/lib/utils"
 import style from './connection-status.module.css'
 
 const formSchema = z.object({
@@ -83,7 +83,7 @@ export function ConnectionStatus() {
           size="sm"
           className={style.popoverTrigger}
         >
-          <div className={clsx(style.statusIndicator, statusColor)} />
+          <div className={cn(style.statusIndicator, statusColor)} />
           <span className="">
             <FormattedMessage id={`connectionStatus.${statusText}`} />
           </span>
