@@ -1,0 +1,27 @@
+.container {
+  @apply w-full text-left justify-between text-sm font-normal px-2;
+}
+
+.circle {
+  @apply w-4 h-4;
+}
+
+.loaderContainer {
+  @apply flex items-center;
+}
+
+.chevron {
+  @apply mr-2 w-5 h-5;
+}
+
+.loaderIcon {
+  @apply w-4 h-4 ml-2 animate-spin text-muted-foreground;
+}
+
+.counter {
+  @apply px-1.5 text-xs;
+}
+
+.countButton {
+  @apply flex text-muted-foreground;
+}

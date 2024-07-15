@@ -1,0 +1,3 @@
+.container {
+  @apply border box-border rounded-md overflow-auto max-h-[241px] my-2;
+}

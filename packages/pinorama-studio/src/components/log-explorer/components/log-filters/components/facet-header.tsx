@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import type React from "react"
 
+import style from './facet-header.module.css'
+
 type FacetHeaderProps = {
   name: string
   loading: boolean
@@ -15,27 +17,27 @@ export function FacetHeader(props: FacetHeaderProps) {
   const ChevronIcon = props.open ? ChevronDown : ChevronRight
   return (
     <Button
-      variant={"ghost"}
+      variant="ghost"
       onClick={props.onClick}
-      className={`w-full text-left justify-between text-sm font-normal px-2 ${props.open ? "hover:bg-transparent" : "text-muted-foreground"}`}
+      className={`${style.container} ${props.open ? "hover:bg-transparent" : "text-muted-foreground"}`}
     >
-      <div className="flex items-center">
-        <ChevronIcon className="mr-2 w-5 h-5" />
+      <div className={style.loaderContainer}>
+        <ChevronIcon className={style.chevron} />
         {props.name}
         {props.loading ? (
-          <LoaderIcon className="w-4 h-4 ml-2 animate-spin text-muted-foreground" />
+          <LoaderIcon className={style.loaderIcon} />
         ) : null}
       </div>
       {props.count > 0 ? (
         <div>
           <Button
-            variant={"outline"}
-            size={"badge"}
-            className="flex text-muted-foreground"
+            variant="outline"
+            size="badge"
+            className={style.countButton}
             onClick={props.onCountClick}
           >
-            <CircleX className="w-4 h-4" />
-            <div className="px-1.5 text-xs">{props.count}</div>
+            <CircleX className={style.circle} />
+            <div className={style.counter}>{props.count}</div>
           </Button>
         </div>
       ) : null}

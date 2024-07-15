@@ -1,6 +1,8 @@
 import type { FacetValue, OramaPropType, SearchFilters } from "../types"
 import { FacetItem } from "./facet-item"
 
+import style from './facet-body.module.css'
+
 type FacetBodyProps = {
   name: string
   type: OramaPropType
@@ -11,7 +13,7 @@ type FacetBodyProps = {
 
 export function FacetBody(props: FacetBodyProps) {
   return (
-    <div className="border box-border rounded-md overflow-auto max-h-[241px] my-2">
+    <div className={style.container}>
       {props.values?.map(({ value, count }) => {
         return (
           <FacetItem
