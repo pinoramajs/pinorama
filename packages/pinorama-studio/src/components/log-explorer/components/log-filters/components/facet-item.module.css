@@ -1,5 +1,5 @@
 .container {
-  @apply flex items-center space-x-3 h-[38px] px-3 border-b last: border-b-0 bg-muted/20;
+  @apply flex items-center space-x-3 h-[38px] px-3 border-b last:border-b-0 bg-muted/20;
 }
 
 .label {

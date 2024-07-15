@@ -7,7 +7,7 @@
 }
 
 .rowMuted {
-  @apply "bg-muted/75 hover:bg-muted/75 odd:bg-muted/75";
+  @apply bg-muted/75 hover:bg-muted/75 odd:bg-muted/75;
 }
 
 .data {
