@@ -1,0 +1,11 @@
+.popoverTrigger {
+  @apply flex h-8 items-center space-x-1.5;
+}
+
+.buttonsContainer {
+  @apply flex items-start justify-between w-full space-x-2;
+}
+
+.statusIndicator {
+  @apply w-2 h-2 rounded-full;
+}

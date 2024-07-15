@@ -18,6 +18,9 @@ import {
 import { Input } from "../ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
+import clsx from "clsx"
+import style from './connection-status.module.css'
+
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
 })
@@ -78,9 +81,9 @@ export function ConnectionStatus() {
         <Button
           variant="ghost"
           size="sm"
-          className="flex h-8 items-center space-x-1.5"
+          className={style.popoverTrigger}
         >
-          <div className={`w-2 h-2 rounded-full ${statusColor}`} />
+          <div className={clsx(style.statusIndicator, statusColor)} />
           <span className="">
             <FormattedMessage id={`connectionStatus.${statusText}`} />
           </span>
@@ -97,7 +100,9 @@ export function ConnectionStatus() {
               name="connectionUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Server URL</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="server.url" />
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -105,10 +110,10 @@ export function ConnectionStatus() {
                 </FormItem>
               )}
             />
-            <div className="flex items-start justify-between w-full space-x-2">
+            <div className={style.buttonsContainer}>
               <Button
                 type="button"
-                variant={"outline"}
+                variant="outline"
                 disabled={!form.formState.isDirty}
                 onClick={() => form.reset()}
                 className="w-full"
