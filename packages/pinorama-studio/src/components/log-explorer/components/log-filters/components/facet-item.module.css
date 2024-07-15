@@ -1,0 +1,11 @@
+.container {
+  @apply flex items-center space-x-3 h-[38px] px-3 border-b last: border-b-0 bg-muted/20;
+}
+
+.label {
+  @apply whitespace-nowrap text-muted-foreground font-normal cursor-pointer flex-grow text-ellipsis w-full overflow-hidden leading-tight;
+}
+
+.badge {
+  @apply font-normal text-muted-foreground cursor-pointer;
+}
