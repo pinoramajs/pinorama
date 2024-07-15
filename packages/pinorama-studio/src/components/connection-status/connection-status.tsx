@@ -76,8 +76,8 @@ export function ConnectionStatus() {
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant={"ghost"}
-          size={"sm"}
+          variant="ghost"
+          size="sm"
           className="flex h-8 items-center space-x-1.5"
         >
           <div className={`w-2 h-2 rounded-full ${statusColor}`} />
