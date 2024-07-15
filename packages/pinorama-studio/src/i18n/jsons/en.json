@@ -24,5 +24,8 @@
   "state.notConnected.title": "Not connected",
   "state.notConnected.message": "You are currently disconnected. Please connect to view logs.",
   "state.notConnected.action": "Connect",
-  "server.url": "Server URL"
+  "server.url": "Server URL",
+  "mode.dark": "Dark Mode",
+  "mode.light": "Light Mode",
+  "mode.system": "System Mode"
 }
