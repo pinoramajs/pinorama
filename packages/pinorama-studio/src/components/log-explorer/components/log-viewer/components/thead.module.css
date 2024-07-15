@@ -1,0 +1,17 @@
+.head {
+  @apply sticky top-0 z-10 bg-background select-none flex;
+}
+
+.header {
+  @apply relative px-3 mb-1 text-left font-normal text-muted-foreground align-middle h-9;
+}
+
+.headerContent {
+  @apply absolute right-0 top-0 h-[32px] w-[3px] bg-muted opacity-0 group-hover:opacity-100 cursor-col-resize select-none touch-none;
+}
+
+.resizing {
+  @apply group-hover:bg-accent-foreground bg-accent-foreground;
+}
+
+
