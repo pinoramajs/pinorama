@@ -1,41 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup
-} from "../ui/resizable"
+import { useConnectionToggle } from "@/hooks"
+import { UnplugIcon } from "lucide-react"
+import { useIntl } from "react-intl"
 import { LogDetails } from "./components/log-details"
 import { LogFilters } from "./components/log-filters"
 import { LogViewer } from "./components/log-viewer"
 
+import { EmptyStateBlock } from "@/components/empty-state"
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup
+} from "@/components/ui/resizable"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import type { SearchFilters } from "./components/log-filters/types"
-
-type LogExplorerProps = {
-  searchText: string
-  filters: SearchFilters
-  onSearchTextChange: (searchText: string) => void
-  onFiltersChange: (filters: SearchFilters) => void
-  hasFilters: boolean
-  onClearFilters: () => void
-}
 
 const PANEL_SIZES = {
   filters: { base: 20, min: 10 },
   details: { base: 20, min: 10 }
 }
 
-export function LogExplorer(props: LogExplorerProps) {
-  const [rowSelection, setRowSelection] = useState(null)
+export function LogExplorer() {
+  const intl = useIntl()
 
-  const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
-  const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
+  const { isConnected, toggleConnection } = useConnectionToggle()
+
+  const [filters, setFilters] = useState<SearchFilters>({})
+  const [searchText, setSearchText] = useState<string>("")
+  const [rowSelection, setRowSelection] = useState()
 
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
   const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
 
-  const handleFiltersPanelToggle = useCallback(() => {
+  const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
+  const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
+
+  const toggleFiltersPanel = useCallback(() => {
     const panel = filtersPanelRef.current
 
     if (panel?.isCollapsed()) {
@@ -45,13 +46,35 @@ export function LogExplorer(props: LogExplorerProps) {
     }
   }, [])
 
+  const clearFilters = useCallback(() => {
+    setSearchText("")
+    setFilters({})
+  }, [])
+
   useEffect(() => {
     const panel = detailsPanelRef.current
     rowSelection ? panel?.expand(PANEL_SIZES.details.base) : panel?.collapse()
   }, [rowSelection])
 
+  if (!isConnected) {
+    return (
+      <EmptyStateBlock
+        icon={UnplugIcon}
+        title={intl.formatMessage({ id: "state.notConnected.title" })}
+        message={intl.formatMessage({ id: "state.notConnected.message" })}
+        buttons={[
+          {
+            text: intl.formatMessage({ id: "state.notConnected.action" }),
+            onClick: toggleConnection
+          }
+        ]}
+      />
+    )
+  }
+
   return (
     <ResizablePanelGroup direction="horizontal">
+      {/* Filters */}
       <ResizablePanel
         ref={filtersPanelRef}
         collapsible
@@ -62,31 +85,33 @@ export function LogExplorer(props: LogExplorerProps) {
         onExpand={() => setFiltersPanelCollapsed(false)}
       >
         <LogFilters
-          searchText={props.searchText}
-          filters={props.filters}
-          onFiltersChange={props.onFiltersChange}
+          searchText={searchText}
+          filters={filters}
+          onFiltersChange={setFilters}
         />
       </ResizablePanel>
       <ResizableHandle
         withHandle
-        className={filtersPanelCollapsed ? "hidden" : ""}
+        className={filtersPanelCollapsed ? "hidden" : undefined}
       />
+
+      {/* Viewer */}
       <ResizablePanel order={2} className="bg-muted/20">
         <LogViewer
-          searchText={props.searchText}
-          filters={props.filters}
-          onSearchTextChange={props.onSearchTextChange}
+          searchText={searchText}
+          filters={filters}
+          onSearchTextChange={setSearchText}
           onRowSelectionChange={setRowSelection}
-          filtersPanelCollapsed={filtersPanelCollapsed}
-          onFiltersPanelToggle={handleFiltersPanelToggle}
-          hasFilters={props.hasFilters}
-          onClearFilters={props.onClearFilters}
+          onToggleFiltersButtonClick={toggleFiltersPanel}
+          onClearFiltersButtonClick={clearFilters}
         />
       </ResizablePanel>
       <ResizableHandle
         withHandle
-        className={detailsPanelCollapsed ? "hidden" : ""}
+        className={detailsPanelCollapsed ? "hidden" : undefined}
       />
+
+      {/* Details */}
       <ResizablePanel
         ref={detailsPanelRef}
         collapsible

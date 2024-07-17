@@ -1,12 +1,6 @@
 import { useState } from "react"
 
-import { useAppConfig } from "@/contexts"
-import { usePinoramaIntrospection } from "@/hooks"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { FormattedMessage } from "react-intl"
-import { z } from "zod"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -14,15 +8,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "../ui/form"
-import { Input } from "../ui/input"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover"
+import { useAppConfig } from "@/contexts"
+import { usePinoramaIntrospection } from "@/hooks"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { FormattedMessage } from "react-intl"
+import { z } from "zod"
 
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
 })
 
-export function ConnectionStatus() {
+export function ConnectionStatusButton() {
   const appConfig = useAppConfig()
   const { status, fetchStatus } = usePinoramaIntrospection()
 

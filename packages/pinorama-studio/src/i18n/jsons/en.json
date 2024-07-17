@@ -21,7 +21,7 @@
   "columns": "Columns",
   "columns.toggle": "Columns Visibility",
   "columns.reset": "Reset Columns",
-  "state.notConnected.title": "Not connected",
+  "state.notConnected.title": "Not Connected",
   "state.notConnected.message": "You are currently disconnected. Please connect to view logs.",
   "state.notConnected.action": "Connect"
 }

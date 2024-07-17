@@ -13,7 +13,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { useIntl } from "react-intl"
 import type { SearchFilters } from "../log-filters/types"
-import { LogViewerHeader } from "./components/header"
+import { LogViewerHeader } from "./components/header/header"
 import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
 import { useLogs } from "./hooks/use-logs"
@@ -21,12 +21,10 @@ import { useLogs } from "./hooks/use-logs"
 type LogViewerProps = {
   filters: SearchFilters
   searchText: string
-  filtersPanelCollapsed: boolean
   onSearchTextChange: (searchText: string) => void
   onRowSelectionChange: (row: any) => void
-  onFiltersPanelToggle: () => void
-  hasFilters: boolean
-  onClearFilters: () => void
+  onToggleFiltersButtonClick: () => void
+  onClearFiltersButtonClick: () => void
 }
 
 export function LogViewer(props: LogViewerProps) {
@@ -73,6 +71,9 @@ export function LogViewer(props: LogViewerProps) {
     enableRowSelection: true
   })
 
+  const hasFilters =
+    props.searchText.length > 0 && Object.keys(props.filters).length > 0
+
   // biome-ignore lint: I need to pop up the selected row
   useEffect(() => {
     const rowModel = table.getSelectedRowModel()
@@ -113,10 +114,10 @@ export function LogViewer(props: LogViewerProps) {
       <LogViewerHeader
         table={table}
         searchText={props.searchText}
-        filters={props.filters}
-        filtersPanelCollapsed={props.filtersPanelCollapsed}
+        showClearFiltersButton={hasFilters}
         onSearchTextChange={props.onSearchTextChange}
-        onFiltersPanelToggle={props.onFiltersPanelToggle}
+        onToggleFiltersButtonClick={props.onToggleFiltersButtonClick}
+        onClearFiltersButtonClick={props.onClearFiltersButtonClick}
       />
 
       <div
