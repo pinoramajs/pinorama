@@ -20,6 +20,12 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+export const THEME: Record<Uppercase<Theme>, Theme> = {
+  DARK: "dark",
+  LIGHT: "light",
+  SYSTEM: "system"
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = "system",
