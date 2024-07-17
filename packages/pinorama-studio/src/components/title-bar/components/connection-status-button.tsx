@@ -105,7 +105,9 @@ export function ConnectionStatusButton() {
               name="connectionUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Server URL</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="server.url" />
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

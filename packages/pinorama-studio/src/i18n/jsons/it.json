@@ -23,5 +23,9 @@
   "columns.reset": "Reimposta Colonne",
   "state.notConnected.title": "Non connesso",
   "state.notConnected.message": "Attualmente sei disconnesso. Connetti per visualizzare i log.",
-  "state.notConnected.action": "Connetti"
+  "state.notConnected.action": "Connetti",
+  "server.url": "URL del Server",
+  "mode.dark": "Modalità scura",
+  "mode.light": "Modalità chiara",
+  "mode.system": "Modalità sistema"
 }
