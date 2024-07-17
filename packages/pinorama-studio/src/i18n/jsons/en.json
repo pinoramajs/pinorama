@@ -23,5 +23,9 @@
   "columns.reset": "Reset Columns",
   "state.notConnected.title": "Not Connected",
   "state.notConnected.message": "You are currently disconnected. Please connect to view logs.",
-  "state.notConnected.action": "Connect"
+  "state.notConnected.action": "Connect",
+  "server.url": "Server URL",
+  "mode.dark": "Dark Mode",
+  "mode.light": "Light Mode",
+  "mode.system": "System Mode"
 }
