@@ -5,7 +5,7 @@ import {
   TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { THEME, useTheme } from "@/contexts"
+import { Theme, useTheme } from "@/contexts"
 import { MoonStarIcon, SunIcon } from "lucide-react"
 import { FormattedMessage, useIntl } from "react-intl"
 
@@ -14,10 +14,10 @@ export function ThemeToggleButton() {
   const { theme, setTheme } = useTheme()
 
   const handleClick = () => {
-    setTheme(theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT)
+    setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light)
   }
 
-  const Icon = theme === THEME.DARK ? MoonStarIcon : SunIcon
+  const Icon = theme === Theme.Dark ? MoonStarIcon : SunIcon
 
   return (
     <Tooltip>
