@@ -20,11 +20,11 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
-export const THEME: Record<Uppercase<Theme>, Theme> = {
-  DARK: "dark",
-  LIGHT: "light",
-  SYSTEM: "system"
-}
+export const Theme: Readonly<Record<Capitalize<Theme>, Theme>> = Object.freeze({
+  Dark: "dark",
+  Light: "light",
+  System: "system"
+})
 
 export function ThemeProvider({
   children,
