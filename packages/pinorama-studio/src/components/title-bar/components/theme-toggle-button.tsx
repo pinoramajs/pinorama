@@ -1,21 +1,21 @@
-import { useTheme } from "@/contexts"
-import { MoonStar, Sun } from "lucide-react"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipPortal,
   TooltipTrigger
-} from "../ui/tooltip"
+} from "@/components/ui/tooltip"
+import { useTheme } from "@/contexts"
+import { MoonStarIcon, SunIcon } from "lucide-react"
 
-export function ThemeToggle() {
+export function ThemeToggleButton() {
   const { theme, setTheme } = useTheme()
 
   const handleClick = () => {
     setTheme(theme === "light" ? "dark" : "light")
   }
 
-  const Icon = theme === "dark" ? MoonStar : Sun
+  const Icon = theme === "dark" ? MoonStarIcon : SunIcon
   const ariaLabel = theme === "dark" ? "Dark Mode" : "Light Mode"
 
   return (

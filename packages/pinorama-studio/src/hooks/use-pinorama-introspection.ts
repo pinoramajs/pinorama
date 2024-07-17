@@ -9,8 +9,7 @@ export const usePinoramaIntrospection = () => {
     queryFn: async () => {
       const response: any = await client?.introspection()
       return response
-    },
-    refetchInterval: 3000
+    }
   })
 
   return query
