@@ -26,6 +26,16 @@ const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
 })
 
+type ConnectionStatus = "disconnected" | "connecting" | "connected" | "connectionFailed" | "unknown"
+
+const STATUS_COLOR: Record<ConnectionStatus, string> = {
+  disconnected: "bg-gray-500",
+  connecting: "bg-orange-500",
+  connected: "bg-green-500",
+  connectionFailed: "bg-red-500",
+  unknown: "bg-gray-500"
+}
+
 export function ConnectionStatusButton() {
   const appConfig = useAppConfig()
   const { status, fetchStatus } = usePinoramaIntrospection()
@@ -48,31 +58,25 @@ export function ConnectionStatusButton() {
     setOpen(false)
   }
 
-  let statusColor = ""
-  let statusText = ""
+  let derivedStatus: ConnectionStatus;
 
   const connectionStatus = appConfig?.config.connectionStatus
 
   switch (true) {
     case connectionStatus === "disconnected":
-      statusColor = "bg-gray-500"
-      statusText = "disconnected"
+      derivedStatus = "disconnected"
       break
     case status === "pending" && fetchStatus === "fetching":
-      statusColor = "bg-orange-500"
-      statusText = "connecting"
+      derivedStatus = "connecting"
       break
     case status === "success":
-      statusColor = "bg-green-500"
-      statusText = "connected"
+      derivedStatus = "connected"
       break
     case status === "error":
-      statusColor = "bg-red-500"
-      statusText = "connectionFailed"
+      derivedStatus = "connectionFailed"
       break
     default:
-      statusColor = "bg-gray-500"
-      statusText = "unknown"
+      derivedStatus = "unknown"
       break
   }
 
@@ -84,9 +88,9 @@ export function ConnectionStatusButton() {
           size={"sm"}
           className="flex h-8 items-center space-x-1.5"
         >
-          <div className={`w-2 h-2 rounded-full ${statusColor}`} />
+          <div className={`w-2 h-2 rounded-full ${STATUS_COLOR[derivedStatus]}`} />
           <span className="">
-            <FormattedMessage id={`connectionStatus.${statusText}`} />
+            <FormattedMessage id={`connectionStatus.${derivedStatus}`} />
           </span>
           <span className="text-muted-foreground">
             {appConfig?.config.connectionUrl ?? "Unknown"}
