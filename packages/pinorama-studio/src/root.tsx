@@ -1,5 +1,15 @@
 import "./styles/globals.css"
 
+import {
+  RouterProvider,
+  type SyncRouteComponent,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  redirect
+} from "@tanstack/react-router"
+import { type ComponentType, StrictMode } from "react"
+
 import { TooltipProvider } from "@/components/ui/tooltip"
 import {
   AppConfigProvider,
@@ -7,23 +17,46 @@ import {
   PinoramaClientProvider,
   ThemeProvider
 } from "@/contexts"
-import { StrictMode } from "react"
 import App from "./app"
+import features from "./features"
+
+const rootRoute = createRootRoute({
+  component: App
+})
+
+const routes = features.map((feature) => {
+  return createRoute({
+    getParentRoute: () => rootRoute,
+    path: feature.routePath,
+    component: feature.component as SyncRouteComponent<ComponentType>
+  })
+})
+
+const router = createRouter({
+  routeTree: rootRoute.addChildren(routes),
+  defaultPreload: "intent",
+  defaultStaleTime: 5000,
+  notFoundRoute: createRoute({
+    id: "not-found",
+    getParentRoute: () => rootRoute,
+    beforeLoad: () => redirect({ to: "/" })
+  })
+})
 
 export function RootComponent() {
   return (
     <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="pinorama-studio-theme">
-        <I18nProvider>
-          <AppConfigProvider>
-            <PinoramaClientProvider>
+      <I18nProvider>
+        <AppConfigProvider>
+          <PinoramaClientProvider>
+            <ThemeProvider>
               <TooltipProvider>
-                <App />
+                <RouterProvider router={router} />
               </TooltipProvider>
-            </PinoramaClientProvider>
-          </AppConfigProvider>
-        </I18nProvider>
-      </ThemeProvider>
+            </ThemeProvider>
+          </PinoramaClientProvider>
+        </AppConfigProvider>
+      </I18nProvider>
     </StrictMode>
   )
 }

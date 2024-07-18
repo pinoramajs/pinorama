@@ -30,7 +30,7 @@ export const getMessages = async (locale: Locale) => {
 
   // Feature Messages
   for (const feature of features) {
-    const translationImport = feature.messages[locale]
+    const translationImport = feature.messages?.[locale]
     if (translationImport) {
       try {
         const module = await translationImport()
