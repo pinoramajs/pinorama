@@ -15,7 +15,7 @@ type LocaleContextProps = {
 
 const LocaleContext = createContext<LocaleContextProps | undefined>(undefined)
 
-const defaultLocale: Locale = "it"
+const defaultLocale: Locale = "en"
 
 export function I18nProvider(props: I18nProviderProps) {
   const [locale, setLocale] = useState<Locale>(defaultLocale)
