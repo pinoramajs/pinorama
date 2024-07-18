@@ -1,29 +1,22 @@
 import "./styles/globals.css"
 
-import { StrictMode, useEffect, useState } from "react"
+import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
-import { type IntlConfig, IntlProvider } from "react-intl"
 
+import { TooltipProvider } from "@/components/ui/tooltip"
 import {
   AppConfigProvider,
+  I18nProvider,
   PinoramaClientProvider,
   ThemeProvider
 } from "@/contexts"
 import App from "./app"
-import { TooltipProvider } from "./components/ui/tooltip"
-import { defaultConfig, retrieveI18nConfig } from "./i18n"
 
 const RootComponent = () => {
-  const [i18nConfig, setI18nConfig] = useState<IntlConfig>(defaultConfig)
-
-  useEffect(() => {
-    retrieveI18nConfig().then(setI18nConfig)
-  }, [])
-
   return (
     <StrictMode>
-      <IntlProvider {...i18nConfig}>
-        <ThemeProvider defaultTheme="dark" storageKey="pinorama-studio-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="pinorama-studio-theme">
+        <I18nProvider>
           <AppConfigProvider>
             <PinoramaClientProvider>
               <TooltipProvider>
@@ -31,12 +24,11 @@ const RootComponent = () => {
               </TooltipProvider>
             </PinoramaClientProvider>
           </AppConfigProvider>
-        </ThemeProvider>
-      </IntlProvider>
+        </I18nProvider>
+      </ThemeProvider>
     </StrictMode>
   )
 }
 
-ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(
-  <RootComponent />
-)
+const appElement = document.getElementById("app") as HTMLElement
+ReactDOM.createRoot(appElement).render(<RootComponent />)

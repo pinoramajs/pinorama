@@ -34,24 +34,19 @@ export function LogFilters(props: PinoramaFacetsProps) {
   }
 
   return (
-    <>
-      <div className="flex items-center p-3 pb-1 bg-background space-x-1.5 h-10">
-        <h2 className="text-md font-medium">Filters</h2>
-      </div>
-      <div className="flex flex-col h-full p-3 overflow-auto">
-        {facets.map((name) => {
-          return (
-            <Facet
-              key={name}
-              name={name}
-              type={introspection.dbSchema[name]}
-              searchText={props.searchText}
-              filters={props.filters}
-              onFiltersChange={props.onFiltersChange}
-            />
-          )
-        })}
-      </div>
-    </>
+    <div className="flex flex-col h-full p-3 overflow-auto">
+      {facets.map((name) => {
+        return (
+          <Facet
+            key={name}
+            name={name}
+            type={introspection.dbSchema[name]}
+            searchText={props.searchText}
+            filters={props.filters}
+            onFiltersChange={props.onFiltersChange}
+          />
+        )
+      })}
+    </div>
   )
 }

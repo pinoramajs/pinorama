@@ -1,0 +1,12 @@
+{
+  "logExplorer.searchLogs": "Search logs...",
+  "logExplorer.noLogsFound": "No logs found. Please check filters.",
+  "logExplorer.showOrHideFilters": "Show or hide filters",
+  "logExplorer.clearFilters": "Clear search text and filters",
+  "logExplorer.columns": "Columns",
+  "logExplorer.columnsVisibility": "Columns visibility",
+  "logExplorer.resetColumns": "Reset columns",
+  "logExplorer.notConnected.title": "Not Connected",
+  "logExplorer.notConnected.message": "You are currently disconnected. Please connect to view logs.",
+  "logExplorer.notConnected.action": "Connect"
+}

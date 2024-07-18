@@ -3,9 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useConnectionToggle } from "@/hooks"
 import { UnplugIcon } from "lucide-react"
 import { useIntl } from "react-intl"
-import { LogDetails } from "./components/log-details"
-import { LogFilters } from "./components/log-filters"
-import { LogViewer } from "./components/log-viewer"
 
 import { EmptyStateBlock } from "@/components/empty-state"
 import {
@@ -13,8 +10,12 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable"
+import { LogDetails } from "./log-details"
+import { LogFilters } from "./log-filters"
+import { LogViewer } from "./log-viewer"
+
 import type { ImperativePanelHandle } from "react-resizable-panels"
-import type { SearchFilters } from "./components/log-filters/types"
+import type { SearchFilters } from "./log-filters/types"
 
 const PANEL_SIZES = {
   filters: { base: 20, min: 10 },
@@ -60,11 +61,17 @@ export function LogExplorer() {
     return (
       <EmptyStateBlock
         icon={UnplugIcon}
-        title={intl.formatMessage({ id: "state.notConnected.title" })}
-        message={intl.formatMessage({ id: "state.notConnected.message" })}
+        title={intl.formatMessage({
+          id: "logExplorer.notConnected.title"
+        })}
+        message={intl.formatMessage({
+          id: "logExplorer.notConnected.message"
+        })}
         buttons={[
           {
-            text: intl.formatMessage({ id: "state.notConnected.action" }),
+            text: intl.formatMessage({
+              id: "logExplorer.notConnected.action"
+            }),
             onClick: toggleConnection
           }
         ]}

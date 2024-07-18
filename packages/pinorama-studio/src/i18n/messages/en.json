@@ -1,0 +1,20 @@
+{
+  "app.name": "Pinorama",
+  "app.version": "v{version}",
+  "theme.dark": "Dark",
+  "theme.light": "Light",
+  "theme.system": "System",
+  "connection.labels.serverUrl": "Server URL",
+  "connection.labels.reset": "Reset",
+  "connection.labels.save": "Save",
+  "connection.labels.connect": "Connect",
+  "connection.labels.disconnect": "Disconnect",
+  "connection.status.disconnected": "Disconnected",
+  "connection.status.connecting": "Connecting...",
+  "connection.status.connected": "Connected",
+  "connection.status.failed": "Connection failed",
+  "connection.status.unknown": "Unknown",
+  "labels.inlineError": "Error:",
+  "labels.loading": "Loading...",
+  "labels.noResultFound": "No result found"
+}

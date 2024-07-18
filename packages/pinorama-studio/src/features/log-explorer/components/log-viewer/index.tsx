@@ -136,7 +136,9 @@ export function LogViewer(props: LogViewerProps) {
                     <ErrorState error={error} />
                   ) : hasNoData ? (
                     <EmptyStateInline
-                      message={intl.formatMessage({ id: "labels.noLogsFound" })}
+                      message={intl.formatMessage({
+                        id: "logExplorer.noLogsFound"
+                      })}
                     />
                   ) : null}
                 </td>

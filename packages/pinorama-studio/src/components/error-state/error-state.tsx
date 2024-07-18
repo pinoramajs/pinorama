@@ -14,9 +14,9 @@ export function ErrorState(props: ErrorStateProps) {
         props.className
       )}
     >
-      <div className="flex items-center text-red-500 mr-2">
+      <div className="text-red-500 mr-2">
         <span className="font-medium">
-          <FormattedMessage id="labels.error" />
+          <FormattedMessage id="labels.inlineError" />
         </span>
       </div>
       <div className="text-foreground">{props.error.message}</div>

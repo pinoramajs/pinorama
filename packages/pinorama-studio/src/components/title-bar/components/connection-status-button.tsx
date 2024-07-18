@@ -26,13 +26,18 @@ const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
 })
 
-type ConnectionStatus = "disconnected" | "connecting" | "connected" | "connectionFailed" | "unknown"
+type ConnectionStatus =
+  | "disconnected"
+  | "connecting"
+  | "connected"
+  | "failed"
+  | "unknown"
 
 const STATUS_COLOR: Record<ConnectionStatus, string> = {
   disconnected: "bg-gray-500",
   connecting: "bg-orange-500",
   connected: "bg-green-500",
-  connectionFailed: "bg-red-500",
+  failed: "bg-red-500",
   unknown: "bg-gray-500"
 }
 
@@ -58,7 +63,7 @@ export function ConnectionStatusButton() {
     setOpen(false)
   }
 
-  let derivedStatus: ConnectionStatus;
+  let derivedStatus: ConnectionStatus
 
   const connectionStatus = appConfig?.config.connectionStatus
 
@@ -73,7 +78,7 @@ export function ConnectionStatusButton() {
       derivedStatus = "connected"
       break
     case status === "error":
-      derivedStatus = "connectionFailed"
+      derivedStatus = "failed"
       break
     default:
       derivedStatus = "unknown"
@@ -88,9 +93,11 @@ export function ConnectionStatusButton() {
           size={"sm"}
           className="flex h-8 items-center space-x-1.5"
         >
-          <div className={`w-2 h-2 rounded-full ${STATUS_COLOR[derivedStatus]}`} />
+          <div
+            className={`w-2 h-2 rounded-full ${STATUS_COLOR[derivedStatus]}`}
+          />
           <span className="">
-            <FormattedMessage id={`connectionStatus.${derivedStatus}`} />
+            <FormattedMessage id={`connection.status.${derivedStatus}`} />
           </span>
           <span className="text-muted-foreground">
             {appConfig?.config.connectionUrl ?? "Unknown"}
@@ -106,7 +113,7 @@ export function ConnectionStatusButton() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    <FormattedMessage id="server.url" />
+                    <FormattedMessage id="connection.labels.serverUrl" />
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -123,10 +130,10 @@ export function ConnectionStatusButton() {
                 onClick={() => form.reset()}
                 className="w-full"
               >
-                <FormattedMessage id="actions.reset" />
+                <FormattedMessage id="connection.labels.reset" />
               </Button>
               <Button type="submit" className="w-full">
-                <FormattedMessage id="actions.save" />
+                <FormattedMessage id="connection.labels.save" />
               </Button>
             </div>
           </form>

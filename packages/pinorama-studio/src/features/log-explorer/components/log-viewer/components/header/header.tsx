@@ -22,7 +22,9 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
     <div className="flex items-center p-3 pb-1 bg-background space-x-1.5">
       <ToggleFiltersButton onClick={props.onToggleFiltersButtonClick} />
       <SearchInput
-        placeholder={intl.formatMessage({ id: "labels.searchLogs" })}
+        placeholder={intl.formatMessage({
+          id: "logExplorer.searchLogs"
+        })}
         value={props.searchText}
         onChange={props.onSearchTextChange}
       />

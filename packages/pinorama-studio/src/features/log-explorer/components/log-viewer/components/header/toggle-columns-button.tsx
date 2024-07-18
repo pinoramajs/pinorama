@@ -8,40 +8,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
 import type { Table } from "@tanstack/react-table"
 import { EllipsisVerticalIcon } from "lucide-react"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 
 type ColumnsVisibilityButtonProps = {
   table: Table<unknown>
 }
 
 export function ToggleColumnsButton(props: ColumnsVisibilityButtonProps) {
+  const intl = useIntl()
+  const label = intl.formatMessage({ id: "logExplorer.columnsVisibility" })
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button aria-label="Columns" variant="outline2" className="px-2.5">
-              <EllipsisVerticalIcon className="h-[18px] w-[18px]" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipPortal>
-            <TooltipContent>
-              <FormattedMessage id="columns" />
-            </TooltipContent>
-          </TooltipPortal>
-        </Tooltip>
+      <DropdownMenuTrigger asChild>
+        <Button aria-label={label} variant="outline2" className="px-2.5">
+          <EllipsisVerticalIcon className="h-[18px] w-[18px]" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>
-          <FormattedMessage id="columns.toggle" />
+          <FormattedMessage id="logExplorer.columnsVisibility" />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {props.table
@@ -67,7 +54,7 @@ export function ToggleColumnsButton(props: ColumnsVisibilityButtonProps) {
           })}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => props.table.resetColumnVisibility()}>
-          <FormattedMessage id="columns.reset" />
+          <FormattedMessage id="logExplorer.resetColumns" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

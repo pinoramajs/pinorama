@@ -1,0 +1,20 @@
+{
+  "app.name": "Pinorama",
+  "app.version": "v{version}",
+  "theme.dark": "Scuro",
+  "theme.light": "Chiaro",
+  "theme.system": "Sistema",
+  "connection.labels.serverUrl": "URL del server",
+  "connection.labels.reset": "Reimposta",
+  "connection.labels.save": "Salva",
+  "connection.labels.connect": "Connetti",
+  "connection.labels.disconnect": "Disconnetti",
+  "connection.status.disconnected": "Disconnesso",
+  "connection.status.connecting": "Connessione in corso...",
+  "connection.status.connected": "Connesso",
+  "connection.status.failed": "Connessione fallita",
+  "connection.status.unknown": "Sconosciuto",
+  "labels.inlineError": "Errore:",
+  "labels.loading": "Caricamento in corso...",
+  "labels.noResultFound": "Nessun risultato trovato"
+}
