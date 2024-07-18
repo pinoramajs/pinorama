@@ -27,17 +27,18 @@ export function FacetHeader(props: FacetHeaderProps) {
         ) : null}
       </div>
       {props.count > 0 ? (
-        <div>
-          <Button
-            variant={"outline"}
-            size={"badge"}
-            className="flex text-muted-foreground"
-            onClick={props.onCountClick}
-          >
+        <Button
+          asChild
+          variant={"outline"}
+          size={"badge"}
+          className="flex text-muted-foreground"
+          onClick={props.onCountClick}
+        >
+          <div>
             <CircleX className="w-4 h-4" />
             <div className="px-1.5 text-xs">{props.count}</div>
-          </Button>
-        </div>
+          </div>
+        </Button>
       ) : null}
     </Button>
   )

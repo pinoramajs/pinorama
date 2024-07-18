@@ -6,17 +6,20 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { FilterXIcon } from "lucide-react"
+import { useIntl } from "react-intl"
 
 type ClearFiltersButtonProps = {
   onClick: () => void
 }
 
 export function ClearFiltersButton(props: ClearFiltersButtonProps) {
+  const intl = useIntl()
+  const label = intl.formatMessage({ id: "logExplorer.clearFilters" })
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          aria-label={"Clear search text and filters"}
+          aria-label={label}
           variant="outline2"
           className="px-2.5"
           onClick={props.onClick}
@@ -25,7 +28,7 @@ export function ClearFiltersButton(props: ClearFiltersButtonProps) {
         </Button>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent>Clear search text and filters</TooltipContent>
+        <TooltipContent>{label}</TooltipContent>
       </TooltipPortal>
     </Tooltip>
   )

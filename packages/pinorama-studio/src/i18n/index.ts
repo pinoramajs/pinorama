@@ -1,27 +1,47 @@
-import type { IntlConfig } from "react-intl"
+import features from "@/features"
 
-const importLocale = async (locale: string) =>
-  (await import(`./jsons/${locale}.json`)).default
+const appMessages: ImportMessages = {
+  en: () => import("./messages/en.json"),
+  it: () => import("./messages/it.json")
+}
 
-const retrieveI18nContent = async () => {
-  let i18nContent: Record<string, string> = {}
+export type Locale = "en" | "it"
 
+export type Messages = {
+  [key: string]: string
+}
+
+export type ImportMessages = {
+  [key in Locale]: () => Promise<{
+    default: Messages
+  }>
+}
+
+export const getMessages = async (locale: Locale) => {
+  let messages: Messages = {}
+
+  // App Messages
   try {
-    i18nContent = await importLocale(defaultConfig.locale)
-  } catch {
-    i18nContent = await importLocale(defaultConfig.defaultLocale)
+    const module = await appMessages[locale]()
+    messages = { ...messages, ...module.default }
+  } catch (error) {
+    console.warn(`i18n: could not load app messages for "${locale}"`)
   }
 
-  return i18nContent
-}
+  // Feature Messages
+  for (const feature of features) {
+    const translationImport = feature.messages[locale]
+    if (translationImport) {
+      try {
+        const module = await translationImport()
+        messages = { ...messages, ...module.default }
+      } catch (error) {
+        console.warn(
+          `i18n: could not load "${feature.id}" messages for "${locale}"`
+        )
+      }
+    }
+  }
 
-export const defaultConfig: IntlConfig & { defaultLocale: string } = {
-  defaultLocale: "en",
-  locale: navigator.language
-}
-
-export const retrieveI18nConfig = async (): Promise<IntlConfig> => {
-  const messages = await retrieveI18nContent()
-
-  return { ...defaultConfig, messages }
+  return messages
 }

@@ -6,17 +6,20 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { SlidersVerticalIcon } from "lucide-react"
+import { useIntl } from "react-intl"
 
 type ToggleFiltersButtonProps = {
   onClick: () => void
 }
 
 export function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
+  const intl = useIntl()
+  const label = intl.formatMessage({ id: "logExplorer.showOrHideFilters" })
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          aria-label={"Show or Hide Filters"}
+          aria-label={label}
           variant="outline2"
           className="px-2.5"
           onClick={props.onClick}
@@ -25,7 +28,7 @@ export function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
         </Button>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent>Show or Hide Filters</TooltipContent>
+        <TooltipContent>{label}</TooltipContent>
       </TooltipPortal>
     </Tooltip>
   )

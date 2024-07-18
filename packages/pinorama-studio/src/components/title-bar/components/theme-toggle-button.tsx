@@ -5,7 +5,7 @@ import {
   TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { Theme, useTheme } from "@/contexts"
+import { useTheme } from "@/contexts"
 import { MoonStarIcon, SunIcon } from "lucide-react"
 import { FormattedMessage, useIntl } from "react-intl"
 
@@ -14,16 +14,16 @@ export function ThemeToggleButton() {
   const { theme, setTheme } = useTheme()
 
   const handleClick = () => {
-    setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light)
+    setTheme(theme === "light" ? "dark" : "light")
   }
 
-  const Icon = theme === Theme.Dark ? MoonStarIcon : SunIcon
+  const Icon = theme === "dark" ? MoonStarIcon : SunIcon
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          aria-label={intl.formatMessage({ id: `mode.${theme}` })}
+          aria-label={intl.formatMessage({ id: `theme.${theme}` })}
           variant="secondary"
           size="sm"
           onClick={handleClick}
@@ -33,7 +33,7 @@ export function ThemeToggleButton() {
       </TooltipTrigger>
       <TooltipPortal>
         <TooltipContent>
-          <FormattedMessage id={`mode.${theme}`} />
+          <FormattedMessage id={`theme.${theme}`} />
         </TooltipContent>
       </TooltipPortal>
     </Tooltip>

@@ -40,7 +40,7 @@ export function EmptyStateBlock({
 }: EmptyStateBlockProps) {
   return (
     <div className="flex items-center justify-center h-full w-full text-center text-sm text-foreground">
-      <div className="w-60 flex flex-col items-center -mt-[10%]">
+      <div className="w-60 flex flex-col items-center -mt-[5%]">
         <div className="bg-muted-foreground/15 p-1.5 rounded-md mb-4">
           <Icon className="h-[18px] w-[18px]" />
         </div>

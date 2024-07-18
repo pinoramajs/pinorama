@@ -6,7 +6,7 @@ export function PinoramaLogo() {
     <div className="flex items-center space-x-1.5 font-medium">
       <ShellIcon className="h-[18px] w-[18px]" />
       <div className="leading-tight">
-        <FormattedMessage id="app.name" />
+        <FormattedMessage id="app.name" />{" "}
         <small className="text-xs font-normal text-muted-foreground">
           <FormattedMessage
             id="app.version"

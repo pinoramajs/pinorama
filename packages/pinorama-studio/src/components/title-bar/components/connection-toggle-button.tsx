@@ -8,7 +8,7 @@ export function ConnectionToggleButton() {
   return (
     <Button variant={"secondary"} size={"sm"} onClick={toggleConnection}>
       <FormattedMessage
-        id={`actions.${isConnected ? "disconnect" : "connect"}`}
+        id={`connection.labels.${isConnected ? "disconnect" : "connect"}`}
       />
     </Button>
   )
