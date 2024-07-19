@@ -18,7 +18,7 @@ export function PinoramaClientProvider({
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        enabled: appConfig?.config.connectionStatus === "connected"
+        enabled: appConfig?.config.connectionIntent
       }
     }
   })

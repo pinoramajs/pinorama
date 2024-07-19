@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button"
-import { useConnectionToggle } from "@/hooks/use-connection-toggle"
+import { usePinoramaConnection } from "@/hooks"
 import { FormattedMessage } from "react-intl"
 
 export function ConnectionToggleButton() {
-  const { isConnected, toggleConnection } = useConnectionToggle()
+  const { isConnected, toggleConnection } = usePinoramaConnection()
 
   return (
     <Button variant={"secondary"} size={"sm"} onClick={toggleConnection}>

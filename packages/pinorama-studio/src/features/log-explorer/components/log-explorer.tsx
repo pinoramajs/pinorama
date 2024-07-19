@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { useConnectionToggle } from "@/hooks"
+import { usePinoramaConnection } from "@/hooks"
 import { UnplugIcon } from "lucide-react"
 import { useIntl } from "react-intl"
 
@@ -25,7 +25,7 @@ const PANEL_SIZES = {
 export function LogExplorer() {
   const intl = useIntl()
 
-  const { isConnected, toggleConnection } = useConnectionToggle()
+  const { isConnected, toggleConnection } = usePinoramaConnection()
 
   const [filters, setFilters] = useState<SearchFilters>({})
   const [searchText, setSearchText] = useState<string>("")

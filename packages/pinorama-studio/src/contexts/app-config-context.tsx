@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 
 export type AppConfig = {
-  connectionStatus: "connected" | "disconnected"
+  connectionIntent: boolean
   connectionUrl?: string | null
 }
 
@@ -11,7 +11,7 @@ type AppConfigContextType = {
 }
 
 const DEFAULT_CONFIG: AppConfig = {
-  connectionStatus: "disconnected",
+  connectionIntent: false,
   connectionUrl: "http://localhost:6200"
 }
 
@@ -37,7 +37,7 @@ export function AppConfigProvider(props: { children: React.ReactNode }) {
 
     const autoConnect = !!queryConfig.connectionUrl
     if (autoConnect) {
-      queryConfig.connectionStatus = "connected"
+      queryConfig.connectionIntent = true
     }
 
     setConfig((prevConfig) => ({ ...prevConfig, ...queryConfig }))
