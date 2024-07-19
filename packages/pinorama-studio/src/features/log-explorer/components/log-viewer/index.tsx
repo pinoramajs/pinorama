@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
-import { usePinoramaIntrospection } from "@/hooks"
+import { usePinoramaConnection } from "@/hooks"
 import {
   type ColumnDef,
   type RowSelectionState,
@@ -30,11 +30,7 @@ type LogViewerProps = {
 export function LogViewer(props: LogViewerProps) {
   const intl = useIntl()
 
-  const {
-    data: introspection,
-    status: introspectionStatus,
-    error: introspectionError
-  }: any = usePinoramaIntrospection()
+  const { introspection } = usePinoramaConnection()
 
   const { data, status, error } = useLogs(props.searchText, props.filters)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -100,14 +96,6 @@ export function LogViewer(props: LogViewerProps) {
   const isLoading = status === "pending"
   const hasError = status === "error"
   const hasNoData = data?.length === 0 || false
-
-  if (introspectionStatus === "pending") {
-    return <LoadingState />
-  }
-
-  if (introspectionStatus === "error") {
-    return <ErrorState error={introspectionError} />
-  }
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
