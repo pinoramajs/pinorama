@@ -46,53 +46,44 @@ export const defaultOptions: PinoramaServerOptions = {
     pid: "enum",
     hostname: "string"
   },
-  ui: {}
-  // ui: {
-  //   props: {
-  //     level: {
-  //       label: "Level",
-  //       type: "enum",
-  //     }
-  //   },
-  //   labels: {
-  //     level: "Level",
-  //     time: "Time",
-  //     msg: "Message",
-  //     pid: "PID",
-  //     hostname: "Host"
-  //   },
-  //   enumLabels: {
-  //     level: {
-  //       10: "TRACE",
-  //       20: "DEBUG",
-  //       30: "INFO",
-  //       40: "WARN",
-  //       50: "ERROR",
-  //       60: "FATAL"
-  //     }
-  //   },
-  //   formatters: {
-  //     time: "timestamp"
-  //   },
-  //   styles: {
-  //     time: {
-  //       default: { opacity: "0.5" }
-  //     },
-  //     level: {
-  //       byValue: {
-  //         10: { color: "var(--color-gray-500)" },
-  //         20: { color: "var(--color-purple-500)" },
-  //         30: { color: "var(--color-lime-500)" },
-  //         40: { color: "var(--color-yellow-500)" },
-  //         50: { color: "var(--color-red-500)" },
-  //         60: { color: "var(--color-red-500)" }
-  //       }
-  //     }
-  //   },
-  //   defaultColumns: ["time", "level", "msg", "hostname", "pid"],
-  //   defaultFacets: ["level", "hostname", "pid"]
-  //   // facets: [["level", { search: false }], "hostname", "pid"],
-  // }
+  ui: {
+    labels: {
+      level: [
+        "Level",
+        {
+          10: "TRACE",
+          20: "DEBUG",
+          30: "INFO",
+          40: "WARN",
+          50: "ERROR",
+          60: "FATAL"
+        }
+      ],
+      time: "Time",
+      msg: "Message",
+      pid: "PID",
+      hostname: "Host"
+    },
+    formatters: {
+      time: "timestamp"
+    },
+    styles: {
+      time: {
+        opacity: "0.5"
+      },
+      level: [
+        { fontWeight: "bold" },
+        {
+          10: { color: "var(--color-gray-500)" },
+          20: { color: "var(--color-purple-500)" },
+          30: { color: "var(--color-lime-500)" },
+          40: { color: "var(--color-yellow-500)" },
+          50: { color: "var(--color-red-500)" },
+          60: { color: "var(--color-red-500)" }
+        }
+      ]
+    }
+  }
 }
 
 const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (

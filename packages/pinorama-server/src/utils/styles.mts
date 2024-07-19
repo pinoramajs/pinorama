@@ -1,45 +1,54 @@
 import { kebabCase } from "change-case"
 
-type StyleConfig = {
-  base?: Record<string, string>
-  conditions?: Record<string | number, Record<string, string>>
+type CSSProperties = {
+  [key: string]: string | number
 }
 
-type ColumnnDefinition =
-  | [string, { style: StyleConfig; formatter?: string }]
-  | string
+type ValueStyles = {
+  [key: string]: CSSProperties
+}
 
-export function generateCSS(columns: ColumnnDefinition[]) {
-  let css = ""
+type StyleDefinition = CSSProperties | [CSSProperties, ValueStyles]
 
-  const generateCSSProps = (styles: Record<string, string>) => {
-    let props = ""
-    for (const [prop, value] of Object.entries(styles)) {
-      props += `${kebabCase(prop)}: ${value};`
-    }
-    return props
-  }
+type Styles = { [key: string]: StyleDefinition }
 
-  for (const column of columns) {
-    if (typeof column === "string") continue
+export function generateCSS(styles: Styles) {
+  return Object.entries(styles)
+    .map(([field, style]) => generateCSSForField(field, style))
+    .join("")
+}
 
-    const prefix = "pinorama-col"
-    const [className, config] = column
-    const baseStyles = config.style?.base ?? {}
-    const conditions = config.style?.conditions ?? {}
+const generateCSSForField = (field: string, style: StyleDefinition) => {
+  let fieldCSS = ""
+
+  const className = `pinorama-${kebabCase(field)}`
+
+  if (Array.isArray(style)) {
+    const [baseStyles, valueStyles] = style
 
     // Generate base style
-    css += `.${prefix}-${kebabCase(className)} {`
-    css += generateCSSProps(baseStyles)
-    css += "}\n"
+    fieldCSS += `.${className} {`
+    fieldCSS += generateCSSProps(baseStyles)
+    fieldCSS += "}\n"
 
-    // Generate conditional style
-    for (const [condition, conditionStyles] of Object.entries(conditions)) {
-      css += `.${prefix}-${kebabCase(className)}-${condition} {`
-      css += generateCSSProps(conditionStyles)
-      css += "}\n"
+    // Generate value styles
+    for (const [value, valueStyle] of Object.entries(valueStyles)) {
+      fieldCSS += `.${className}-${kebabCase(value)} {`
+      fieldCSS += generateCSSProps(valueStyle)
+      fieldCSS += "}\n"
     }
+  } else {
+    // Generate base style
+    fieldCSS += `.${className} {`
+    fieldCSS += generateCSSProps(style)
+    fieldCSS += "}\n"
   }
 
-  return css
+  return fieldCSS
+}
+
+const generateCSSProps = (style: CSSProperties) => {
+  return Object.entries(style)
+    .map(([cssProp, value]) => `${kebabCase(cssProp)}: ${value};`)
+    .join("")
 }

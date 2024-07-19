@@ -6,13 +6,13 @@ export async function stylesRoute(fastify: FastifyInstance) {
     url: "/styles.css",
     method: "get",
     handler: async (req, res) => {
-      const columns = fastify.pinoramaOpts?.ui?.columns
+      const styles = fastify.pinoramaOpts?.ui?.styles
 
-      if (!columns || columns?.length === 0) {
+      if (!styles || Object.keys(styles).length === 0) {
         res.type("text/css").send("")
       }
 
-      const css = generateCSS(columns)
+      const css = generateCSS(styles)
       res.type("text/css").send(css)
     }
   })
