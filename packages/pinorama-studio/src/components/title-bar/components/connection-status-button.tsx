@@ -16,7 +16,7 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover"
 import { useAppConfig } from "@/contexts"
-import { usePinoramaIntrospection } from "@/hooks"
+import { type ConnectionStatus, usePinoramaConnection } from "@/hooks"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { FormattedMessage } from "react-intl"
@@ -25,13 +25,6 @@ import { z } from "zod"
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")
 })
-
-type ConnectionStatus =
-  | "disconnected"
-  | "connecting"
-  | "connected"
-  | "failed"
-  | "unknown"
 
 const STATUS_COLOR: Record<ConnectionStatus, string> = {
   disconnected: "bg-gray-500",
@@ -43,7 +36,7 @@ const STATUS_COLOR: Record<ConnectionStatus, string> = {
 
 export function ConnectionStatusButton() {
   const appConfig = useAppConfig()
-  const { status, fetchStatus } = usePinoramaIntrospection()
+  const { connectionStatus } = usePinoramaConnection()
 
   const [open, setOpen] = useState(false)
 
@@ -63,28 +56,6 @@ export function ConnectionStatusButton() {
     setOpen(false)
   }
 
-  let derivedStatus: ConnectionStatus
-
-  const connectionStatus = appConfig?.config.connectionStatus
-
-  switch (true) {
-    case connectionStatus === "disconnected":
-      derivedStatus = "disconnected"
-      break
-    case status === "pending" && fetchStatus === "fetching":
-      derivedStatus = "connecting"
-      break
-    case status === "success":
-      derivedStatus = "connected"
-      break
-    case status === "error":
-      derivedStatus = "failed"
-      break
-    default:
-      derivedStatus = "unknown"
-      break
-  }
-
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -94,10 +65,10 @@ export function ConnectionStatusButton() {
           className="flex h-8 items-center space-x-1.5"
         >
           <div
-            className={`w-2 h-2 rounded-full ${STATUS_COLOR[derivedStatus]}`}
+            className={`w-2 h-2 rounded-full ${STATUS_COLOR[connectionStatus]}`}
           />
           <span className="">
-            <FormattedMessage id={`connection.status.${derivedStatus}`} />
+            <FormattedMessage id={`connection.status.${connectionStatus}`} />
           </span>
           <span className="text-muted-foreground">
             {appConfig?.config.connectionUrl ?? "Unknown"}
