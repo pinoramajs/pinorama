@@ -1,5 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
+import { usePinoramaConnection } from "@/hooks"
+import { createField } from "@/lib/introspection"
 import type { OramaPropType, SearchFilters } from "../types"
 import { FacetFactoryInput } from "./facet-factory-input"
 
@@ -13,6 +15,8 @@ type FacetItemProps = {
 }
 
 export function FacetItem(props: FacetItemProps) {
+  const { introspection } = usePinoramaConnection()
+  const field = createField(props.name, introspection)
   return (
     <div className="flex items-center space-x-3 h-[38px] px-3 border-b last:border-b-0 bg-muted/20">
       <FacetFactoryInput
@@ -27,7 +31,7 @@ export function FacetItem(props: FacetItemProps) {
         htmlFor={props.value as string}
         className="whitespace-nowrap text-muted-foreground font-normal cursor-pointer flex-grow text-ellipsis w-full overflow-hidden leading-tight"
       >
-        {props.value}
+        {field.format(props.value)}
       </Label>
       <Badge
         variant={"secondary"}
