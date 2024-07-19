@@ -4,6 +4,8 @@ import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
 import { usePinoramaConnection } from "@/hooks"
+import { createField } from "@/lib/introspection"
+import { cn } from "@/lib/utils"
 import {
   type ColumnDef,
   type RowSelectionState,
@@ -39,19 +41,23 @@ export function LogViewer(props: LogViewerProps) {
     if (!introspection?.dbSchema) return []
 
     return Object.keys(introspection.dbSchema).map((columnName) => {
+      const field = createField(columnName, introspection)
       return {
         accessorKey: columnName,
-        header: columnName,
+        header: () => field.getDisplayLabel(),
         cell: (info) => {
+          const value = info.getValue() as string | number
+          const formattedValue = field.format(value)
+          const className = field.getClassName(value)
           return (
-            <div className={"overflow-ellipsis overflow-hidden"}>
-              {info.getValue() as string}
+            <div className={cn("overflow-ellipsis overflow-hidden", className)}>
+              {formattedValue}
             </div>
           )
         }
       }
     })
-  }, [introspection?.dbSchema])
+  }, [introspection])
 
   const logs = useMemo(() => data ?? [], [data])
 

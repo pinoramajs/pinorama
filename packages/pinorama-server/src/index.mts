@@ -72,7 +72,7 @@ export const defaultOptions: PinoramaServerOptions = {
         opacity: "0.5"
       },
       level: [
-        { fontWeight: "bold" },
+        {},
         {
           10: { color: "var(--color-gray-500)" },
           20: { color: "var(--color-purple-500)" },

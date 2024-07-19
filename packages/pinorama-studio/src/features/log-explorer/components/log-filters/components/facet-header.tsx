@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button"
+import { usePinoramaConnection } from "@/hooks"
+import { createField } from "@/lib/introspection"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import type React from "react"
 
@@ -12,6 +14,8 @@ type FacetHeaderProps = {
 }
 
 export function FacetHeader(props: FacetHeaderProps) {
+  const { introspection } = usePinoramaConnection()
+  const field = createField(props.name, introspection)
   const ChevronIcon = props.open ? ChevronDown : ChevronRight
   return (
     <Button
@@ -21,7 +25,7 @@ export function FacetHeader(props: FacetHeaderProps) {
     >
       <div className="flex items-center">
         <ChevronIcon className="mr-2 w-5 h-5" />
-        {props.name}
+        {field.getDisplayLabel()}
         {props.loading ? (
           <LoaderIcon className="w-4 h-4 ml-2 animate-spin text-muted-foreground" />
         ) : null}
