@@ -10,40 +10,49 @@ export type ConnectionStatus =
   | "failed"
   | "unknown"
 
+export const ConnectionStatus = Object.freeze({
+  Disconnected: "disconnected",
+  Connecting: "connecting",
+  Connected: "connected",
+  Failed: "failed",
+  Unknown: "unknown"
+}) satisfies Readonly<Record<Capitalize<ConnectionStatus>, ConnectionStatus>>
+
 export function usePinoramaConnection() {
   const appConfig = useAppConfig()
 
   const introspection = usePinoramaIntrospection()
   usePinoramaStyles()
 
-  const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("unknown")
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(
+    ConnectionStatus.Unknown
+  )
 
   const connectionIntent = appConfig?.config.connectionIntent
 
   useEffect(() => {
     switch (true) {
       case connectionIntent === false:
-        setConnectionStatus("disconnected")
+        setConnectionStatus(ConnectionStatus.Disconnected)
         break
       case introspection.status === "pending" &&
         introspection.fetchStatus === "fetching":
-        setConnectionStatus("connecting")
+        setConnectionStatus(ConnectionStatus.Connecting)
         break
       case introspection.status === "success":
-        setConnectionStatus("connected")
+        setConnectionStatus(ConnectionStatus.Connected)
         break
       case introspection.status === "error":
-        setConnectionStatus("failed")
+        setConnectionStatus(ConnectionStatus.Failed)
         break
       default:
-        setConnectionStatus("unknown")
+        setConnectionStatus(ConnectionStatus.Unknown)
         break
     }
   }, [connectionIntent, introspection])
 
   const isConnected = useMemo(
-    () => connectionStatus === "connected",
+    () => connectionStatus === ConnectionStatus.Connected,
     [connectionStatus]
   )
 
