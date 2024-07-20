@@ -1,5 +1,5 @@
 import { useAppConfig } from "@/contexts"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { usePinoramaIntrospection } from "./use-pinorama-introspection"
 import { usePinoramaStyles } from "./use-pinorama-styles"
 
@@ -18,43 +18,43 @@ export const ConnectionStatus = Object.freeze({
   Unknown: "unknown"
 }) satisfies Readonly<Record<Capitalize<ConnectionStatus>, ConnectionStatus>>
 
+type ConnectionStatusDetail = {
+  connectionStatus: ConnectionStatus
+  isConnected?: boolean
+}
+
 export function usePinoramaConnection() {
   const appConfig = useAppConfig()
 
   const introspection = usePinoramaIntrospection()
   usePinoramaStyles()
 
-  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(
-    ConnectionStatus.Unknown
-  )
+  const [{ connectionStatus, isConnected = false }, setConnectionStatus] = useState<ConnectionStatusDetail>({
+    connectionStatus: ConnectionStatus.Unknown
+  })
 
   const connectionIntent = appConfig?.config.connectionIntent
 
   useEffect(() => {
     switch (true) {
       case connectionIntent === false:
-        setConnectionStatus(ConnectionStatus.Disconnected)
+        setConnectionStatus({connectionStatus: ConnectionStatus.Disconnected})
         break
       case introspection.status === "pending" &&
         introspection.fetchStatus === "fetching":
-        setConnectionStatus(ConnectionStatus.Connecting)
+        setConnectionStatus({connectionStatus: ConnectionStatus.Connecting})
         break
       case introspection.status === "success":
-        setConnectionStatus(ConnectionStatus.Connected)
+        setConnectionStatus({connectionStatus: ConnectionStatus.Connected, isConnected: true})
         break
       case introspection.status === "error":
-        setConnectionStatus(ConnectionStatus.Failed)
+        setConnectionStatus({connectionStatus: ConnectionStatus.Failed})
         break
       default:
-        setConnectionStatus(ConnectionStatus.Unknown)
+        setConnectionStatus({connectionStatus: ConnectionStatus.Unknown})
         break
     }
   }, [connectionIntent, introspection])
-
-  const isConnected = useMemo(
-    () => connectionStatus === ConnectionStatus.Connected,
-    [connectionStatus]
-  )
 
   const toggleConnection = useCallback(() => {
     appConfig?.setConfig({
