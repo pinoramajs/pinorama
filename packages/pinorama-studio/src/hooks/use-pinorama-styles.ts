@@ -1,34 +1,36 @@
 import { usePinoramaClient } from "@/contexts"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect } from "react"
+
+const PINORAMA_STYLES_ID = "pinorama-styles"
+
+const insertStyle = (data: any) => {
+  if (!data) return
+
+  let styleElement = document.getElementById(
+    PINORAMA_STYLES_ID
+  ) as HTMLStyleElement
+
+  if (!styleElement) {
+    styleElement = document.createElement("style")
+    styleElement.id = PINORAMA_STYLES_ID
+    document.head.appendChild(styleElement)
+  }
+
+  styleElement.textContent = data
+}
 
 export const usePinoramaStyles = () => {
   const client = usePinoramaClient()
 
-  const query = useQuery({
+  return useQuery({
     queryKey: ["styles"],
     queryFn: async () => {
       const response: any = await client?.styles()
+
+      insertStyle(response)
+
       return response
     },
     staleTime: Number.POSITIVE_INFINITY
   })
-
-  useEffect(() => {
-    if (!query.data) return
-
-    let styleElement = document.getElementById(
-      "pinorama-styles"
-    ) as HTMLStyleElement
-
-    if (!styleElement) {
-      styleElement = document.createElement("style")
-      styleElement.id = "pinorama-styles"
-      document.head.appendChild(styleElement)
-    }
-
-    styleElement.textContent = query.data
-  }, [query.data])
-
-  return query
 }
