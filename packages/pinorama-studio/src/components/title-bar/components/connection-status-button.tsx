@@ -16,7 +16,7 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover"
 import { useAppConfig } from "@/contexts"
-import { type ConnectionStatus, usePinoramaConnection } from "@/hooks"
+import { ConnectionStatus, usePinoramaConnection } from "@/hooks"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { FormattedMessage } from "react-intl"
@@ -27,11 +27,11 @@ const formSchema = z.object({
 })
 
 const STATUS_COLOR: Record<ConnectionStatus, string> = {
-  disconnected: "bg-gray-500",
-  connecting: "bg-orange-500",
-  connected: "bg-green-500",
-  failed: "bg-red-500",
-  unknown: "bg-gray-500"
+  [ConnectionStatus.Disconnected]: "bg-gray-500",
+  [ConnectionStatus.Connecting]: "bg-orange-500",
+  [ConnectionStatus.Connected]: "bg-green-500",
+  [ConnectionStatus.Failed]: "bg-red-500",
+  [ConnectionStatus.Unknown]: "bg-gray-500"
 }
 
 export function ConnectionStatusButton() {

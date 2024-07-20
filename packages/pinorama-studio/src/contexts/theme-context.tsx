@@ -13,11 +13,11 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-export const Theme: Readonly<Record<Capitalize<Theme>, Theme>> = Object.freeze({
+export const Theme = Object.freeze({
   Dark: "dark",
   Light: "light",
   System: "system"
-})
+}) satisfies Readonly<Record<Capitalize<Theme>, Theme>>
 
 const initialState: ThemeProviderState = {
   theme: Theme.System,
