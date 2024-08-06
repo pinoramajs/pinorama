@@ -1,5 +1,11 @@
 # pinorama-client
 
+## 0.1.3
+
+### Patch Changes
+
+- b31f88c: execute build step on github release workflow
+
 ## 0.1.2
 
 ### Patch Changes

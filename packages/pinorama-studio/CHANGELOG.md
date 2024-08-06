@@ -1,5 +1,14 @@
 # pinorama-studio
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [b31f88c]
+  - pinorama-client@0.1.3
+  - pinorama-server@0.1.2
+  - pinorama-transport@0.1.2
+
 ## 0.1.3
 
 ### Patch Changes
