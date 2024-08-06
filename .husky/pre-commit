@@ -2,4 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 pnpm biome
-pnpm test
+# pnpm test (not needed, github action will run it anyway)
