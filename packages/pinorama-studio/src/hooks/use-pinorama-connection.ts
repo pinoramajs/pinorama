@@ -29,29 +29,33 @@ export function usePinoramaConnection() {
   const introspection = usePinoramaIntrospection()
   usePinoramaStyles()
 
-  const [{ connectionStatus, isConnected = false }, setConnectionStatus] = useState<ConnectionStatusDetail>({
-    connectionStatus: ConnectionStatus.Unknown
-  })
+  const [{ connectionStatus, isConnected = false }, setConnectionStatus] =
+    useState<ConnectionStatusDetail>({
+      connectionStatus: ConnectionStatus.Unknown
+    })
 
   const connectionIntent = appConfig?.config.connectionIntent
 
   useEffect(() => {
     switch (true) {
       case connectionIntent === false:
-        setConnectionStatus({connectionStatus: ConnectionStatus.Disconnected})
+        setConnectionStatus({ connectionStatus: ConnectionStatus.Disconnected })
         break
       case introspection.status === "pending" &&
         introspection.fetchStatus === "fetching":
-        setConnectionStatus({connectionStatus: ConnectionStatus.Connecting})
+        setConnectionStatus({ connectionStatus: ConnectionStatus.Connecting })
         break
       case introspection.status === "success":
-        setConnectionStatus({connectionStatus: ConnectionStatus.Connected, isConnected: true})
+        setConnectionStatus({
+          connectionStatus: ConnectionStatus.Connected,
+          isConnected: true
+        })
         break
       case introspection.status === "error":
-        setConnectionStatus({connectionStatus: ConnectionStatus.Failed})
+        setConnectionStatus({ connectionStatus: ConnectionStatus.Failed })
         break
       default:
-        setConnectionStatus({connectionStatus: ConnectionStatus.Unknown})
+        setConnectionStatus({ connectionStatus: ConnectionStatus.Unknown })
         break
     }
   }, [connectionIntent, introspection])
