@@ -7,9 +7,8 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  build_and_test:
     name: Build and Test
-    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,10 +29,19 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Snyk Security Scan
-        uses: snyk/actions@0.4.0
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
       - name: Test
         run: pnpm test
+
+  security:
+    name: Snyk Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Snyk
+        uses: snyk/actions@0.4.0
+        with:
+          args: test --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
