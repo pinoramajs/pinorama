@@ -1,5 +1,11 @@
 # pinorama-transport
 
+## 0.1.2
+
+### Patch Changes
+
+- b31f88c: execute build step on github release workflow
+
 ## 0.1.1
 
 ### Patch Changes
