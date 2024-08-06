@@ -78,5 +78,8 @@
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-plugin-package-version": "^1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
