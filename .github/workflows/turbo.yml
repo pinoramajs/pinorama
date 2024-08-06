@@ -39,6 +39,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
       - name: Snyk
         uses: snyk/actions@0.4.0
         with:
