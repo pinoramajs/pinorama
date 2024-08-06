@@ -32,6 +32,8 @@ jobs:
 
       - name: Snyk Security Scan
         uses: snyk/actions@0.4.0
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Test
         run: pnpm test
