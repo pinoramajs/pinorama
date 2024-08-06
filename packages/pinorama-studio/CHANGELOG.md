@@ -1,5 +1,11 @@
 # pinorama-studio
 
+## 0.1.3
+
+### Patch Changes
+
+- 5a53ded: execute build step on github release workflow
+
 ## 0.1.2
 
 ### Patch Changes
