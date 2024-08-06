@@ -28,7 +28,16 @@
     "clean": "rimraf dist node_modules",
     "build": "rollup --config"
   },
-  "author": "Francesco Pasqua <cesconix@me.com>",
+  "homepage": "https://github.com/pinoramajs/pinorama#readme",
+  "bugs": {
+    "url": "https://github.com/pinoramajs/pinorama/issues"
+  },
+  "author": "Francesco Pasqua <cesconix@me.com> (https://cesco.me)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoramajs/pinorama.git",
+    "directory": "packages/pinorama-client"
+  },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^26.0.1",

@@ -10,10 +10,15 @@
     "clean": "rimraf dist node_modules",
     "build": "tsc"
   },
-  "author": {
-    "email": "cesconix@me.com",
-    "name": "Francesco Pasqua",
-    "url": "https://github.com/cesconix"
+  "homepage": "https://github.com/pinoramajs/pinorama#readme",
+  "bugs": {
+    "url": "https://github.com/pinoramajs/pinorama/issues"
+  },
+  "author": "Francesco Pasqua <cesconix@me.com> (https://cesco.me)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoramajs/pinorama.git",
+    "directory": "packages/pinorama-server"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

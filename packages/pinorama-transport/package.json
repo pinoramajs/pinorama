@@ -19,12 +19,17 @@
     "build": "tsc",
     "postbuild": "chmod u+x ./dist/cli.mjs"
   },
-  "author": {
-    "email": "cesconix@me.com",
-    "name": "Francesco Pasqua",
-    "url": "https://github.com/cesconix"
+  "homepage": "https://github.com/pinoramajs/pinorama#readme",
+  "bugs": {
+    "url": "https://github.com/pinoramajs/pinorama/issues"
   },
   "license": "MIT",
+  "author": "Francesco Pasqua <cesconix@me.com> (https://cesco.me)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoramajs/pinorama.git",
+    "directory": "packages/pinorama-transport"
+  },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "@types/node": "^20.14.2",
