@@ -29,13 +29,14 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Creating .npmrc
+      - name: Creating .npmrc and remove .husky
         run: |
           cat << EOF > "$HOME/.npmrc"
             enable-pre-post-scripts=true
             package-manager-strict=false
             //registry.npmjs.org/:_authToken=$NPM_TOKEN
           EOF
+          rm -rf .husky
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
