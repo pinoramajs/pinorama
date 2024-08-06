@@ -1,7 +1,7 @@
 # Pinorama 🌀
 
 ![Build Status](https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main)
-![Known Vulnerabilities](https://snyk.io/test/github/pinoramajs/pinorama/badge.svg)(https://snyk.io/test/github/pinoramajs/pinorama)
+[![Known Vulnerabilities](https://snyk.io/test/github/pinoramajs/pinorama/badge.svg)](https://snyk.io/test/github/pinoramajs/pinorama)
 
 ⚠️ **Warning: This project is currently under development and not ready for production use.**
 
