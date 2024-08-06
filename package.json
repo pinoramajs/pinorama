@@ -15,9 +15,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "biome": "biome check --no-errors-on-unmatched --files-ignore-unknown=true",
-    "changeset": "changeset",
-    "changeset:version": "changeset version",
-    "changeset:release": "changeset publish",
+    "release": "changeset publish",
     "prepare": "husky"
   },
   "devDependencies": {
