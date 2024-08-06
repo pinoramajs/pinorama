@@ -111,7 +111,7 @@ export class PinoramaClient {
 
       return json
     } catch (error) {
-      console.error("error searching docs:", error)
+      console.error("error searching logs:", error)
       throw error
     }
   }
