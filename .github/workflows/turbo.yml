@@ -51,6 +51,6 @@ jobs:
       - name: Snyk
         uses: snyk/actions@0.4.0
         with:
-          args: test --all-projects
+          args: --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
