@@ -10,6 +10,17 @@
     "preview": "vitepress preview",
     "clean": "rimraf .vitepress/cache .vitepress/dist node_modules"
   },
+  "homepage": "https://github.com/pinoramajs/pinorama#readme",
+  "bugs": {
+    "url": "https://github.com/pinoramajs/pinorama/issues"
+  },
+  "license": "MIT",
+  "author": "Francesco Pasqua <cesconix@me.com> (https://cesco.me)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoramajs/pinorama.git",
+    "directory": "packages/pinorama-docs"
+  },
   "devDependencies": {
     "rimraf": "^5.0.7",
     "vitepress": "^1.2.3"

@@ -1,20 +1,27 @@
 {
   "name": "pinorama-studio",
-  "private": true,
   "version": "0.1.1",
+  "license": "MIT",
   "type": "module",
   "bin": {
     "pinorama": "./cli.mjs"
   },
-  "files": [
-    "dist",
-    "cli.mjs"
-  ],
+  "files": ["dist", "cli.mjs"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "clean": "rimraf dist node_modules"
+  },
+  "homepage": "https://github.com/pinoramajs/pinorama#readme",
+  "bugs": {
+    "url": "https://github.com/pinoramajs/pinorama/issues"
+  },
+  "author": "Francesco Pasqua <cesconix@me.com> (https://cesco.me)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoramajs/pinorama.git",
+    "directory": "packages/pinorama-studio"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
