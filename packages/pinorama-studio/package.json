@@ -6,10 +6,7 @@
   "bin": {
     "pinorama": "./cli.mjs"
   },
-  "files": [
-    "dist",
-    "cli.mjs"
-  ],
+  "files": ["dist", "cli.mjs"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
