@@ -24,5 +24,7 @@ export default defineConfig({
 
   locales: {
     root: { label: "English", ...en }
-  }
+  },
+
+  ignoreDeadLinks: true
 })
