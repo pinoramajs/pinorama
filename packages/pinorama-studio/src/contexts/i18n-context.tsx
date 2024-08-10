@@ -18,15 +18,10 @@ const LocaleContext = createContext<LocaleContextProps | undefined>(undefined)
 const defaultLocale: Locale = "en"
 
 export function I18nProvider(props: I18nProviderProps) {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
+  const [locale, setLocale] = useState<Locale>(
+    (localStorage.getItem("locale") as Locale) ?? defaultLocale
+  )
   const [messages, setMessages] = useState<Messages | null>(null)
-
-  useEffect(() => {
-    const savedLocale = localStorage.getItem("locale") as Locale
-    if (savedLocale) {
-      setLocale(savedLocale)
-    }
-  }, [])
 
   useEffect(() => {
     const loadMessages = async () => {
