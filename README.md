@@ -28,10 +28,12 @@ This README will be updated as the project evolves.
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://cesco.me/"><img src="https://avatars.githubusercontent.com/u/244004?v=4?s=100" width="100px;" alt="Francesco Pasqua"/><br /><sub><b>Francesco Pasqua</b></sub></a><br /><a href="https://github.com/pinoramajs/pinorama/commits?author=cesconix" title="Code">💻</a> <a href="#design-cesconix" title="Design">🎨</a> <a href="https://github.com/pinoramajs/pinorama/commits?author=cesconix" title="Documentation">📖</a> <a href="#ideas-cesconix" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-cesconix" title="Maintenance">🚧</a> <a href="#projectManagement-cesconix" title="Project Management">📆</a> <a href="https://github.com/pinoramajs/pinorama/pulls?q=is%3Apr+reviewed-by%3Acesconix" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://cesco.me/"><img src="https://avatars.githubusercontent.com/u/244004?v=4?s=100" width="100px;" alt="Francesco Pasqua"/><br /><sub><b>Francesco Pasqua</b></sub></a><br /><a href="https://github.com/pinoramajs/Pinorama/commits?author=cesconix" title="Code">💻</a> <a href="#design-cesconix" title="Design">🎨</a> <a href="https://github.com/pinoramajs/Pinorama/commits?author=cesconix" title="Documentation">📖</a> <a href="#ideas-cesconix" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-cesconix" title="Maintenance">🚧</a> <a href="#projectManagement-cesconix" title="Project Management">📆</a> <a href="https://github.com/pinoramajs/Pinorama/pulls?q=is%3Apr+reviewed-by%3Acesconix" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://ilteoood.xyz/"><img src="https://avatars.githubusercontent.com/u/6383527?v=4?s=100" width="100px;" alt="Matteo Pietro Dazzi"/><br /><sub><b>Matteo Pietro Dazzi</b></sub></a><br /><a href="https://github.com/pinoramajs/Pinorama/commits?author=ilteoood" title="Code">💻</a> <a href="https://github.com/pinoramajs/Pinorama/pulls?q=is%3Apr+reviewed-by%3Ailteoood" title="Reviewed Pull Requests">👀</a> <a href="#design-ilteoood" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>
+
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
