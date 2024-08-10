@@ -9,7 +9,7 @@ outline: deep
 ::: tip
 **Need a Quick Start?** 🚀
 
-If you're looking to get started quickly, check out [Pinorama Studio](/studio/), a Web App and CLI that allows you to store, view, filter, and analyze logs with minimal setup.
+If you're looking to get started quickly, check out [Pinorama Studio Quickstart](/guide/quick-start/), a Web App and CLI that allows you to store, view, filter, and analyze logs with minimal setup.
 :::
 
 ## Understanding the suite
