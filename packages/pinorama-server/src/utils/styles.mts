@@ -1,24 +1,18 @@
 import { kebabCase } from "change-case"
 
-type CSSProperties = {
-  [key: string]: string | number
-}
+type CSSProperties = Record<string, string | number>
 
-type ValueStyles = {
-  [key: string]: CSSProperties
-}
+type ValueStyles = Record<string, CSSProperties>
 
 type StyleDefinition = CSSProperties | [CSSProperties, ValueStyles]
 
 type Styles = { [key: string]: StyleDefinition }
 
-export function generateCSS(styles: Styles) {
-  return Object.entries(styles)
-    .map(([field, style]) => generateCSSForField(field, style))
-    .join("")
+export function generateCSS(styles: Styles = {}) {
+  return Object.entries(styles).map(generateCSSForField).join("")
 }
 
-const generateCSSForField = (field: string, style: StyleDefinition) => {
+const generateCSSForField = ([field, style]: [string, StyleDefinition]) => {
   let fieldCSS = ""
 
   const className = `pinorama-${kebabCase(field)}`
@@ -47,7 +41,7 @@ const generateCSSForField = (field: string, style: StyleDefinition) => {
   return fieldCSS
 }
 
-const generateCSSProps = (style: CSSProperties) => {
+const generateCSSProps = (style: CSSProperties = {}) => {
   return Object.entries(style)
     .map(([cssProp, value]) => `${kebabCase(cssProp)}: ${value};`)
     .join("")
