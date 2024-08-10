@@ -2,4 +2,4 @@
 "pinorama-server": patch
 ---
 
-chore: improvements
+chore(server): optimize introspection route and improve code structure
