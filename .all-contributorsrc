@@ -1,4 +1,23 @@
 {
   "projectName": "pinorama",
-  "projectOwner": "pinoramajs"
+  "projectOwner": "pinoramajs",
+  "repoType": "github",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "cesconix",
+      "name": "Francesco Pasqua",
+      "avatar_url": "https://avatars.githubusercontent.com/u/244004?v=4",
+      "profile": "https://cesco.me/",
+      "contributions": [
+        "code",
+        "design",
+        "doc",
+        "ideas",
+        "maintenance",
+        "projectManagement",
+        "review"
+      ]
+    }
+  ]
 }
