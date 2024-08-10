@@ -8,13 +8,10 @@ export async function stylesRoute(fastify: FastifyInstance) {
     url: "/styles.css",
     method: "get",
     handler: (req, res) => {
-      const styles = fastify.pinoramaOpts?.ui?.styles
+      const styles = fastify.pinoramaOpts?.ui?.styles || {}
 
-      if (!styles || Object.keys(styles).length === 0) {
-        res.type(CSS_MIME_TYPE).send("")
-      }
+      const css = Object.keys(styles).length > 0 ? generateCSS(styles) : ""
 
-      const css = generateCSS(styles)
       res.type(CSS_MIME_TYPE).send(css)
     }
   })
