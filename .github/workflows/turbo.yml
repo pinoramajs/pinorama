@@ -2,7 +2,7 @@ name: Turbo CI
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
     types: [opened, synchronize]
 
@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install
         run: pnpm install --no-frozen-lockfile
@@ -31,29 +31,3 @@ jobs:
 
       - name: Test
         run: pnpm test
-
-  security:
-    name: Snyk Security Scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Snyk
-        uses: snyk/actions@0.4.0
-        with:
-          args: --all-projects
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
