@@ -56,11 +56,11 @@ export const en = defineConfig({
           },
           {
             text: "Quick Start",
-            link: "/guide/quick-start/"
+            link: "/guide/quick-start"
           },
           {
             text: "Use Cases",
-            link: "/guide/use-cases/"
+            link: "/guide/use-cases"
           }
         ]
       },
@@ -69,19 +69,19 @@ export const en = defineConfig({
         items: [
           {
             text: "Overview",
-            link: "/guide/pinorama-studio/"
+            link: "/pinorama-studio"
           },
           {
             text: "Installation",
-            link: "/guide/pinorama-studio/installation/"
+            link: "/pinorama-studio/installation"
           },
           {
             text: "Usage",
-            link: "/guide/pinorama-studio/usage/"
+            link: "/pinorama-studio/usage"
           },
           {
             text: "CLI",
-            link: "/guide/pinorama-studio/api/"
+            link: "/pinorama-studio/api"
           }
         ]
       },
@@ -90,19 +90,19 @@ export const en = defineConfig({
         items: [
           {
             text: "Overview",
-            link: "/guide/pinorama-client/"
+            link: "/pinorama-client"
           },
           {
             text: "Installation",
-            link: "/guide/pinorama-client/installation/"
+            link: "/pinorama-client/installation"
           },
           {
             text: "Usage",
-            link: "/guide/pinorama-client/usage/"
+            link: "/pinorama-client/usage"
           },
           {
             text: "API Reference",
-            link: "/guide/pinorama-client/api/"
+            link: "/pinorama-client/api"
           }
         ]
       },
@@ -111,19 +111,19 @@ export const en = defineConfig({
         items: [
           {
             text: "Overview",
-            link: "/guide/pinorama-server/"
+            link: "/pinorama-server"
           },
           {
             text: "Installation",
-            link: "/guide/pinorama-server/installation/"
+            link: "/pinorama-server/installation"
           },
           {
             text: "Configuration",
-            link: "/guide/pinorama-server/configuration/"
+            link: "/pinorama-server/configuration"
           },
           {
             text: "API Reference",
-            link: "/guide/pinorama-server/api/"
+            link: "/pinorama-server/api"
           }
         ]
       },
@@ -132,15 +132,15 @@ export const en = defineConfig({
         items: [
           {
             text: "Overview",
-            link: "/guide/pinorama-transport/"
+            link: "/pinorama-transport"
           },
           {
             text: "Installation",
-            link: "/guide/pinorama-transport/installation/"
+            link: "/pinorama-transport/installation"
           },
           {
             text: "Usage",
-            link: "/guide/pinorama-transport/usage/"
+            link: "/pinorama-transport/usage"
           }
         ]
       }
