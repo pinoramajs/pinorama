@@ -16,7 +16,7 @@ export const defaultClientOptions: Partial<PinoramaClientOptions> = {
   maxRetries: 5,
   backoff: 1000,
   backoffFactor: 2,
-  backoffMax: 30000
+  backoffMax: 30_000
 }
 
 export class PinoramaClient {
@@ -135,7 +135,7 @@ export class PinoramaClient {
     }
   }
 
-  public async introspection(): Promise<unknown> {
+  public async introspection<T = unknown>(): Promise<T> {
     try {
       const response = await fetch(`${this.url}/introspection`, {
         method: "GET",
