@@ -7,9 +7,7 @@ const appMessages: ImportMessages = {
 
 export type Locale = "en" | "it"
 
-export type Messages = {
-  [key: string]: string
-}
+export type Messages = Record<string, string>
 
 export type ImportMessages = {
   [key in Locale]: () => Promise<{
