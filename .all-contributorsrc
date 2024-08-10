@@ -1,5 +1,5 @@
 {
-  "projectName": "pinorama",
+  "projectName": "Pinorama",
   "projectOwner": "pinoramajs",
   "repoType": "github",
   "commitConvention": "angular",
@@ -18,6 +18,22 @@
         "projectManagement",
         "review"
       ]
+    },
+    {
+      "login": "ilteoood",
+      "name": "Matteo Pietro Dazzi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6383527?v=4",
+      "profile": "https://ilteoood.xyz/",
+      "contributions": [
+        "code",
+        "review",
+        "design"
+      ]
     }
-  ]
+  ],
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "contributorsPerLine": 7
 }
