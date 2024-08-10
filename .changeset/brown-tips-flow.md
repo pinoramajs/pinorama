@@ -3,4 +3,4 @@
 "pinorama-studio": patch
 ---
 
-chore: improvements
+chore: optimize code and improve type safety
