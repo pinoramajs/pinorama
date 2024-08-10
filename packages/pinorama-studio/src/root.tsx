@@ -24,13 +24,13 @@ const rootRoute = createRootRoute({
   component: App
 })
 
-const routes = features.map((feature) => {
-  return createRoute({
+const routes = features.map((feature) =>
+  createRoute({
     getParentRoute: () => rootRoute,
     path: feature.routePath,
     component: feature.component as SyncRouteComponent<ComponentType>
   })
-})
+)
 
 const router = createRouter({
   routeTree: rootRoute.addChildren(routes),
