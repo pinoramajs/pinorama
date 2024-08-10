@@ -7,9 +7,7 @@ const appMessages: ImportMessages = {
 
 export type Locale = "en" | "it"
 
-export type Messages = {
-  [key: string]: string
-}
+export type Messages = Record<string, string>
 
 export type ImportMessages = {
   [key in Locale]: () => Promise<{
@@ -23,7 +21,7 @@ export const getMessages = async (locale: Locale) => {
   // App Messages
   try {
     const module = await appMessages[locale]()
-    messages = { ...messages, ...module.default }
+    messages = module.default
   } catch (error) {
     console.warn(`i18n: could not load app messages for "${locale}"`)
   }

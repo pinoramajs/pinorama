@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 
 const PINORAMA_STYLES_ID = "pinorama-styles"
 
-const insertStyle = (data: any) => {
+const insertStyle = (data?: string) => {
   if (!data) return
 
   let styleElement = document.getElementById(
@@ -25,7 +25,7 @@ export const usePinoramaStyles = () => {
   return useQuery({
     queryKey: ["styles"],
     queryFn: async () => {
-      const response: any = await client?.styles()
+      const response = await client?.styles()
 
       insertStyle(response)
 

@@ -23,12 +23,9 @@ export function PinoramaClientProvider({
     }
   })
 
-  let pinoramaClient: PinoramaClient | null = null
-  if (appConfig?.config.connectionUrl) {
-    pinoramaClient = new PinoramaClient({
-      url: appConfig?.config.connectionUrl
-    })
-  }
+  const pinoramaClient: PinoramaClient | null = appConfig?.config.connectionUrl
+    ? new PinoramaClient({ url: appConfig.config.connectionUrl })
+    : null
 
   return (
     <QueryClientProvider client={queryClient}>
