@@ -2,6 +2,7 @@
 
 ![Build Status](https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main)
 [![Known Vulnerabilities](https://snyk.io/test/github/pinoramajs/pinorama/badge.svg)](https://snyk.io/test/github/pinoramajs/pinorama)
+[![All Contributors](https://img.shields.io/github/all-contributors/pinoramajs/pinorama?color=ee8449&style=flat-square)](#contributors)
 
 ⚠️ **Warning: This project is currently under development and not ready for production use.**
 
@@ -29,3 +30,5 @@ This README will be updated as the project evolves.
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://allcontributors.org/) specification. Contributions of any kind welcome!
