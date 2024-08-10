@@ -20,23 +20,18 @@ ${generateCSSProps(style)}
 }
 
 const generateCSSForField = ([field, style]: [string, StyleDefinition]) => {
-  let fieldCSS = ""
-
   const className = `pinorama-${kebabCase(field)}`
 
-  if (Array.isArray(style)) {
-    const [baseStyles, valueStyles] = style
+  if (!Array.isArray(style)) {
+    return createFieldCss(className, style)
+  }
 
-    // Generate base style
-    fieldCSS += createFieldCss(className, baseStyles)
+  const [baseStyles, valueStyles] = style
 
-    // Generate value styles
-    for (const [value, valueStyle] of Object.entries(valueStyles)) {
-      fieldCSS += createFieldCss(`${className}-${kebabCase(value)}`, valueStyle)
-    }
-  } else {
-    // Generate base style
-    fieldCSS += createFieldCss(className, style)
+  let fieldCSS = createFieldCss(className, baseStyles)
+
+  for (const [value, valueStyle] of Object.entries(valueStyles)) {
+    fieldCSS += createFieldCss(`${className}-${kebabCase(value)}`, valueStyle)
   }
 
   return fieldCSS
