@@ -12,6 +12,13 @@ export function generateCSS(styles: Styles = {}) {
   return Object.entries(styles).map(generateCSSForField).join("")
 }
 
+const createFieldCss = (className: string, style: CSSProperties) => {
+  return `.${className} {
+${generateCSSProps(style)}
+}
+`
+}
+
 const generateCSSForField = ([field, style]: [string, StyleDefinition]) => {
   let fieldCSS = ""
 
@@ -21,21 +28,15 @@ const generateCSSForField = ([field, style]: [string, StyleDefinition]) => {
     const [baseStyles, valueStyles] = style
 
     // Generate base style
-    fieldCSS += `.${className} {`
-    fieldCSS += generateCSSProps(baseStyles)
-    fieldCSS += "}\n"
+    fieldCSS += createFieldCss(className, baseStyles)
 
     // Generate value styles
     for (const [value, valueStyle] of Object.entries(valueStyles)) {
-      fieldCSS += `.${className}-${kebabCase(value)} {`
-      fieldCSS += generateCSSProps(valueStyle)
-      fieldCSS += "}\n"
+      fieldCSS += createFieldCss(`${className}-${kebabCase(value)}`, valueStyle)
     }
   } else {
     // Generate base style
-    fieldCSS += `.${className} {`
-    fieldCSS += generateCSSProps(style)
-    fieldCSS += "}\n"
+    fieldCSS += createFieldCss(className, style)
   }
 
   return fieldCSS
