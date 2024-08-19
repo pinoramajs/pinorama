@@ -14,7 +14,7 @@ export const useStaticLogs = (
   return useQuery({
     queryKey: ["static-logs", searchText, searchFilters],
     queryFn: async ({ signal }) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 300))
       if (signal.aborted) return
 
       const payload = buildPayload(searchText, searchFilters)

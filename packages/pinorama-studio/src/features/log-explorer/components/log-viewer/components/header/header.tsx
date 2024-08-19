@@ -6,16 +6,19 @@ import { ToggleFiltersButton } from "./toggle-filters-button"
 import { ToggleLiveButton } from "./toggle-live-button"
 
 import type { Table } from "@tanstack/react-table"
+import { RefreshDataButton } from "./refresh-data-button"
 
 type LogViewerHeaderProps = {
   table: Table<unknown>
   searchText: string
   showClearFiltersButton: boolean
   liveMode: boolean
+  isLoading: boolean
   onSearchTextChange: (text: string) => void
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
   onToggleLiveButtonClick: (live: boolean) => void
+  onRefreshButtonClick: () => void
 }
 
 export function LogViewerHeader(props: LogViewerHeaderProps) {
@@ -34,6 +37,10 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
       <ToggleLiveButton
         pressed={props.liveMode}
         onPressedChange={props.onToggleLiveButtonClick}
+      />
+      <RefreshDataButton
+        onClick={props.onRefreshButtonClick}
+        loading={props.isLoading}
       />
       {props.showClearFiltersButton ? (
         <ClearFiltersButton onClick={props.onClearFiltersButtonClick} />
