@@ -10,7 +10,7 @@ type ToggleLiveButtonProps = {
 
 export function ToggleLiveButton(props: ToggleLiveButtonProps) {
   const intl = useIntl()
-  const label = intl.formatMessage({ id: "logExplorer.live" })
+  const label = intl.formatMessage({ id: "logExplorer.liveMode" })
   const Icon = props.pressed ? StopCircleIcon : PlayCircleIcon
 
   return (
@@ -28,7 +28,7 @@ export function ToggleLiveButton(props: ToggleLiveButtonProps) {
         className={cn("flex items-center", props.pressed && "text-blue-400")}
       >
         <Icon className="mr-1.5 w-[18px] h-[18px]" />
-        <div className="whitespace-nowrap">Live Mode</div>
+        <div className="whitespace-nowrap">{label}</div>
       </div>
     </Toggle>
   )
