@@ -1,7 +1,6 @@
 import { ConnectionStatusButton } from "./components/connection-status-button"
 import { ConnectionToggleButton } from "./components/connection-toggle-button"
 import { PinoramaLogo } from "./components/pinorama-logo"
-import { SettingsButton } from "./components/settings-button"
 import { ThemeToggleButton } from "./components/theme-toggle-button"
 
 export function TitleBar() {
@@ -21,7 +20,6 @@ export function TitleBar() {
         {/* Right */}
         <div className="flex items-center space-x-1.5">
           <ThemeToggleButton />
-          <SettingsButton />
           <ConnectionToggleButton />
         </div>
       </div>
