@@ -126,10 +126,12 @@ export function LogViewer(props: LogViewerProps) {
         searchText={props.searchText}
         liveMode={props.liveMode}
         showClearFiltersButton={hasFilters}
+        isLoading={logsQuery.isFetching}
         onSearchTextChange={props.onSearchTextChange}
         onToggleFiltersButtonClick={props.onToggleFiltersButtonClick}
         onToggleLiveButtonClick={props.onToggleLiveButtonClick}
         onClearFiltersButtonClick={props.onClearFiltersButtonClick}
+        onRefreshButtonClick={logsQuery.refetch}
       />
 
       <div
