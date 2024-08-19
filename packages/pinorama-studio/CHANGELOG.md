@@ -1,5 +1,22 @@
 # pinorama-studio
 
+## 0.2.0
+
+### Minor Changes
+
+- 306a952: add live mode feature
+
+### Patch Changes
+
+- 54639cb: update favicon to official logo
+- 0b8ae5b: chore: optimize code and improve type safety
+- Updated dependencies [0b8ae5b]
+- Updated dependencies [306a952]
+- Updated dependencies [f79e807]
+  - pinorama-client@0.2.0
+  - pinorama-server@0.2.0
+  - pinorama-transport@0.1.2
+
 ## 0.1.4
 
 ### Patch Changes

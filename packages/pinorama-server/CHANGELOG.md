@@ -1,5 +1,15 @@
 # pinorama-server
 
+## 0.2.0
+
+### Minor Changes
+
+- 306a952: add live mode feature
+
+### Patch Changes
+
+- f79e807: chore(server): optimize introspection route and improve code structure
+
 ## 0.1.2
 
 ### Patch Changes
