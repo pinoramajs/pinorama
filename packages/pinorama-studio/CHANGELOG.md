@@ -1,5 +1,11 @@
 # pinorama-studio
 
+## 0.2.1
+
+### Patch Changes
+
+- 2ff89b8: wrong query param for connectionUrl
+
 ## 0.2.0
 
 ### Minor Changes
