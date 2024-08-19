@@ -2,6 +2,7 @@
   "logExplorer.searchLogs": "Cerca nei log...",
   "logExplorer.noLogsFound": "Nessun log trovato. Si prega di controllare i filtri.",
   "logExplorer.showOrHideFilters": "Mostra o nascondi filtri",
+  "logExplorer.live": "Live",
   "logExplorer.clearFilters": "Cancella testo di ricerca e filtri",
   "logExplorer.columns": "Colonne",
   "logExplorer.columnsVisibility": "Visibilità delle colonne",

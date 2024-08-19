@@ -18,15 +18,18 @@ import type { SearchFilters } from "../log-filters/types"
 import { LogViewerHeader } from "./components/header/header"
 import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
-import { useLogs } from "./hooks/use-logs"
+import { useLiveLogs } from "./hooks/use-live-logs"
+import { useStaticLogs } from "./hooks/use-static-logs"
 
 type LogViewerProps = {
   filters: SearchFilters
   searchText: string
+  liveMode: boolean
   onSearchTextChange: (searchText: string) => void
   onRowSelectionChange: (row: any) => void
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
+  onToggleLiveButtonClick: (live: boolean) => void
 }
 
 export function LogViewer(props: LogViewerProps) {
@@ -34,7 +37,20 @@ export function LogViewer(props: LogViewerProps) {
 
   const { introspection } = usePinoramaConnection()
 
-  const { data, status, error } = useLogs(props.searchText, props.filters)
+  const staticLogsQuery = useStaticLogs(
+    props.searchText,
+    props.filters,
+    !props.liveMode
+  )
+
+  const liveLogsQuery = useLiveLogs(
+    props.searchText,
+    props.filters,
+    props.liveMode
+  )
+
+  const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const columns = useMemo<ColumnDef<unknown>[]>(() => {
@@ -59,7 +75,7 @@ export function LogViewer(props: LogViewerProps) {
     })
   }, [introspection])
 
-  const logs = useMemo(() => data ?? [], [data])
+  const logs = useMemo(() => logsQuery.data ?? [], [logsQuery.data])
 
   const table = useReactTable({
     data: logs,
@@ -99,18 +115,20 @@ export function LogViewer(props: LogViewerProps) {
     overscan: 100
   })
 
-  const isLoading = status === "pending"
-  const hasError = status === "error"
-  const hasNoData = data?.length === 0 || false
+  const isLoading = logsQuery.status === "pending"
+  const hasError = logsQuery.status === "error"
+  const hasNoData = logsQuery.data?.length === 0 || false
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
       <LogViewerHeader
         table={table}
         searchText={props.searchText}
+        liveMode={props.liveMode}
         showClearFiltersButton={hasFilters}
         onSearchTextChange={props.onSearchTextChange}
         onToggleFiltersButtonClick={props.onToggleFiltersButtonClick}
+        onToggleLiveButtonClick={props.onToggleLiveButtonClick}
         onClearFiltersButtonClick={props.onClearFiltersButtonClick}
       />
 
@@ -127,7 +145,7 @@ export function LogViewer(props: LogViewerProps) {
                   {isLoading ? (
                     <LoadingState />
                   ) : hasError ? (
-                    <ErrorState error={error} />
+                    <ErrorState error={logsQuery.error} />
                   ) : hasNoData ? (
                     <EmptyStateInline
                       message={intl.formatMessage({

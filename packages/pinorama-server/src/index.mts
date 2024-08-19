@@ -6,8 +6,9 @@ import fp from "fastify-plugin"
 
 import * as plugins from "./plugins/index.mjs"
 import * as routes from "./routes/index.mjs"
+import { withPinoramaSchema } from "./utils/metadata.js"
 
-import type { AnyOrama, AnySchema } from "@orama/orama"
+import type { AnyOrama, AnySchema, Orama, TypedDocument } from "@orama/orama"
 import type {
   FastifyInstance,
   FastifyPluginAsync,
@@ -36,16 +37,22 @@ type PinoramaServerOptions = {
   ui: any
 }
 
+export type OramaPinorama = Orama<typeof dbSchema>
+export type PinoramaDocument = TypedDocument<OramaPinorama>
+
+// INFO: need to use `as const` to prevent widening
+const dbSchema = {
+  level: "enum",
+  time: "number",
+  msg: "string",
+  pid: "enum",
+  hostname: "string"
+} as const
+
 export const defaultOptions: PinoramaServerOptions = {
   adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET,
   dbFormat: "json",
-  dbSchema: {
-    level: "enum",
-    time: "number",
-    msg: "string",
-    pid: "enum",
-    hostname: "string"
-  },
+  dbSchema,
   ui: {
     labels: {
       level: [
@@ -94,7 +101,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 
   const db = fs.existsSync(opts.dbPath as string)
     ? await restoreFromFile(opts.dbFormat, opts.dbPath)
-    : await create({ schema: opts.dbSchema })
+    : await create({ schema: withPinoramaSchema(opts.dbSchema) })
 
   fastify.decorate("pinoramaOpts", opts)
   fastify.decorate("pinoramaDb", db)

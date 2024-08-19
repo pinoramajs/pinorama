@@ -9,6 +9,4 @@ export type StringFilter = string[]
 export type EnumFilter = { in: (string | number)[] }
 export type FacetFilter = StringFilter | EnumFilter
 
-export type SearchFilters = {
-  [key: string]: FacetFilter
-}
+export type SearchFilters = Record<string, FacetFilter>

@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 export type AppConfig = {
   connectionIntent: boolean
   connectionUrl?: string | null
+  liveMode: boolean
 }
 
 type AppConfigContextType = {
@@ -12,7 +13,8 @@ type AppConfigContextType = {
 
 const DEFAULT_CONFIG: AppConfig = {
   connectionIntent: false,
-  connectionUrl: "http://localhost:6200"
+  connectionUrl: "http://localhost:6200",
+  liveMode: false
 }
 
 const getAppConfigFromQueryParams = () => {
@@ -22,6 +24,11 @@ const getAppConfigFromQueryParams = () => {
   const connectionUrl = params.get("connectionUrl")
   if (connectionUrl) {
     appConfig.connectionUrl = connectionUrl
+  }
+
+  const liveMode = params.get("liveMode")
+  if (liveMode) {
+    appConfig.liveMode = liveMode === "true"
   }
 
   return appConfig

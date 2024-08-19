@@ -1,6 +1,9 @@
 import { z } from "zod"
 import { setTimeout } from "./platform/node.js"
 
+import type { Results, SearchParams } from "@orama/orama"
+import type { OramaPinorama, PinoramaDocument } from "pinorama-server"
+
 const clientOptionsSchema = z.object({
   url: z.string(),
   maxRetries: z.number().min(2),
@@ -19,7 +22,7 @@ export const defaultClientOptions: Partial<PinoramaClientOptions> = {
   backoffMax: 30_000
 }
 
-export class PinoramaClient {
+export class PinoramaClient<T extends z.ZodType = z.ZodType> {
   /** Pinorama Server URL */
   private url: string
 
@@ -82,7 +85,7 @@ export class PinoramaClient {
     }
   }
 
-  public async insert(docs: any[]): Promise<void> {
+  public async insert(docs: z.infer<T>[]): Promise<void> {
     await this.retryOperation(async () => {
       const response = await fetch(`${this.url}/bulk`, {
         method: "POST",
@@ -96,7 +99,7 @@ export class PinoramaClient {
     })
   }
 
-  public async search(payload: unknown): Promise<unknown> {
+  public async search(payload: SearchParams<OramaPinorama>) {
     try {
       const response = await fetch(`${this.url}/search`, {
         method: "POST",
@@ -104,10 +107,11 @@ export class PinoramaClient {
         body: JSON.stringify(payload)
       })
 
-      const json = await response.json()
-      if (response.status !== 200) {
-        throw new Error(json.error)
+      if (!response.ok) {
+        throw new Error("[TODO ERROR]: PinoramaClient.search failed")
       }
+
+      const json: Results<PinoramaDocument> = await response.json()
 
       return json
     } catch (error) {
