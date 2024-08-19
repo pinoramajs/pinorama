@@ -26,9 +26,7 @@ export const usePinoramaStyles = () => {
     queryKey: ["styles"],
     queryFn: async () => {
       const response = await client?.styles()
-
       insertStyle(response)
-
       return response
     },
     staleTime: Number.POSITIVE_INFINITY

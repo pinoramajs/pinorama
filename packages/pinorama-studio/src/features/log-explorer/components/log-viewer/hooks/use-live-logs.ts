@@ -1,0 +1,69 @@
+import { usePinoramaClient } from "@/contexts"
+import {
+  buildPayload,
+  getDocumentMetadata
+} from "@/features/log-explorer/utils"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { useCallback, useEffect, useMemo, useRef } from "react"
+
+import type { SearchParams } from "@orama/orama"
+import type { OramaPinorama } from "pinorama-server"
+
+const POLL_DELAY = 1500
+
+export const useLiveLogs = (
+  searchText?: string,
+  searchFilters?: SearchParams<OramaPinorama>["where"],
+  enabled?: boolean
+) => {
+  const client = usePinoramaClient()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const query = useInfiniteQuery({
+    queryKey: ["live-logs", searchText, searchFilters],
+    queryFn: async ({ pageParam }) => {
+      const payload = buildPayload(searchText, searchFilters, pageParam)
+
+      const response = await client?.search(payload)
+      const newData = response?.hits.map((hit) => hit.document) ?? []
+
+      if (newData.length > 0) {
+        const lastItem = newData[newData.length - 1]
+        const metadata = getDocumentMetadata(lastItem)
+        pageParam = metadata.createdAt
+      }
+
+      return { data: newData, nextCursor: pageParam }
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    staleTime: Number.POSITIVE_INFINITY,
+    // refetchInterval: POLL_DELAY, // NOTE: This is not working as expected, it doesn't use the nextCursor
+    enabled: false // NOTE: We will manually poll the data
+  })
+
+  const schedulePoll = useCallback(() => {
+    if (enabled) {
+      timeoutRef.current = setTimeout(() => {
+        query.fetchNextPage().finally(schedulePoll)
+      }, POLL_DELAY)
+    }
+  }, [enabled, query])
+
+  useEffect(() => {
+    if (enabled) {
+      schedulePoll()
+    }
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [enabled, schedulePoll])
+
+  const flattenedData = useMemo(() => {
+    return query.data?.pages.flatMap((page) => page.data) ?? []
+  }, [query.data])
+
+  return { ...query, data: flattenedData }
+}

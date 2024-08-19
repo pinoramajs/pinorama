@@ -9,6 +9,7 @@ const ALLOWED_TYPES = ["string", "enum", "boolean"]
 type PinoramaFacetsProps = {
   searchText: string
   filters: SearchFilters
+  liveMode: boolean
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -33,6 +34,7 @@ export function LogFilters(props: PinoramaFacetsProps) {
             type={introspection.dbSchema[name]}
             searchText={props.searchText}
             filters={props.filters}
+            liveMode={props.liveMode}
             onFiltersChange={props.onFiltersChange}
           />
         )

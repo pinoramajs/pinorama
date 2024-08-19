@@ -3,6 +3,7 @@ import { useIntl } from "react-intl"
 import { ClearFiltersButton } from "./clear-filters-button"
 import { ToggleColumnsButton } from "./toggle-columns-button"
 import { ToggleFiltersButton } from "./toggle-filters-button"
+import { ToggleLiveButton } from "./toggle-live-button"
 
 import type { Table } from "@tanstack/react-table"
 
@@ -10,9 +11,11 @@ type LogViewerHeaderProps = {
   table: Table<unknown>
   searchText: string
   showClearFiltersButton: boolean
+  liveMode: boolean
   onSearchTextChange: (text: string) => void
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
+  onToggleLiveButtonClick: (live: boolean) => void
 }
 
 export function LogViewerHeader(props: LogViewerHeaderProps) {
@@ -27,6 +30,10 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
         })}
         value={props.searchText}
         onChange={props.onSearchTextChange}
+      />
+      <ToggleLiveButton
+        pressed={props.liveMode}
+        onPressedChange={props.onToggleLiveButtonClick}
       />
       {props.showClearFiltersButton ? (
         <ClearFiltersButton onClick={props.onClearFiltersButtonClick} />
