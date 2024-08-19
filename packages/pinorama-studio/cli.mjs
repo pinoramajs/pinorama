@@ -97,7 +97,7 @@ async function start(options) {
     console.log(msg.join("\n"))
 
     opts.open &&
-      (await open(`${studioUrl}?serverUrl=${serverUrl}&liveMode=true`))
+      (await open(`${studioUrl}?connectionUrl=${serverUrl}&liveMode=true`))
   })
 
   if (isPiped) {
