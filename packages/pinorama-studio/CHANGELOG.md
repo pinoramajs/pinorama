@@ -1,5 +1,11 @@
 # pinorama-studio
 
+## 0.2.2
+
+### Patch Changes
+
+- b33e94d: add refresh data button
+
 ## 0.2.1
 
 ### Patch Changes
