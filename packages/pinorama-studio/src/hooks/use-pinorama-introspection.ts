@@ -6,6 +6,7 @@ export const usePinoramaIntrospection = () => {
 
   return useQuery({
     queryKey: ["introspection", client],
-    queryFn: () => client?.introspection<any>()
+    queryFn: () => client?.introspection<any>(),
+    staleTime: Number.POSITIVE_INFINITY
   })
 }

@@ -18,6 +18,7 @@ type FacetProps = {
   type: OramaPropType
   searchText: string
   filters: SearchFilters
+  liveMode: boolean
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -31,7 +32,7 @@ export function Facet(props: FacetProps) {
     fetchStatus,
     status,
     error
-  } = useFacet(props.name, props.searchText, props.filters)
+  } = useFacet(props.name, props.searchText, props.filters, props.liveMode)
 
   const operations: any = facetFilterOperationsFactory(props.type)
   const criteria = props.filters[props.name] || operations.create()

@@ -14,6 +14,7 @@ import { LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
 import { LogViewer } from "./log-viewer"
 
+import { useAppConfig } from "@/contexts"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import type { SearchFilters } from "./log-filters/types"
 
@@ -24,9 +25,11 @@ const PANEL_SIZES = {
 
 export function LogExplorer() {
   const intl = useIntl()
+  const appConfig = useAppConfig()
 
   const { isConnected, toggleConnection } = usePinoramaConnection()
 
+  const [liveMode, setLiveMode] = useState<boolean | null>(null)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [searchText, setSearchText] = useState<string>("")
   const [rowSelection, setRowSelection] = useState()
@@ -36,6 +39,8 @@ export function LogExplorer() {
 
   const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
   const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
+
+  const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
 
   const toggleFiltersPanel = useCallback(() => {
     const panel = filtersPanelRef.current
@@ -61,12 +66,8 @@ export function LogExplorer() {
     return (
       <EmptyStateBlock
         icon={UnplugIcon}
-        title={intl.formatMessage({
-          id: "logExplorer.notConnected.title"
-        })}
-        message={intl.formatMessage({
-          id: "logExplorer.notConnected.message"
-        })}
+        title={intl.formatMessage({ id: "logExplorer.notConnected.title" })}
+        message={intl.formatMessage({ id: "logExplorer.notConnected.message" })}
         buttons={[
           {
             text: intl.formatMessage({
@@ -94,6 +95,7 @@ export function LogExplorer() {
         <LogFilters
           searchText={searchText}
           filters={filters}
+          liveMode={isLiveModeEnabled}
           onFiltersChange={setFilters}
         />
       </ResizablePanel>
@@ -107,10 +109,12 @@ export function LogExplorer() {
         <LogViewer
           searchText={searchText}
           filters={filters}
+          liveMode={isLiveModeEnabled}
           onSearchTextChange={setSearchText}
           onRowSelectionChange={setRowSelection}
           onToggleFiltersButtonClick={toggleFiltersPanel}
           onClearFiltersButtonClick={clearFilters}
+          onToggleLiveButtonClick={setLiveMode}
         />
       </ResizablePanel>
       <ResizableHandle

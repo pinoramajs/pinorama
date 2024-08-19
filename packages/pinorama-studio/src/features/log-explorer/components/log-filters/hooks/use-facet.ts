@@ -8,10 +8,13 @@ type OramaFacetValue = {
   values: Record<string | number, number>
 }
 
+const POLL_DELAY = 1500
+
 export const useFacet = (
   name: string,
   searchText: string,
-  filters: SearchFilters
+  filters: SearchFilters,
+  liveMode: boolean
 ) => {
   const client = usePinoramaClient()
 
@@ -42,7 +45,7 @@ export const useFacet = (
       return response.facets[name]
     },
     placeholderData: keepPreviousData,
-    refetchInterval: 3000
+    refetchInterval: liveMode ? POLL_DELAY : false
   })
 
   return query

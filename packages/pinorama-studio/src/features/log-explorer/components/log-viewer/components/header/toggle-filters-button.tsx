@@ -5,7 +5,7 @@ import {
   TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { SlidersVerticalIcon } from "lucide-react"
+import { FilterIcon } from "lucide-react"
 import { useIntl } from "react-intl"
 
 type ToggleFiltersButtonProps = {
@@ -24,7 +24,7 @@ export function ToggleFiltersButton(props: ToggleFiltersButtonProps) {
           className="px-2.5"
           onClick={props.onClick}
         >
-          <SlidersVerticalIcon className="h-[18px] w-[18px]" />
+          <FilterIcon className="h-[18px] w-[18px]" />
         </Button>
       </TooltipTrigger>
       <TooltipPortal>

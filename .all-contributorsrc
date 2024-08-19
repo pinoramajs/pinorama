@@ -24,16 +24,10 @@
       "name": "Matteo Pietro Dazzi",
       "avatar_url": "https://avatars.githubusercontent.com/u/6383527?v=4",
       "profile": "https://ilteoood.xyz/",
-      "contributions": [
-        "code",
-        "review",
-        "design"
-      ]
+      "contributions": ["code", "review", "design"]
     }
   ],
-  "files": [
-    "README.md"
-  ],
+  "files": ["README.md"],
   "commitType": "docs",
   "contributorsPerLine": 7
 }
