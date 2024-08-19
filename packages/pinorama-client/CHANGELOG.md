@@ -1,5 +1,15 @@
 # pinorama-client
 
+## 0.2.0
+
+### Minor Changes
+
+- 306a952: add live mode feature
+
+### Patch Changes
+
+- 0b8ae5b: chore: optimize code and improve type safety
+
 ## 0.1.3
 
 ### Patch Changes
