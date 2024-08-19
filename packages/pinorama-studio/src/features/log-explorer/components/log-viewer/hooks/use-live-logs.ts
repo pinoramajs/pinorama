@@ -39,7 +39,7 @@ export const useLiveLogs = (
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Number.POSITIVE_INFINITY,
     // refetchInterval: POLL_DELAY, // NOTE: This is not working as expected, it doesn't use the nextCursor
-    enabled: false // NOTE: We will manually poll the data
+    enabled: false
   })
 
   const schedulePoll = useCallback(() => {
@@ -48,18 +48,20 @@ export const useLiveLogs = (
         query.fetchNextPage().finally(schedulePoll)
       }, POLL_DELAY)
     }
-  }, [enabled, query])
+  }, [enabled, query.fetchNextPage])
 
   useEffect(() => {
     if (enabled) {
-      schedulePoll()
+      query.fetchNextPage().finally(() => {
+        schedulePoll()
+      })
     }
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [enabled, schedulePoll])
+  }, [enabled, query.fetchNextPage, schedulePoll])
 
   const flattenedData = useMemo(() => {
     return query.data?.pages.flatMap((page) => page.data) ?? []
