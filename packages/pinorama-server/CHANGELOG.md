@@ -1,5 +1,15 @@
 # pinorama-server
 
+## 0.2.1
+
+### Patch Changes
+
+- 4980b4b: add preset feature
+- Updated dependencies [4980b4b]
+- Updated dependencies [a0495f4]
+  - pinorama-presets@0.1.0
+  - pinorama-types@0.1.0
+
 ## 0.2.0
 
 ### Minor Changes

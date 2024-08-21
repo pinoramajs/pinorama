@@ -1,5 +1,22 @@
 # pinorama-studio
 
+## 0.3.0
+
+### Minor Changes
+
+- 4980b4b: add preset feature
+- a0495f4: add column visibility and sizing
+
+### Patch Changes
+
+- 81c2135: set high frequency log flushing defaults
+- Updated dependencies [4980b4b]
+- Updated dependencies [a0495f4]
+  - pinorama-presets@0.1.0
+  - pinorama-transport@0.1.3
+  - pinorama-client@0.2.1
+  - pinorama-server@0.2.1
+
 ## 0.2.2
 
 ### Patch Changes

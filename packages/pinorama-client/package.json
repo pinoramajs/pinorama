@@ -1,6 +1,6 @@
 {
   "name": "pinorama-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "main": "./dist/node/pinorama-client.cjs",
   "module": "./dist/node/pinorama-client.mjs",
@@ -21,7 +21,9 @@
     }
   },
   "types": "./dist/types/pinorama-client.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "rollup --config"
