@@ -1,10 +1,12 @@
 {
   "name": "pinorama-presets",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "types": "./dist/presets/index.d.mts",
   "exports": "./dist/presets/index.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "tsc"
