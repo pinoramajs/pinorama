@@ -1,5 +1,11 @@
 # pinorama-transport
 
+## 0.1.3
+
+### Patch Changes
+
+- 4980b4b: add preset feature
+
 ## 0.1.2
 
 ### Patch Changes

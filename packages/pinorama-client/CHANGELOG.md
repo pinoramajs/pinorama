@@ -1,5 +1,11 @@
 # pinorama-client
 
+## 0.2.1
+
+### Patch Changes
+
+- 4980b4b: add preset feature
+
 ## 0.2.0
 
 ### Minor Changes
