@@ -4,6 +4,7 @@ import { PinoramaClient } from "pinorama-client/node"
 
 import type { Transform } from "node:stream"
 import type { PinoramaClientOptions } from "pinorama-client/node"
+import type { BaseOramaPinorama, PinoramaDocument } from "pinorama-types"
 
 type BulkOptions = {
   batchSize: number
@@ -41,7 +42,7 @@ export default function pinoramaTransport(
 
   /* build */
   const buildFn = async (stream: Transform) => {
-    const buffer: unknown[] = []
+    const buffer: PinoramaDocument<BaseOramaPinorama>[] = []
     let flushing = false
 
     const opts: BulkOptions = {

@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { usePinoramaConnection } from "@/hooks"
 import { createField } from "@/lib/introspection"
+import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
 import { EllipsisVerticalIcon } from "lucide-react"
+import type { PinoramaIntrospection } from "pinorama-types"
 import { FormattedMessage, useIntl } from "react-intl"
 
 type ColumnsVisibilityButtonProps = {
@@ -42,7 +44,10 @@ export function ToggleColumnsButton(props: ColumnsVisibilityButtonProps) {
               typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
-            const field = createField(column.id, introspection)
+            const field = createField(
+              column.id,
+              introspection as PinoramaIntrospection<AnySchema>
+            )
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
