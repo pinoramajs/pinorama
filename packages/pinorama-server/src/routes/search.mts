@@ -1,6 +1,6 @@
-import { type Results, search } from "@orama/orama"
+import { type AnyOrama, type Results, search } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
-import type { PinoramaDocument } from "../index.mjs"
+import type { PinoramaDocument } from "pinorama-types"
 
 export async function searchRoute(fastify: FastifyInstance) {
   fastify.route({
@@ -8,7 +8,7 @@ export async function searchRoute(fastify: FastifyInstance) {
     method: "post",
     handler: async (req, res) => {
       try {
-        const result: Results<PinoramaDocument> = await search(
+        const result: Results<PinoramaDocument<AnyOrama>> = await search(
           fastify.pinoramaDb,
           req.body as any
         )

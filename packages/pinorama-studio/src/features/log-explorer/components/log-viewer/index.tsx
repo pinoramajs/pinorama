@@ -54,12 +54,14 @@ export function LogViewer(props: LogViewerProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
   const columns = useMemo<ColumnDef<unknown>[]>(() => {
-    if (!introspection?.dbSchema) return []
+    const columns = introspection?.columns
+    if (!columns) return []
 
-    return Object.keys(introspection.dbSchema).map((columnName) => {
+    return Object.keys(columns).map((columnName) => {
       const field = createField(columnName, introspection)
       return {
-        accessorKey: columnName,
+        id: columnName,
+        accessorKey: columnName.split(".")[0] || columnName,
         header: () => field.getDisplayLabel(),
         cell: (info) => {
           const value = info.getValue() as string | number

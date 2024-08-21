@@ -1,6 +1,6 @@
 import type { AnyOrama } from "@orama/orama"
 
-export const withPinoramaSchema = (
+export const withPinoramaMetadataSchema = (
   schema: AnyOrama["schema"]
 ): AnyOrama["schema"] => {
   return {
@@ -11,7 +11,7 @@ export const withPinoramaSchema = (
   }
 }
 
-export const withPinoramaValue = (
+export const withPinoramaMetadataValue = (
   value: Record<string, unknown>
 ): Record<string, unknown> => {
   return {

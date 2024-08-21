@@ -11,6 +11,7 @@ import c from "chalk"
 import fastify from "fastify"
 import minimist from "minimist"
 import open from "open"
+import * as pinoramaPresets from "pinorama-presets"
 import { fastifyPinoramaServer } from "pinorama-server"
 import pinoramaTransport from "pinorama-transport"
 
@@ -22,7 +23,8 @@ const defaultOptions = {
   server: false,
   "server-prefix": "/pinorama",
   "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
-  "admin-secret": "your-secret"
+  "admin-secret": "your-secret",
+  preset: "pino"
 }
 
 async function start(options) {
@@ -49,9 +51,10 @@ async function start(options) {
     -o, --open                 Open Pinorama Studio (default: ${defaultOptions.open}).
     -l, --logger               Enable logging (default: ${defaultOptions.logger}).
     -s, --server               Start Pinorama Server (default: ${defaultOptions.server}).
-    -p, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
+    -e, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
     -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
     -k, --server-admin-secret  Set Pinorama Server admin secret key (default: ${defaultOptions["admin-secret"]}). 
+    -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
 
   Examples:
     pinorama --open
@@ -59,6 +62,7 @@ async function start(options) {
     cat logs | pinorama -l -o
     pinorama --host 192.168.1.1 --port 8080
     pinorama --server --logger
+    node app.js | pinorama --open --preset fastify
 `)
     return
   }
@@ -74,10 +78,17 @@ async function start(options) {
   const app = createServer(opts)
 
   if (opts.server) {
+    if (!Object.keys(pinoramaPresets).includes(opts.preset)) {
+      console.error(c.red(`Invalid preset: ${opts.preset}`))
+      process.exit(1)
+    }
+
     app.register(fastifyPinoramaServer, {
       adminSecret: opts["admin-secret"],
       dbPath: opts["server-db-path"],
-      prefix: opts["server-prefix"]
+      prefix: opts["server-prefix"],
+      dbSchema: pinoramaPresets[opts.preset].schema,
+      introspection: pinoramaPresets[opts.preset].introspection
     })
   }
 
@@ -149,13 +160,14 @@ start(
       help: "h",
       version: "v",
       host: "H",
-      port: "p",
+      port: "P",
       open: "o",
       logger: "l",
       server: "s",
       "server-prefix": "e",
       "server-db-path": "f",
-      "admin-secret": "k"
+      "admin-secret": "k",
+      preset: "p"
     },
     boolean: ["server", "open"],
     default: defaultOptions

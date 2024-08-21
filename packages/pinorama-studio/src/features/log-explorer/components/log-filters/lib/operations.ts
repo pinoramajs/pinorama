@@ -1,13 +1,14 @@
-import type { EnumFilter, OramaPropType, StringFilter } from "../types"
+import type { IntrospectionFacet } from "pinorama-types"
+import type { EnumFilter, StringFilter } from "../types"
 
-export const facetFilterOperationsFactory = (type: OramaPropType) => {
+export const facetFilterOperationsFactory = (type: IntrospectionFacet) => {
   switch (type) {
     case "enum":
       return createEnumOperations()
     case "string":
       return createStringOperations()
     default:
-      throw new Error(`unsupported type: ${type}`)
+      throw new Error(`unsupported type "${type}" for facet operations`)
   }
 }
 
