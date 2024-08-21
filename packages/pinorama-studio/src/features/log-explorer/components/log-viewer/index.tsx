@@ -32,6 +32,8 @@ type LogViewerProps = {
   onToggleLiveButtonClick: (live: boolean) => void
 }
 
+const DEFAULT_COLUMN_SIZE = 150
+
 export function LogViewer(props: LogViewerProps) {
   const intl = useIntl()
 
@@ -53,7 +55,7 @@ export function LogViewer(props: LogViewerProps) {
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
-  const columns = useMemo<ColumnDef<unknown>[]>(() => {
+  const columnsDefinition = useMemo<ColumnDef<unknown>[]>(() => {
     const columns = introspection?.columns
     if (!columns) return []
 
@@ -61,10 +63,15 @@ export function LogViewer(props: LogViewerProps) {
       const field = createField(columnName, introspection)
       return {
         id: columnName,
-        accessorKey: columnName.split(".")[0] || columnName,
+        // accessorKey: columnName.split(".")[0] || columnName,
+        accessorKey: columnName,
         header: () => field.getDisplayLabel(),
         cell: (info) => {
           const value = info.getValue() as string | number
+          if (!value) {
+            return <div className="text-muted-foreground/60">—</div>
+          }
+
           const formattedValue = field.format(value)
           const className = field.getClassName(value)
           return (
@@ -81,7 +88,7 @@ export function LogViewer(props: LogViewerProps) {
 
   const table = useReactTable({
     data: logs,
-    columns,
+    columns: columnsDefinition,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
@@ -90,6 +97,22 @@ export function LogViewer(props: LogViewerProps) {
     state: { rowSelection },
     enableRowSelection: true
   })
+
+  useEffect(() => {
+    const columns = introspection?.columns
+    if (!columns) return
+
+    const visibility: Record<string, boolean> = {}
+    const sizing: Record<string, number> = {}
+
+    for (const [name, config] of Object.entries(columns)) {
+      visibility[name] = config?.visible ?? false
+      sizing[name] = config?.size ?? DEFAULT_COLUMN_SIZE
+    }
+
+    table.setColumnVisibility(visibility)
+    table.setColumnSizing(sizing)
+  }, [introspection, table.setColumnVisibility, table.setColumnSizing])
 
   const hasFilters =
     props.searchText.length > 0 && Object.keys(props.filters).length > 0

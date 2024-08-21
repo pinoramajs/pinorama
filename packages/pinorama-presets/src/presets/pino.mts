@@ -16,11 +16,11 @@ export const pino = createPreset(
       hostname: "string"
     },
     columns: {
-      time: true,
-      level: true,
-      msg: true,
-      pid: false,
-      hostname: false
+      time: { visible: true, size: 150 },
+      level: { visible: true, size: 70 },
+      msg: { visible: true, size: 400 },
+      pid: { visible: false, size: 70 },
+      hostname: { visible: false, size: 150 }
     },
     labels: {
       time: "Time",
