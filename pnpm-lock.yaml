@@ -101,9 +101,9 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.14.9
-      pinorama-server:
+      pinorama-types:
         specifier: workspace:*
-        version: link:../pinorama-server
+        version: link:../pinorama-types
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -129,6 +129,24 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3(@algolia/client-search@4.24.0)(@types/node@20.14.10)(@types/react@18.3.3)(postcss@8.4.39)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.14.0)(terser@5.31.1)(typescript@5.5.3)
 
+  packages/pinorama-presets:
+    devDependencies:
+      '@orama/orama':
+        specifier: 2.0.19
+        version: 2.0.19
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.10
+      pinorama-types:
+        specifier: workspace:*
+        version: link:../pinorama-types
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.9
+      typescript:
+        specifier: ^5.4.5
+        version: 5.5.3
+
   packages/pinorama-server:
     dependencies:
       '@orama/orama':
@@ -146,6 +164,12 @@ importers:
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
+      pinorama-presets:
+        specifier: workspace:*
+        version: link:../pinorama-presets
+      pinorama-types:
+        specifier: workspace:*
+        version: link:../pinorama-types
     devDependencies:
       '@types/node':
         specifier: ^20.12.7
@@ -243,6 +267,9 @@ importers:
       pinorama-client:
         specifier: workspace:*
         version: link:../pinorama-client
+      pinorama-presets:
+        specifier: workspace:*
+        version: link:../pinorama-presets
       pinorama-server:
         specifier: workspace:*
         version: link:../pinorama-server
@@ -295,6 +322,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.39)
+      pinorama-types:
+        specifier: workspace:*
+        version: link:../pinorama-types
       postcss:
         specifier: ^8.4.39
         version: 8.4.39
@@ -341,6 +371,9 @@ importers:
       pinorama-server:
         specifier: workspace:*
         version: link:../pinorama-server
+      pinorama-types:
+        specifier: workspace:*
+        version: link:../pinorama-types
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
@@ -350,6 +383,21 @@ importers:
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.9)(terser@5.31.1)
+
+  packages/pinorama-types:
+    devDependencies:
+      '@orama/orama':
+        specifier: 2.0.19
+        version: 2.0.19
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.10
+      rimraf:
+        specifier: ^5.0.7
+        version: 5.0.9
+      typescript:
+        specifier: ^5.4.5
+        version: 5.5.3
 
 packages:
 

@@ -1,14 +1,9 @@
 import { kebabCase } from "change-case"
+import type { IntrospectionStyle } from "pinorama-types"
 
 type CSSProperties = Record<string, string | number>
 
-type ValueStyles = Record<string, CSSProperties>
-
-type StyleDefinition = CSSProperties | [CSSProperties, ValueStyles]
-
-type Styles = { [key: string]: StyleDefinition }
-
-export function generateCSS(styles: Styles = {}) {
+export function generateCSS(styles: Record<string, IntrospectionStyle>) {
   return Object.entries(styles).map(generateCSSForField).join("")
 }
 
@@ -19,7 +14,7 @@ ${generateCSSProps(style)}
 `
 }
 
-const generateCSSForField = ([field, style]: [string, StyleDefinition]) => {
+const generateCSSForField = ([field, style]: [string, IntrospectionStyle]) => {
   const className = `pinorama-${kebabCase(field)}`
 
   if (!Array.isArray(style)) {

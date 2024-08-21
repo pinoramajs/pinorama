@@ -1,5 +1,3 @@
-export type OramaPropType = "string" | "enum"
-
 export type FacetValue = {
   value: string | number
   count: number

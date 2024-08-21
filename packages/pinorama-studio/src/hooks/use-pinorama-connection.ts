@@ -1,5 +1,5 @@
 import { useAppConfig } from "@/contexts"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { usePinoramaIntrospection } from "./use-pinorama-introspection"
 import { usePinoramaStyles } from "./use-pinorama-styles"
 
@@ -34,40 +34,40 @@ export function usePinoramaConnection() {
       connectionStatus: ConnectionStatus.Unknown
     })
 
-  const connectionIntent = appConfig?.config.connectionIntent
-  const introspectionStatus = introspection.status
-  const introspectionFetchStatus = introspection.fetchStatus
-
   useEffect(() => {
     switch (true) {
-      case connectionIntent === false:
+      case appConfig?.config.connectionIntent === false:
         setConnectionStatus({ connectionStatus: ConnectionStatus.Disconnected })
         break
-      case introspectionStatus === "pending" &&
-        introspectionFetchStatus === "fetching":
+      case introspection.status === "pending" &&
+        introspection.fetchStatus === "fetching":
         setConnectionStatus({ connectionStatus: ConnectionStatus.Connecting })
         break
-      case introspectionStatus === "success":
+      case introspection.status === "success":
         setConnectionStatus({
           connectionStatus: ConnectionStatus.Connected,
           isConnected: true
         })
         break
-      case introspectionStatus === "error":
+      case introspection.status === "error":
         setConnectionStatus({ connectionStatus: ConnectionStatus.Failed })
         break
       default:
         setConnectionStatus({ connectionStatus: ConnectionStatus.Unknown })
         break
     }
-  }, [connectionIntent, introspectionStatus, introspectionFetchStatus])
+  }, [
+    appConfig?.config.connectionIntent,
+    introspection.status,
+    introspection.fetchStatus
+  ])
 
-  const toggleConnection = useCallback(() => {
+  const toggleConnection = () => {
     appConfig?.setConfig({
       ...appConfig.config,
-      connectionIntent: !connectionIntent
+      connectionIntent: !appConfig.config.connectionIntent
     })
-  }, [appConfig, connectionIntent])
+  }
 
   return {
     connectionStatus,

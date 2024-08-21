@@ -4,11 +4,12 @@ import { restoreFromFile } from "@orama/plugin-data-persistence/server"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
 
+import { fastify as defaultPreset } from "pinorama-presets"
 import * as plugins from "./plugins/index.mjs"
 import * as routes from "./routes/index.mjs"
-import { withPinoramaSchema } from "./utils/metadata.js"
+import { withPinoramaMetadataSchema } from "./utils/metadata.mjs"
 
-import type { AnyOrama, AnySchema, Orama, TypedDocument } from "@orama/orama"
+import type { AnyOrama, AnySchema } from "@orama/orama"
 import type {
   FastifyInstance,
   FastifyPluginAsync,
@@ -17,6 +18,7 @@ import type {
   LogLevel,
   RegisterOptions
 } from "fastify"
+import type { PinoramaIntrospection } from "pinorama-types"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -34,63 +36,14 @@ type PinoramaServerOptions = {
   dbFormat?: PersistenceFormat
   prefix?: string
   logLevel?: LogLevel
-  ui: any
+  introspection: PinoramaIntrospection<any>
 }
-
-export type OramaPinorama = Orama<typeof dbSchema>
-export type PinoramaDocument = TypedDocument<OramaPinorama>
-
-// INFO: need to use `as const` to prevent widening
-const dbSchema = {
-  level: "enum",
-  time: "number",
-  msg: "string",
-  pid: "enum",
-  hostname: "string"
-} as const
 
 export const defaultOptions: PinoramaServerOptions = {
   adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET,
   dbFormat: "json",
-  dbSchema,
-  ui: {
-    labels: {
-      level: [
-        "Level",
-        {
-          10: "TRACE",
-          20: "DEBUG",
-          30: "INFO",
-          40: "WARN",
-          50: "ERROR",
-          60: "FATAL"
-        }
-      ],
-      time: "Time",
-      msg: "Message",
-      pid: "PID",
-      hostname: "Host"
-    },
-    formatters: {
-      time: "timestamp"
-    },
-    styles: {
-      time: {
-        opacity: "0.5"
-      },
-      level: [
-        {},
-        {
-          10: { color: "var(--color-gray-500)" },
-          20: { color: "var(--color-purple-500)" },
-          30: { color: "var(--color-lime-500)" },
-          40: { color: "var(--color-yellow-500)" },
-          50: { color: "var(--color-red-500)" },
-          60: { color: "var(--color-red-500)" }
-        }
-      ]
-    }
-  }
+  dbSchema: defaultPreset.schema,
+  introspection: defaultPreset.introspection
 }
 
 const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
@@ -101,7 +54,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 
   const db = fs.existsSync(opts.dbPath as string)
     ? await restoreFromFile(opts.dbFormat, opts.dbPath)
-    : await create({ schema: withPinoramaSchema(opts.dbSchema) })
+    : await create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
 
   fastify.decorate("pinoramaOpts", opts)
   fastify.decorate("pinoramaDb", db)

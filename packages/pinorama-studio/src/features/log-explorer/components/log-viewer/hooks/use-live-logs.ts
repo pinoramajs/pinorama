@@ -1,19 +1,15 @@
 import { usePinoramaClient } from "@/contexts"
-import {
-  buildPayload,
-  getDocumentMetadata
-} from "@/features/log-explorer/utils"
+import { buildPayload } from "@/features/log-explorer/utils"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
-import type { SearchParams } from "@orama/orama"
-import type { OramaPinorama } from "pinorama-server"
+import type { AnyOrama, SearchParams } from "@orama/orama"
 
 const POLL_DELAY = 1500
 
-export const useLiveLogs = (
+export const useLiveLogs = <T extends AnyOrama>(
   searchText?: string,
-  searchFilters?: SearchParams<OramaPinorama>["where"],
+  searchFilters?: SearchParams<T>["where"],
   enabled?: boolean
 ) => {
   const client = usePinoramaClient()
@@ -29,7 +25,7 @@ export const useLiveLogs = (
 
       if (newData.length > 0) {
         const lastItem = newData[newData.length - 1]
-        const metadata = getDocumentMetadata(lastItem)
+        const metadata = lastItem._pinorama
         pageParam = metadata.createdAt
       }
 

@@ -1,8 +1,13 @@
+import type { PinoramaIntrospection } from "pinorama-types"
 import { z } from "zod"
 import { setTimeout } from "./platform/node.js"
 
-import type { Results, SearchParams } from "@orama/orama"
-import type { OramaPinorama, PinoramaDocument } from "pinorama-server"
+import type {
+  AnyOrama,
+  Results,
+  SearchParams,
+  TypedDocument
+} from "@orama/orama"
 
 const clientOptionsSchema = z.object({
   url: z.string(),
@@ -22,7 +27,7 @@ export const defaultClientOptions: Partial<PinoramaClientOptions> = {
   backoffMax: 30_000
 }
 
-export class PinoramaClient<T extends z.ZodType = z.ZodType> {
+export class PinoramaClient<T extends AnyOrama> {
   /** Pinorama Server URL */
   private url: string
 
@@ -85,7 +90,7 @@ export class PinoramaClient<T extends z.ZodType = z.ZodType> {
     }
   }
 
-  public async insert(docs: z.infer<T>[]): Promise<void> {
+  public async insert(docs: TypedDocument<T>[]): Promise<void> {
     await this.retryOperation(async () => {
       const response = await fetch(`${this.url}/bulk`, {
         method: "POST",
@@ -99,7 +104,7 @@ export class PinoramaClient<T extends z.ZodType = z.ZodType> {
     })
   }
 
-  public async search(payload: SearchParams<OramaPinorama>) {
+  public async search(payload: SearchParams<T>) {
     try {
       const response = await fetch(`${this.url}/search`, {
         method: "POST",
@@ -111,7 +116,7 @@ export class PinoramaClient<T extends z.ZodType = z.ZodType> {
         throw new Error("[TODO ERROR]: PinoramaClient.search failed")
       }
 
-      const json: Results<PinoramaDocument> = await response.json()
+      const json: Results<TypedDocument<T>> = await response.json()
 
       return json
     } catch (error) {
@@ -139,17 +144,18 @@ export class PinoramaClient<T extends z.ZodType = z.ZodType> {
     }
   }
 
-  public async introspection<T = unknown>(): Promise<T> {
+  public async introspection() {
     try {
       const response = await fetch(`${this.url}/introspection`, {
         method: "GET",
         headers: this.defaultHeaders
       })
 
-      const json = await response.json()
-      if (response.status !== 200) {
-        throw new Error(json.error)
+      if (!response.ok) {
+        throw new Error("[TODO ERROR]: PinoramaClient.introspection failed")
       }
+
+      const json: PinoramaIntrospection<T["schema"]> = await response.json()
 
       return json
     } catch (error) {

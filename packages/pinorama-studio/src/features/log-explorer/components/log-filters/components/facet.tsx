@@ -4,18 +4,15 @@ import { useCallback, useMemo, useState } from "react"
 import { useIntl } from "react-intl"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
-import type {
-  FacetFilter,
-  FacetValue,
-  OramaPropType,
-  SearchFilters
-} from "../types"
 import { FacetBody } from "./facet-body"
 import { FacetHeader } from "./facet-header"
 
+import type { IntrospectionFacet } from "pinorama-types"
+import type { FacetFilter, FacetValue, SearchFilters } from "../types"
+
 type FacetProps = {
   name: string
-  type: OramaPropType
+  type: IntrospectionFacet
   searchText: string
   filters: SearchFilters
   liveMode: boolean
@@ -64,17 +61,17 @@ export function Facet(props: FacetProps) {
   }, [props.filters, props.name, facet?.values, operations])
 
   const allValues = useMemo(() => {
-    const currentValues = Object.entries(facet?.values || {}).map(
-      ([value, count]) => {
-        // If the value is a number of type string,
+    const currentValues = Object.entries(facet?.values || {})
+      .filter(([value]) => value !== "") // NOTE: Don't show empty values
+      .map(([value, count]) => {
+        // NOTE: If the value is a number of type string,
         // we need to parse it to a number.
         let parsedValue: string | number = value
         if (props.type === "enum" && Number.isFinite(+value)) {
           parsedValue = Number(value)
         }
         return { value: parsedValue, count }
-      }
-    )
+      })
 
     return [...selectedValuesNotInDataSource, ...currentValues]
   }, [selectedValuesNotInDataSource, facet?.values, props.type])

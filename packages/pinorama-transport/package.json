@@ -35,6 +35,7 @@
     "pino": "^9.1.0",
     "pinorama-client": "workspace:*",
     "pinorama-server": "workspace:*",
+    "pinorama-types": "workspace:*",
     "rimraf": "^5.0.7",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"

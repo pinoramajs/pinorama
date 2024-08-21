@@ -15,8 +15,14 @@ type FacetHeaderProps = {
 
 export function FacetHeader(props: FacetHeaderProps) {
   const { introspection } = usePinoramaConnection()
+
+  if (!introspection) {
+    return null
+  }
+
   const field = createField(props.name, introspection)
   const ChevronIcon = props.open ? ChevronDown : ChevronRight
+
   return (
     <Button
       variant={"ghost"}

@@ -6,10 +6,7 @@
   "bin": {
     "pinorama": "./cli.mjs"
   },
-  "files": [
-    "dist",
-    "cli.mjs"
-  ],
+  "files": ["dist", "cli.mjs"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -55,6 +52,7 @@
     "minimist": "^1.2.8",
     "open": "^10.1.0",
     "pinorama-client": "workspace:*",
+    "pinorama-presets": "workspace:*",
     "pinorama-server": "workspace:*",
     "pinorama-transport": "workspace:*",
     "react": "^18.3.1",
@@ -74,6 +72,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
+    "pinorama-types": "workspace:*",
     "postcss": "^8.4.39",
     "rimraf": "^5.0.9",
     "tailwindcss": "^3.4.4",

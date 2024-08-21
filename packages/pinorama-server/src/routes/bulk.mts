@@ -1,6 +1,6 @@
 import { insertMultiple } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
-import { withPinoramaValue } from "../utils/metadata.js"
+import { withPinoramaMetadataValue } from "../utils/metadata.mjs"
 
 export async function bulkRoute(fastify: FastifyInstance) {
   fastify.route({
@@ -10,7 +10,7 @@ export async function bulkRoute(fastify: FastifyInstance) {
       try {
         await insertMultiple(
           fastify.pinoramaDb,
-          (req.body as any).map(withPinoramaValue)
+          (req.body as any).map(withPinoramaMetadataValue)
         )
         res.code(201).send({ success: true })
       } catch (e) {

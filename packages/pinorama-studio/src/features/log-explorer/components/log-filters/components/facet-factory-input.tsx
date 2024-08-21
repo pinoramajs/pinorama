@@ -1,10 +1,12 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { facetFilterOperationsFactory } from "../lib/operations"
-import type { OramaPropType, SearchFilters } from "../types"
+
+import type { IntrospectionFacet } from "pinorama-types"
+import type { SearchFilters } from "../types"
 
 export function FacetFactoryInput(props: {
   id: string
-  type: OramaPropType
+  type: IntrospectionFacet
   name: string
   value: string | number
   filters: SearchFilters

@@ -1,11 +1,14 @@
+import type { AnySchema } from "@orama/orama"
 import { format } from "date-fns"
+import type { PinoramaIntrospection } from "pinorama-types"
 
-export function createField(fieldName: string, introspection: any) {
-  const { ui } = introspection
-
-  const label = ui.labels[fieldName]
-  const style = ui.styles[fieldName]
-  const formatter = ui.formatters[fieldName]
+export function createField(
+  fieldName: string,
+  introspection: PinoramaIntrospection<AnySchema>
+) {
+  const label = introspection.labels?.[fieldName]
+  const style = introspection.styles?.[fieldName]
+  const formatter = introspection.formatters?.[fieldName]
 
   return {
     getDisplayLabel() {
@@ -13,7 +16,7 @@ export function createField(fieldName: string, introspection: any) {
     },
     getValueLabel(value: string | number) {
       if (this.hasValueLabels()) {
-        return label[1][value]
+        return label?.[1][value as number] ?? value
       }
       return value
     },
@@ -32,7 +35,7 @@ export function createField(fieldName: string, introspection: any) {
       css.push(className)
 
       if (this.hasValueStyle()) {
-        const [, valueStyles] = style
+        const [, valueStyles] = style as any
 
         const valueStyle = valueStyles[value]
         if (valueStyle) {
