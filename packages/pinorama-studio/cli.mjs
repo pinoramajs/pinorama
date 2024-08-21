@@ -24,7 +24,9 @@ const defaultOptions = {
   "server-prefix": "/pinorama",
   "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
   "admin-secret": "your-secret",
-  preset: "pino"
+  preset: "pino",
+  "batch-size": 10,
+  "flush-interval": 100
 }
 
 async function start(options) {
@@ -55,11 +57,13 @@ async function start(options) {
     -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
     -k, --server-admin-secret  Set Pinorama Server admin secret key (default: ${defaultOptions["admin-secret"]}). 
     -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
+    -b, --batch-size           Set batch size for transport (default: ${defaultOptions.batchSize}).
+    -f, --flush-interval       Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
 
   Examples:
     pinorama --open
     node app.js | pinorama
-    cat logs | pinorama -l -o
+    cat logs | pinorama --batch-size 1000 --flush-interval 5000
     pinorama --host 192.168.1.1 --port 8080
     pinorama --server --logger
     node app.js | pinorama --open --preset fastify
@@ -118,8 +122,9 @@ async function start(options) {
 
     const stream = pinoramaTransport({
       url: serverUrl,
-      batchSize: 1000,
-      adminSecret: opts["admin-secret"]
+      adminSecret: opts["admin-secret"],
+      batchSize: opts["batch-size"],
+      flushInterval: opts["flush-interval"]
     })
 
     stream.on("error", (error) => {
@@ -167,7 +172,9 @@ start(
       "server-prefix": "e",
       "server-db-path": "f",
       "admin-secret": "k",
-      preset: "p"
+      preset: "p",
+      "batch-size": "b",
+      "flush-interval": "f"
     },
     boolean: ["server", "open"],
     default: defaultOptions
