@@ -17,7 +17,7 @@ export type PinoramaIntrospection<T extends AnySchema> = {
     [K in FlattenedKeys<SafeFlatten<T>>]: IntrospectionFacet
   }>
   columns: Partial<{
-    [K in FlattenedKeys<SafeFlatten<T>>]: boolean
+    [K in FlattenedKeys<SafeFlatten<T>>]: IntrospectionColumn
   }>
   labels?: Partial<{
     [K in FlattenedKeys<SafeFlatten<T>>]: IntrospectionLabel
@@ -31,6 +31,11 @@ export type PinoramaIntrospection<T extends AnySchema> = {
 }
 
 export type IntrospectionFacet = "enum" | "string"
+
+export type IntrospectionColumn = {
+  visible: boolean
+  size?: number
+}
 
 export type IntrospectionLabel =
   | string

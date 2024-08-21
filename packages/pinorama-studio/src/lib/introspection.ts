@@ -1,4 +1,5 @@
 import type { AnySchema } from "@orama/orama"
+import { kebabCase } from "change-case"
 import { format } from "date-fns"
 import type { PinoramaIntrospection } from "pinorama-types"
 
@@ -31,7 +32,7 @@ export function createField(
 
       if (!style) return css
 
-      const className = `pinorama-${fieldName}`
+      const className = `pinorama-${kebabCase(fieldName)}`
       css.push(className)
 
       if (this.hasValueStyle()) {
@@ -39,7 +40,7 @@ export function createField(
 
         const valueStyle = valueStyles[value]
         if (valueStyle) {
-          css.push(`${className}-${value}`)
+          css.push(`${className}-${value.toString().toLowerCase()}`)
         }
       }
 
