@@ -4,7 +4,7 @@ import { restoreFromFile } from "@orama/plugin-data-persistence/server"
 import Fastify from "fastify"
 import fp from "fastify-plugin"
 
-import { fastify as defaultPreset } from "pinorama-presets"
+import { pino as defaultPreset } from "pinorama-presets"
 import * as plugins from "./plugins/index.mjs"
 import * as routes from "./routes/index.mjs"
 import { withPinoramaMetadataSchema } from "./utils/metadata.mjs"

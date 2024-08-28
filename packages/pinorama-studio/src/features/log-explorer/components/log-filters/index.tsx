@@ -1,12 +1,14 @@
 import { useMemo } from "react"
 
-import { usePinoramaConnection } from "@/hooks"
 import { Facet } from "./components/facet"
 
-import type { IntrospectionFacet } from "pinorama-types"
+import type { AnySchema } from "@orama/orama"
+import type { PinoramaIntrospection } from "pinorama-types"
+import { getFacetsConfig } from "./lib/utils"
 import type { SearchFilters } from "./types"
 
 type PinoramaFacetsProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   searchText: string
   filters: SearchFilters
   liveMode: boolean
@@ -14,30 +16,17 @@ type PinoramaFacetsProps = {
 }
 
 export function LogFilters(props: PinoramaFacetsProps) {
-  const { introspection } = usePinoramaConnection()
-
-  const facets = useMemo(() => {
-    const facets = introspection?.facets
-    if (!facets) return []
-
-    return Object.keys(facets).map((fieldName) => {
-      return {
-        name: fieldName,
-        type: facets[fieldName] as IntrospectionFacet
-      }
-    })
-  }, [introspection])
-
-  if (!introspection) {
-    return null
-  }
+  const facetsConfig = useMemo(() => {
+    return getFacetsConfig(props.introspection)
+  }, [props.introspection])
 
   return (
     <div className="flex flex-col h-full p-3 overflow-auto">
-      {facets.map((facet) => {
+      {facetsConfig.definition.map((facet) => {
         return (
           <Facet
             key={facet.name}
+            introspection={props.introspection}
             name={facet.name}
             type={facet.type}
             searchText={props.searchText}

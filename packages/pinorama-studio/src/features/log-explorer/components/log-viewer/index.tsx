@@ -1,18 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react"
 
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
-import { usePinoramaConnection } from "@/hooks"
-import { createField } from "@/lib/introspection"
-import { cn } from "@/lib/utils"
+import type { AnySchema } from "@orama/orama"
 import {
-  type ColumnDef,
   type RowSelectionState,
   getCoreRowModel,
   useReactTable
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import type { PinoramaIntrospection } from "pinorama-types"
 import { useIntl } from "react-intl"
 import type { SearchFilters } from "../log-filters/types"
 import { LogViewerHeader } from "./components/header/header"
@@ -20,24 +18,22 @@ import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
 import { useLiveLogs } from "./hooks/use-live-logs"
 import { useStaticLogs } from "./hooks/use-static-logs"
+import * as utils from "./utils"
 
 type LogViewerProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   filters: SearchFilters
   searchText: string
   liveMode: boolean
   onSearchTextChange: (searchText: string) => void
-  onRowSelectionChange: (row: any) => void
+  onSelectedRowChange: (row: any) => void
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
   onToggleLiveButtonClick: (live: boolean) => void
 }
 
-const DEFAULT_COLUMN_SIZE = 150
-
-export function LogViewer(props: LogViewerProps) {
+export const LogViewer = forwardRef(function LogViewer(props: LogViewerProps) {
   const intl = useIntl()
-
-  const { introspection } = usePinoramaConnection()
 
   const staticLogsQuery = useStaticLogs(
     props.searchText,
@@ -51,77 +47,43 @@ export function LogViewer(props: LogViewerProps) {
     props.liveMode
   )
 
-  const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const tableContainerRef = useRef(null)
 
-  const columnsDefinition = useMemo<ColumnDef<unknown>[]>(() => {
-    const columns = introspection?.columns
-    if (!columns) return []
-
-    return Object.keys(columns).map((columnName) => {
-      const field = createField(columnName, introspection)
-      return {
-        id: columnName,
-        // accessorKey: columnName.split(".")[0] || columnName,
-        accessorKey: columnName,
-        header: () => field.getDisplayLabel(),
-        cell: (info) => {
-          const value = info.getValue() as string | number
-          if (!value) {
-            return <div className="text-muted-foreground/60">—</div>
-          }
-
-          const formattedValue = field.format(value)
-          const className = field.getClassName(value)
-          return (
-            <div className={cn("overflow-ellipsis overflow-hidden", className)}>
-              {formattedValue}
-            </div>
-          )
-        }
-      }
-    })
-  }, [introspection])
-
+  const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
   const logs = useMemo(() => logsQuery.data ?? [], [logsQuery.data])
+
+  const columnsConfig = useMemo(
+    () => utils.getColumnsConfig(props.introspection),
+    [props.introspection]
+  )
 
   const table = useReactTable({
     data: logs,
-    columns: columnsDefinition,
+    columns: columnsConfig.definition,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
     enableMultiRowSelection: false,
-    state: { rowSelection },
-    enableRowSelection: true
-  })
-
-  useEffect(() => {
-    const columns = introspection?.columns
-    if (!columns) return
-
-    const visibility: Record<string, boolean> = {}
-    const sizing: Record<string, number> = {}
-
-    for (const [name, config] of Object.entries(columns)) {
-      visibility[name] = config?.visible ?? false
-      sizing[name] = config?.size ?? DEFAULT_COLUMN_SIZE
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      rowSelection
+    },
+    initialState: {
+      columnVisibility: columnsConfig.visibility,
+      columnSizing: columnsConfig.sizing
     }
-
-    table.setColumnVisibility(visibility)
-    table.setColumnSizing(sizing)
-  }, [introspection, table.setColumnVisibility, table.setColumnSizing])
+  })
 
   const hasFilters =
     props.searchText.length > 0 && Object.keys(props.filters).length > 0
 
-  // biome-ignore lint: I need to pop up the selected row
+  // biome-ignore lint: I need to update the selected row on row selection change
   useEffect(() => {
     const rowModel = table.getSelectedRowModel()
     const original = rowModel.rows[0]?.original
-    props.onRowSelectionChange(original)
+    props.onSelectedRowChange(original)
   }, [table.getSelectedRowModel()])
 
   // biome-ignore lint: I need to reset row selection on filters change
@@ -130,8 +92,6 @@ export function LogViewer(props: LogViewerProps) {
   }, [props.filters, props.searchText])
 
   const { rows } = table.getRowModel()
-
-  const tableContainerRef = useRef(null)
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -147,6 +107,7 @@ export function LogViewer(props: LogViewerProps) {
   return (
     <div className="flex flex-col h-full bg-muted/20">
       <LogViewerHeader
+        introspection={props.introspection}
         table={table}
         searchText={props.searchText}
         liveMode={props.liveMode}
@@ -190,4 +151,4 @@ export function LogViewer(props: LogViewerProps) {
       </div>
     </div>
   )
-}
+})
