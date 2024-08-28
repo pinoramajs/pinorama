@@ -1,13 +1,14 @@
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
-import { usePinoramaConnection } from "@/hooks"
 import { createField } from "@/lib/introspection"
 import { FacetFactoryInput } from "./facet-factory-input"
 
-import type { IntrospectionFacet } from "pinorama-types"
+import type { AnySchema } from "@orama/orama"
+import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import type { SearchFilters } from "../types"
 
 type FacetItemProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   name: string
   type: IntrospectionFacet
   value: string | number
@@ -17,13 +18,7 @@ type FacetItemProps = {
 }
 
 export function FacetItem(props: FacetItemProps) {
-  const { introspection } = usePinoramaConnection()
-
-  if (!introspection) {
-    return null
-  }
-
-  const field = createField(props.name, introspection)
+  const field = createField(props.name, props.introspection)
 
   return (
     <div className="flex items-center space-x-3 h-[38px] px-3 border-b last:border-b-0 bg-muted/20">

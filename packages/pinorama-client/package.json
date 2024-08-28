@@ -21,9 +21,7 @@
     }
   },
   "types": "./dist/types/pinorama-client.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "rollup --config"

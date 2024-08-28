@@ -27,12 +27,13 @@ export function LogExplorer() {
   const intl = useIntl()
   const appConfig = useAppConfig()
 
-  const { isConnected, toggleConnection } = usePinoramaConnection()
+  const { isConnected, toggleConnection, introspection } =
+    usePinoramaConnection()
 
   const [liveMode, setLiveMode] = useState<boolean | null>(null)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [searchText, setSearchText] = useState<string>("")
-  const [rowSelection, setRowSelection] = useState()
+  const [selectedRow, setSelectedRow] = useState(null)
 
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
   const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
@@ -59,8 +60,8 @@ export function LogExplorer() {
 
   useEffect(() => {
     const panel = detailsPanelRef.current
-    rowSelection ? panel?.expand(PANEL_SIZES.details.base) : panel?.collapse()
-  }, [rowSelection])
+    selectedRow ? panel?.expand(PANEL_SIZES.details.base) : panel?.collapse()
+  }, [selectedRow])
 
   if (!isConnected) {
     return (
@@ -80,6 +81,10 @@ export function LogExplorer() {
     )
   }
 
+  if (!introspection) {
+    return null
+  }
+
   return (
     <ResizablePanelGroup direction="horizontal">
       {/* Filters */}
@@ -93,6 +98,7 @@ export function LogExplorer() {
         onExpand={() => setFiltersPanelCollapsed(false)}
       >
         <LogFilters
+          introspection={introspection}
           searchText={searchText}
           filters={filters}
           liveMode={isLiveModeEnabled}
@@ -107,11 +113,12 @@ export function LogExplorer() {
       {/* Viewer */}
       <ResizablePanel order={2} className="bg-muted/20">
         <LogViewer
+          introspection={introspection}
           searchText={searchText}
           filters={filters}
           liveMode={isLiveModeEnabled}
           onSearchTextChange={setSearchText}
-          onRowSelectionChange={setRowSelection}
+          onSelectedRowChange={setSelectedRow}
           onToggleFiltersButtonClick={toggleFiltersPanel}
           onClearFiltersButtonClick={clearFilters}
           onToggleLiveButtonClick={setLiveMode}
@@ -132,7 +139,7 @@ export function LogExplorer() {
         onCollapse={() => setDetailsPanelCollapsed(true)}
         onExpand={() => setDetailsPanelCollapsed(false)}
       >
-        <LogDetails data={rowSelection} />
+        <LogDetails data={selectedRow} />
       </ResizablePanel>
     </ResizablePanelGroup>
   )

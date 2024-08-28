@@ -7,10 +7,12 @@ import { facetFilterOperationsFactory } from "../lib/operations"
 import { FacetBody } from "./facet-body"
 import { FacetHeader } from "./facet-header"
 
-import type { IntrospectionFacet } from "pinorama-types"
+import type { AnySchema } from "@orama/orama"
+import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import type { FacetFilter, FacetValue, SearchFilters } from "../types"
 
 type FacetProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   name: string
   type: IntrospectionFacet
   searchText: string
@@ -82,6 +84,7 @@ export function Facet(props: FacetProps) {
   return (
     <div>
       <FacetHeader
+        introspection={props.introspection}
         name={props.name}
         loading={fetchStatus === "fetching"}
         count={selelectedOptionCount}
@@ -99,6 +102,7 @@ export function Facet(props: FacetProps) {
           />
         ) : (
           <FacetBody
+            introspection={props.introspection}
             name={props.name}
             type={props.type}
             values={allValues}

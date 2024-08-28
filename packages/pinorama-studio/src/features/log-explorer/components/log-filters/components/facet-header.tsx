@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { usePinoramaConnection } from "@/hooks"
 import { createField } from "@/lib/introspection"
+import type { AnySchema } from "@orama/orama"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
+import type { PinoramaIntrospection } from "pinorama-types"
 import type React from "react"
 
 type FacetHeaderProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   name: string
   loading: boolean
   count: number
@@ -14,13 +16,7 @@ type FacetHeaderProps = {
 }
 
 export function FacetHeader(props: FacetHeaderProps) {
-  const { introspection } = usePinoramaConnection()
-
-  if (!introspection) {
-    return null
-  }
-
-  const field = createField(props.name, introspection)
+  const field = createField(props.name, props.introspection)
   const ChevronIcon = props.open ? ChevronDown : ChevronRight
 
   return (

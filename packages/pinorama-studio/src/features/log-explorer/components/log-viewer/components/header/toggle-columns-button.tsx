@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { usePinoramaConnection } from "@/hooks"
 import { createField } from "@/lib/introspection"
 import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
@@ -17,12 +16,11 @@ import type { PinoramaIntrospection } from "pinorama-types"
 import { FormattedMessage, useIntl } from "react-intl"
 
 type ColumnsVisibilityButtonProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   table: Table<unknown>
 }
 
 export function ToggleColumnsButton(props: ColumnsVisibilityButtonProps) {
-  const { introspection } = usePinoramaConnection()
-
   const intl = useIntl()
   const label = intl.formatMessage({ id: "logExplorer.columnsVisibility" })
   return (
@@ -44,10 +42,7 @@ export function ToggleColumnsButton(props: ColumnsVisibilityButtonProps) {
               typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
-            const field = createField(
-              column.id,
-              introspection as PinoramaIntrospection<AnySchema>
-            )
+            const field = createField(column.id, props.introspection)
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}

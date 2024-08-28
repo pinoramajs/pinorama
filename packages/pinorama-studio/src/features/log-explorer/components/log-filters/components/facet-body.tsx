@@ -1,9 +1,11 @@
 import { FacetItem } from "./facet-item"
 
-import type { IntrospectionFacet } from "pinorama-types"
+import type { AnySchema } from "@orama/orama"
+import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import type { FacetValue, SearchFilters } from "../types"
 
 type FacetBodyProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   name: string
   type: IntrospectionFacet
   values: FacetValue[]
@@ -18,6 +20,7 @@ export function FacetBody(props: FacetBodyProps) {
         return (
           <FacetItem
             key={value}
+            introspection={props.introspection}
             name={props.name}
             type={props.type}
             value={value}

@@ -5,10 +5,13 @@ import { ToggleColumnsButton } from "./toggle-columns-button"
 import { ToggleFiltersButton } from "./toggle-filters-button"
 import { ToggleLiveButton } from "./toggle-live-button"
 
+import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
+import type { PinoramaIntrospection } from "pinorama-types"
 import { RefreshDataButton } from "./refresh-data-button"
 
 type LogViewerHeaderProps = {
+  introspection: PinoramaIntrospection<AnySchema>
   table: Table<unknown>
   searchText: string
   showClearFiltersButton: boolean
@@ -45,7 +48,10 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
       {props.showClearFiltersButton ? (
         <ClearFiltersButton onClick={props.onClearFiltersButtonClick} />
       ) : null}
-      <ToggleColumnsButton table={props.table} />
+      <ToggleColumnsButton
+        table={props.table}
+        introspection={props.introspection}
+      />
     </div>
   )
 }

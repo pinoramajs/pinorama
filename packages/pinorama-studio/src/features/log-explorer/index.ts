@@ -8,4 +8,4 @@ export default {
     en: () => import("./messages/en.json"),
     it: () => import("./messages/it.json")
   }
-} as Omit<Feature, "id">
+} as Feature
