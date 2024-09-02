@@ -1,5 +1,15 @@
 # pinorama-studio
 
+## 0.4.0
+
+### Minor Changes
+
+- f7dc713: keyboard shortcut system and ui enhancements
+
+### Patch Changes
+
+- 06e7ae4: fix cli help message for batchSize and flushInterval
+
 ## 0.3.0
 
 ### Minor Changes
