@@ -1,4 +1,4 @@
-import features from "@/features"
+import modules from "@/modules"
 
 const appMessages: ImportMessages = {
   en: () => import("./messages/en.json"),
@@ -26,16 +26,16 @@ export const getMessages = async (locale: Locale) => {
     console.warn(`i18n: could not load app messages for "${locale}"`)
   }
 
-  // Feature Messages
-  for (const feature of features) {
-    const translationImport = feature.messages?.[locale]
+  // Module Messages
+  for (const mod of modules) {
+    const translationImport = mod.messages?.[locale]
     if (translationImport) {
       try {
         const module = await translationImport()
         messages = { ...messages, ...module.default }
       } catch (error) {
         console.warn(
-          `i18n: could not load "${feature.id}" messages for "${locale}"`
+          `i18n: could not load "${mod.id}" messages for "${locale}"`
         )
       }
     }

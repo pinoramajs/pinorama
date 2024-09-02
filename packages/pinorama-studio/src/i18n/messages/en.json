@@ -16,5 +16,8 @@
   "connection.status.unknown": "Unknown",
   "labels.inlineError": "Error:",
   "labels.loading": "Loading...",
-  "labels.noResultFound": "No result found"
+  "labels.noResultFound": "No result found",
+  "labels.copyToClipboard": "Copy to clipboard",
+  "labels.keyboardShortcuts": "Keyboard Shortcuts",
+  "labels.allShortcutsSeparatedByModule": "All shortcuts are separated by module"
 }
