@@ -16,5 +16,8 @@
   "connection.status.unknown": "Sconosciuto",
   "labels.inlineError": "Errore:",
   "labels.loading": "Caricamento in corso...",
-  "labels.noResultFound": "Nessun risultato trovato"
+  "labels.noResultFound": "Nessun risultato trovato",
+  "labels.copyToClipboard": "Copia negli appunti",
+  "labels.keyboardShortcuts": "Scorciatoie da tastiera",
+  "labels.allShortcutsSeparatedByModule": "Tutte le scorciatoie sono separate per modulo"
 }

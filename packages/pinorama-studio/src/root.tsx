@@ -2,13 +2,12 @@ import "./styles/globals.css"
 
 import {
   RouterProvider,
-  type SyncRouteComponent,
   createRootRoute,
   createRoute,
   createRouter,
   redirect
 } from "@tanstack/react-router"
-import { type ComponentType, StrictMode } from "react"
+import { StrictMode } from "react"
 
 import { TooltipProvider } from "@/components/ui/tooltip"
 import {
@@ -18,17 +17,17 @@ import {
   ThemeProvider
 } from "@/contexts"
 import App from "./app"
-import features from "./features"
+import modules from "./modules"
 
 const rootRoute = createRootRoute({
   component: App
 })
 
-const routes = features.map((feature) =>
+const routes = modules.map((mod) =>
   createRoute({
     getParentRoute: () => rootRoute,
-    path: feature.routePath,
-    component: feature.component as SyncRouteComponent<ComponentType>
+    path: mod.routePath,
+    component: mod.component
   })
 )
 
