@@ -57,8 +57,8 @@ async function start(options) {
     -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
     -k, --server-admin-secret  Set Pinorama Server admin secret key (default: ${defaultOptions["admin-secret"]}). 
     -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
-    -b, --batch-size           Set batch size for transport (default: ${defaultOptions.batchSize}).
-    -f, --flush-interval       Set flush wait time in ms (default: ${defaultOptions.flushInterval}).
+    -b, --batch-size           Set batch size for transport (default: ${defaultOptions["batch-size"]}).
+    -f, --flush-interval       Set flush wait time in ms (default: ${defaultOptions["flush-interval"]}).
 
   Examples:
     pinorama --open
