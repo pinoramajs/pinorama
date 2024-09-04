@@ -144,8 +144,7 @@ export const LogViewer = forwardRef(function LogViewer(
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: () => 24,
-    overscan: 100
+    estimateSize: () => 24
   })
 
   const isLoading = logsQuery.status === "pending"

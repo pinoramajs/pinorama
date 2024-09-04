@@ -2,6 +2,7 @@ import { createField } from "@/lib/introspection"
 import { cn } from "@/lib/utils"
 import type { AnySchema } from "@orama/orama"
 import type { ColumnDef, Table } from "@tanstack/react-table"
+import debounce from "debounce"
 import type { PinoramaIntrospection } from "pinorama-types"
 
 const DEFAULT_COLUMN_SIZE = 150
@@ -59,17 +60,23 @@ export const getColumnsConfig = (
   }
 }
 
+const debouncedScrollIntoView = debounce((element: Element) => {
+  element.scrollIntoView({
+    block: "center",
+    behavior: "smooth"
+  })
+}, 50)
+
 export const selectRowByIndex = (index: number, table: Table<unknown>) => {
   const totalRows = table.getRowModel().rows.length
   const validIndex = Math.max(0, Math.min(index, totalRows - 1))
 
-  table.setRowSelection({ [validIndex]: true })
+  table.setRowSelection({ [index]: true })
 
   const row = document.querySelector(`[data-index="${validIndex}"]`)
-  row?.scrollIntoView({
-    block: "center",
-    behavior: "smooth"
-  })
+  if (row) {
+    debouncedScrollIntoView(row)
+  }
 }
 
 export const getCurrentRowIndex = (table: Table<unknown>) => {
