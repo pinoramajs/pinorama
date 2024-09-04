@@ -63,6 +63,9 @@ importers:
       fastify:
         specifier: ^4.26.2
         version: 4.28.0
+      pinorama-presets:
+        specifier: workspace:*
+        version: link:../../packages/pinorama-presets
       pinorama-server:
         specifier: workspace:*
         version: link:../../packages/pinorama-server
