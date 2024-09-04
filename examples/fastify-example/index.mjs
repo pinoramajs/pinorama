@@ -1,6 +1,7 @@
 import path from "node:path"
 import fastifyCors from "@fastify/cors"
 import Fastify from "fastify"
+import * as pinoramaPresets from "pinorama-presets"
 import { fastifyPinoramaServer } from "pinorama-server"
 
 const fastify = Fastify({
@@ -24,6 +25,8 @@ fastify.register(fastifyCors)
 fastify.register(fastifyPinoramaServer, {
   prefix: "/my_pinorama_server",
   dbPath: path.resolve("./db.msp"),
+  dbSchema: pinoramaPresets.fastify.schema,
+  introspection: pinoramaPresets.fastify.introspection,
   logLevel: "silent" // need to avoid loop
 })
 
