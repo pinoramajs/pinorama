@@ -4,6 +4,7 @@ import { Facet } from "./components/facet"
 
 import type { AnySchema } from "@orama/orama"
 import type { PinoramaIntrospection } from "pinorama-types"
+import { type OramaFacetValue, useFacets } from "./hooks/use-facets"
 import { getFacetsConfig } from "./lib/utils"
 import type { SearchFilters } from "./types"
 
@@ -20,18 +21,31 @@ export function LogFilters(props: PinoramaFacetsProps) {
     return getFacetsConfig(props.introspection)
   }, [props.introspection])
 
+  const names = useMemo(() => {
+    return facetsConfig.definition.map((facet) => facet.name)
+  }, [facetsConfig])
+
+  const { data: facets, isFetching } = useFacets(
+    names,
+    props.searchText,
+    props.filters,
+    props.liveMode
+  )
+
   return (
     <div className="flex flex-col h-full p-3 overflow-auto">
-      {facetsConfig.definition.map((facet) => {
+      {facetsConfig.definition.map((facetDef) => {
+        const facet: OramaFacetValue | undefined = facets?.[facetDef.name]
         return (
           <Facet
-            key={facet.name}
+            key={facetDef.name}
             introspection={props.introspection}
-            name={facet.name}
-            type={facet.type}
-            searchText={props.searchText}
+            loading={isFetching}
+            name={facetDef.name}
+            count={facet?.count ?? 0}
+            values={facet?.values ?? {}}
+            type={facetDef.type}
             filters={props.filters}
-            liveMode={props.liveMode}
             onFiltersChange={props.onFiltersChange}
           />
         )

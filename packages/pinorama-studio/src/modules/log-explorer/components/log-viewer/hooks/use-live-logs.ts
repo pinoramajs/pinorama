@@ -3,22 +3,23 @@ import { buildPayload } from "@/modules/log-explorer/utils"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
-import type { AnyOrama, SearchParams } from "@orama/orama"
+import type { SearchParams } from "@orama/orama"
+import type { BaseOramaPinorama } from "pinorama-types"
 
 const POLL_DELAY = 1500
 
-export const useLiveLogs = <T extends AnyOrama>(
-  searchText?: string,
-  searchFilters?: SearchParams<T>["where"],
+export const useLiveLogs = <T extends BaseOramaPinorama>(
+  term?: string,
+  filters?: SearchParams<T>["where"],
   enabled?: boolean
 ) => {
   const client = usePinoramaClient()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const query = useInfiniteQuery({
-    queryKey: ["live-logs", searchText, searchFilters],
-    queryFn: async ({ pageParam }) => {
-      const payload = buildPayload(searchText, searchFilters, pageParam)
+    queryKey: ["live-logs", term, filters],
+    queryFn: async ({ pageParam: cursor }) => {
+      const payload = buildPayload({ term, filters, cursor })
 
       const response = await client?.search(payload)
       const newData = response?.hits.map((hit) => hit.document) ?? []
@@ -26,12 +27,12 @@ export const useLiveLogs = <T extends AnyOrama>(
       if (newData.length > 0) {
         const lastItem = newData[newData.length - 1]
         const metadata = lastItem._pinorama
-        pageParam = metadata.createdAt
+        cursor = metadata.createdAt
       }
 
-      return { data: newData, nextCursor: pageParam }
+      return { data: newData, nextCursor: cursor }
     },
-    initialPageParam: 0,
+    initialPageParam: new Date().getTime(),
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Number.POSITIVE_INFINITY,
     // refetchInterval: POLL_DELAY, // NOTE: This is not working as expected, it doesn't use the nextCursor

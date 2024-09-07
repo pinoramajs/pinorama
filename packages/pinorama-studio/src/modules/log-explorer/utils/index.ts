@@ -1,24 +1,27 @@
 import type { SearchParams } from "@orama/orama"
 import type { BaseOramaPinorama } from "pinorama-types"
 
-const createBasePayload = <T extends BaseOramaPinorama>(): SearchParams<T> => ({
-  limit: 10_000,
-  sortBy: { property: "_pinorama.createdAt" }
+const createBasePayload = <T extends BaseOramaPinorama>({
+  preflight = false
+}: { preflight: boolean }): SearchParams<T> => ({
+  limit: 10,
+  sortBy: { property: "_pinorama.createdAt" },
+  preflight
 })
 
-const withSearchText =
-  <T extends BaseOramaPinorama>(searchText: string) =>
+const withTerm =
+  <T extends BaseOramaPinorama>(term: string) =>
   (payload: SearchParams<T>): SearchParams<T> => {
-    return { ...payload, term: searchText }
+    return { ...payload, term }
   }
 
-const withSearchFilters =
+const withFilters =
   <T extends BaseOramaPinorama>(
-    searchFilters: SearchParams<BaseOramaPinorama>["where"]
+    filters: SearchParams<BaseOramaPinorama>["where"]
   ) =>
   (payload: SearchParams<T>): SearchParams<T> => {
     const where: SearchParams<T>["where"] = payload.where || {}
-    return { ...payload, where: { ...where, ...searchFilters } }
+    return { ...payload, where: { ...where, ...filters } }
   }
 
 const withCursor =
@@ -31,21 +34,27 @@ const withCursor =
     }
   }
 
-export const buildPayload = <T extends BaseOramaPinorama>(
-  searchText?: string,
-  searchFilters?: SearchParams<T>["where"],
+export const buildPayload = <T extends BaseOramaPinorama>({
+  term,
+  filters,
+  cursor,
+  preflight
+}: {
+  term?: string
+  filters?: SearchParams<T>["where"]
   cursor?: number
-) => {
-  let payload = createBasePayload()
+  preflight?: boolean
+}) => {
+  let payload = createBasePayload({ preflight: !!preflight })
 
-  if (searchText) {
-    const addSearchText = withSearchText(searchText)
-    payload = addSearchText(payload)
+  if (term) {
+    const addTerm = withTerm(term)
+    payload = addTerm(payload)
   }
 
-  if (searchFilters) {
-    const addSearchFilters = withSearchFilters(searchFilters)
-    payload = addSearchFilters(payload)
+  if (filters) {
+    const addFilters = withFilters(filters)
+    payload = addFilters(payload)
   }
 
   if (cursor) {

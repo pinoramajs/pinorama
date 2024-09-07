@@ -6,7 +6,8 @@ import type {
   AnyOrama,
   Results,
   SearchParams,
-  TypedDocument
+  TypedDocument,
+  count
 } from "@orama/orama"
 
 const clientOptionsSchema = z.object({
@@ -117,6 +118,26 @@ export class PinoramaClient<T extends AnyOrama> {
       }
 
       const json: Results<TypedDocument<T>> = await response.json()
+
+      return json
+    } catch (error) {
+      console.error("error searching logs:", error)
+      throw error
+    }
+  }
+
+  public async count(): Promise<number> {
+    try {
+      const response = await fetch(`${this.url}/count`, {
+        method: "GET",
+        headers: this.defaultHeaders
+      })
+
+      if (!response.ok) {
+        throw new Error("[TODO ERROR]: PinoramaClient.count failed")
+      }
+
+      const json: number = await response.json()
 
       return json
     } catch (error) {

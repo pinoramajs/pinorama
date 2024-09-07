@@ -1,8 +1,6 @@
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
-import { ErrorState } from "@/components/error-state/error-state"
 import { useCallback, useMemo, useState } from "react"
 import { useIntl } from "react-intl"
-import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
 import { FacetBody } from "./facet-body"
 import { FacetHeader } from "./facet-header"
@@ -14,10 +12,11 @@ import type { FacetFilter, FacetValue, SearchFilters } from "../types"
 type FacetProps = {
   introspection: PinoramaIntrospection<AnySchema>
   name: string
+  count: number
+  loading: boolean
+  values: Record<string, number>
   type: IntrospectionFacet
-  searchText: string
   filters: SearchFilters
-  liveMode: boolean
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -25,13 +24,6 @@ export function Facet(props: FacetProps) {
   const intl = useIntl()
 
   const [open, setOpen] = useState(true)
-
-  const {
-    data: facet,
-    fetchStatus,
-    status,
-    error
-  } = useFacet(props.name, props.searchText, props.filters, props.liveMode)
 
   const operations: any = facetFilterOperationsFactory(props.type)
   const criteria = props.filters[props.name] || operations.create()
@@ -53,17 +45,15 @@ export function Facet(props: FacetProps) {
       .map((value: string | number) => {
         return {
           value,
-          count: facet?.values[value] || 0
+          count: props.values[value as number] || 0
         }
       })
 
-    return selectedItems.filter(
-      (item) => !(item.value in (facet?.values || {}))
-    )
-  }, [props.filters, props.name, facet?.values, operations])
+    return selectedItems.filter((item) => !(item.value in (props.values || {})))
+  }, [props.filters, props.name, props.values, operations])
 
   const allValues = useMemo(() => {
-    const currentValues = Object.entries(facet?.values || {})
+    const currentValues = Object.entries(props.values || {})
       .filter(([value]) => value !== "") // NOTE: Don't show empty values
       .map(([value, count]) => {
         // NOTE: If the value is a number of type string,
@@ -76,9 +66,8 @@ export function Facet(props: FacetProps) {
       })
 
     return [...selectedValuesNotInDataSource, ...currentValues]
-  }, [selectedValuesNotInDataSource, facet?.values, props.type])
+  }, [selectedValuesNotInDataSource, props.values, props.type])
 
-  const hasError = status === "error"
   const hasNoData = allValues.length === 0
 
   return (
@@ -86,16 +75,14 @@ export function Facet(props: FacetProps) {
       <FacetHeader
         introspection={props.introspection}
         name={props.name}
-        loading={fetchStatus === "fetching"}
+        loading={props.loading}
         count={selelectedOptionCount}
         open={open}
         onClick={() => setOpen((value) => !value)}
         onCountClick={handleReset}
       />
       {open ? (
-        hasError ? (
-          <ErrorState error={error} className="my-2 mx-0" />
-        ) : hasNoData ? (
+        hasNoData ? (
           <EmptyStateInline
             message={intl.formatMessage({ id: "labels.noResultFound" })}
             className="my-2 mx-0"

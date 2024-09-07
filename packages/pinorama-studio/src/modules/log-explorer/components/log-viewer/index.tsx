@@ -12,6 +12,7 @@ import {
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
+import { Button } from "@/components/ui/button"
 import type { AnySchema } from "@orama/orama"
 import {
   type RowSelectionState,
@@ -27,6 +28,7 @@ import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
 import { useLiveLogs } from "./hooks/use-live-logs"
 import { useStaticLogs } from "./hooks/use-static-logs"
+import { useTotalLogs } from "./hooks/use-total-logs"
 import * as utils from "./utils"
 
 type LogViewerProps = {
@@ -58,7 +60,10 @@ export const LogViewer = forwardRef(function LogViewer(
 ) {
   const intl = useIntl()
 
+  const totalsLogQuery = useTotalLogs(props.searchText, props.filters)
+
   const staticLogsQuery = useStaticLogs(
+    totalsLogQuery.data?.filtered ?? 0,
     props.searchText,
     props.filters,
     !props.liveMode
@@ -151,6 +156,10 @@ export const LogViewer = forwardRef(function LogViewer(
   const hasError = logsQuery.status === "error"
   const hasNoData = logsQuery.data?.length === 0 || false
 
+  const showLoadMore =
+    !props.liveMode &&
+    (totalsLogQuery.data?.filtered ?? 0) < logsQuery.data?.length
+
   return (
     <div className="flex flex-col h-full bg-muted/20">
       <LogViewerHeader
@@ -197,6 +206,11 @@ export const LogViewer = forwardRef(function LogViewer(
             <TableBody virtualizer={virtualizer} rows={rows} />
           )}
         </table>
+        {showLoadMore && (
+          <div className="bottom-0 right-0 p-2 text-muted-foreground/60">
+            <Button onClick={() => logsQuery.fetchNextPage()}>Load more</Button>
+          </div>
+        )}
       </div>
     </div>
   )
