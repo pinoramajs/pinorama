@@ -28,13 +28,12 @@ import { TableBody } from "./components/tbody"
 import { TableHead } from "./components/thead"
 import { useLiveLogs } from "./hooks/use-live-logs"
 import { useStaticLogs } from "./hooks/use-static-logs"
-import { useTotalLogs } from "./hooks/use-total-logs"
 import * as utils from "./utils"
 
 type LogViewerProps = {
   introspection: PinoramaIntrospection<AnySchema>
   filters: SearchFilters
-  searchText: string
+  term: string
   liveMode: boolean
   onSearchTextChange: (searchText: string) => void
   onSelectedRowChange: (row: any) => void
@@ -60,20 +59,13 @@ export const LogViewer = forwardRef(function LogViewer(
 ) {
   const intl = useIntl()
 
-  const totalsLogQuery = useTotalLogs(props.searchText, props.filters)
-
   const staticLogsQuery = useStaticLogs(
-    totalsLogQuery.data?.filtered ?? 0,
-    props.searchText,
+    props.term,
     props.filters,
     !props.liveMode
   )
 
-  const liveLogsQuery = useLiveLogs(
-    props.searchText,
-    props.filters,
-    props.liveMode
-  )
+  const liveLogsQuery = useLiveLogs(props.term, props.filters, props.liveMode)
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const tableContainerRef = useRef(null)
@@ -106,7 +98,7 @@ export const LogViewer = forwardRef(function LogViewer(
   })
 
   const hasFilters =
-    props.searchText.length > 0 && Object.keys(props.filters).length > 0
+    props.term.length > 0 && Object.keys(props.filters).length > 0
 
   // biome-ignore lint: I need to update the selected row on row selection change
   useEffect(() => {
@@ -118,7 +110,7 @@ export const LogViewer = forwardRef(function LogViewer(
   // biome-ignore lint: I need to reset row selection on filters change
   useEffect(() => {
     clearSelection()
-  }, [props.filters, props.searchText])
+  }, [props.filters, props.term])
 
   const clearSelection = useCallback(() => {
     table.setRowSelection({})
@@ -157,8 +149,7 @@ export const LogViewer = forwardRef(function LogViewer(
   const hasNoData = logsQuery.data?.length === 0 || false
 
   const showLoadMore =
-    !props.liveMode &&
-    (totalsLogQuery.data?.filtered ?? 0) < logsQuery.data?.length
+    !props.liveMode && logsQuery.hasNextPage && !logsQuery.isFetchingNextPage
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
@@ -166,7 +157,7 @@ export const LogViewer = forwardRef(function LogViewer(
         searchInputRef={searchInputRef}
         introspection={props.introspection}
         table={table}
-        searchText={props.searchText}
+        searchText={props.term}
         liveMode={props.liveMode}
         showClearFiltersButton={hasFilters}
         isLoading={logsQuery.isFetching}

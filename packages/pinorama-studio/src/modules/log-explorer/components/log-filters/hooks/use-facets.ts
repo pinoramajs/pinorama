@@ -1,6 +1,7 @@
 import { usePinoramaClient } from "@/contexts"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
+import { useState } from "react"
 import type { SearchFilters } from "../types"
 
 export type OramaFacetValue = {
@@ -17,9 +18,11 @@ export const useFacets = (
   liveMode: boolean
 ) => {
   const client = usePinoramaClient()
+  const [startDate, setStartDate] = useState<Date>(new Date())
+  console.log("startDate", startDate)
 
   const query = useQuery<Record<string, OramaFacetValue>>({
-    queryKey: ["facets", names, searchText, filters],
+    queryKey: ["facets", names, searchText, filters, liveMode],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -47,8 +50,14 @@ export const useFacets = (
         payload.where = filters
       }
 
-      const response: any = await client?.search(payload)
-      return response.facets
+      if (liveMode) {
+        payload.where["_pinorama.createdAt"] = { gt: startDate.getTime() }
+      }
+
+      console.log("Fetching facets", payload)
+
+      const response = await client?.search(payload)
+      return response?.facets
     },
     placeholderData: keepPreviousData,
     refetchInterval: liveMode ? POLL_DELAY : false

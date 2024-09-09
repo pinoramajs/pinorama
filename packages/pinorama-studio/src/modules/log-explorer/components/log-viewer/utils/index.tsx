@@ -1,9 +1,12 @@
 import { createField } from "@/lib/introspection"
 import { cn } from "@/lib/utils"
-import type { AnySchema } from "@orama/orama"
+import { buildPayload } from "@/modules/log-explorer/utils"
+import type { AnySchema, SearchParams } from "@orama/orama"
+import type { InfiniteData, QueryClient, QueryKey } from "@tanstack/react-query"
 import type { ColumnDef, Table } from "@tanstack/react-table"
 import debounce from "debounce"
-import type { PinoramaIntrospection } from "pinorama-types"
+import type { PinoramaClient } from "pinorama-client"
+import type { BaseOramaPinorama, PinoramaIntrospection } from "pinorama-types"
 
 const DEFAULT_COLUMN_SIZE = 150
 
@@ -92,4 +95,31 @@ export const canSelectNextRow = (table: Table<unknown>) => {
 export const canSelectPreviousRow = (table: Table<unknown>) => {
   const currentRowIndex = getCurrentRowIndex(table)
   return currentRowIndex > 0
+}
+
+export const getInfiniteQueryItemCount = (
+  queryClient: QueryClient,
+  queryKey: QueryKey
+): number => {
+  const data = queryClient.getQueryData<InfiniteData<any>>(queryKey)
+
+  if (!data) {
+    return 0
+  }
+
+  const totalItems = data.pages.reduce((sum, page) => {
+    return sum + (Array.isArray(page) ? page.length : page.length ?? 0)
+  }, 0)
+
+  return totalItems
+}
+
+export const fetchTotalCount = async (
+  client: PinoramaClient<BaseOramaPinorama> | null,
+  term?: string,
+  filters?: SearchParams<BaseOramaPinorama>["where"]
+) => {
+  const payload = buildPayload({ term, filters, preflight: true })
+  const response = await client?.search(payload)
+  return response?.count ?? 0
 }

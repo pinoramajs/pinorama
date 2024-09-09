@@ -2,12 +2,13 @@ import type { SearchParams } from "@orama/orama"
 import type { BaseOramaPinorama } from "pinorama-types"
 
 const createBasePayload = <T extends BaseOramaPinorama>({
-  preflight = false
-}: { preflight: boolean }): SearchParams<T> => ({
-  limit: 10,
-  sortBy: { property: "_pinorama.createdAt" },
-  preflight
-})
+  preflight = false,
+  pageSize = 100
+}: { preflight?: boolean; pageSize?: number }): SearchParams<T> => {
+  return preflight
+    ? { preflight }
+    : { limit: pageSize, sortBy: { property: "_pinorama.createdAt" } }
+}
 
 const withTerm =
   <T extends BaseOramaPinorama>(term: string) =>
@@ -37,22 +38,24 @@ const withCursor =
 export const buildPayload = <T extends BaseOramaPinorama>({
   term,
   filters,
+  pageSize,
   cursor,
   preflight
 }: {
   term?: string
   filters?: SearchParams<T>["where"]
+  pageSize?: number
   cursor?: number
   preflight?: boolean
 }) => {
-  let payload = createBasePayload({ preflight: !!preflight })
+  let payload = createBasePayload({ pageSize, preflight })
 
-  if (term) {
+  if (term?.length) {
     const addTerm = withTerm(term)
     payload = addTerm(payload)
   }
 
-  if (filters) {
+  if (Object.keys(filters || {}).length) {
     const addFilters = withFilters(filters)
     payload = addFilters(payload)
   }

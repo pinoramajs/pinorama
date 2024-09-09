@@ -1,34 +1,40 @@
 import { usePinoramaClient } from "@/contexts"
 import { buildPayload } from "@/modules/log-explorer/utils"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 
 import type { SearchParams } from "@orama/orama"
 import type { BaseOramaPinorama } from "pinorama-types"
 import { useMemo } from "react"
+import { fetchTotalCount, getInfiniteQueryItemCount } from "../utils"
 
 export const useStaticLogs = <T extends BaseOramaPinorama>(
-  totals: number,
   term?: string,
   filters?: SearchParams<T>["where"],
   enabled?: boolean
 ) => {
   const client = usePinoramaClient()
+  const queryClient = useQueryClient()
+
+  const queryKey = ["static-logs", term, filters]
 
   const query = useInfiniteQuery({
-    queryKey: ["static-logs", totals, term, filters],
-    queryFn: async ({ pageParam: cursor }) => {
-      // await new Promise((resolve) => setTimeout(resolve, 300))
-      // if (signal.aborted) return
+    queryKey,
+    queryFn: async ({ pageParam, signal }) => {
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      if (signal.aborted) return
 
-      const payload = buildPayload({ term, filters, cursor })
+      const payload = buildPayload({ term, filters, cursor: pageParam })
 
       const response = await client?.search(payload)
       const newData = response?.hits.map((hit) => hit.document) ?? []
 
-      if (newData.length > 0) {
+      const cachedCount = getInfiniteQueryItemCount(queryClient, queryKey)
+      const totalCount = await fetchTotalCount(client, term, filters)
+
+      let cursor: number | undefined = undefined
+      if (cachedCount + newData.length < totalCount) {
         const lastItem = newData[newData.length - 1]
-        const metadata = lastItem._pinorama
-        cursor = metadata.createdAt
+        cursor = lastItem._pinorama.createdAt
       }
 
       return {
@@ -37,13 +43,13 @@ export const useStaticLogs = <T extends BaseOramaPinorama>(
       }
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: Number.POSITIVE_INFINITY,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor,
+    // staleTime: 0,
     enabled
   })
 
   const flattenedData = useMemo(() => {
-    return query.data?.pages.flatMap((page) => page.data) ?? []
+    return query.data?.pages.flatMap((page) => page?.data) ?? []
   }, [query.data])
 
   return { ...query, data: flattenedData }

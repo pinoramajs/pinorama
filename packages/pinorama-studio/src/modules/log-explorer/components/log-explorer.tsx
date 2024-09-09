@@ -204,13 +204,13 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
           onCollapse={() => setFiltersPanelCollapsed(true)}
           onExpand={() => setFiltersPanelCollapsed(false)}
         >
-          <LogFilters
-            introspection={introspection}
-            searchText={searchText}
-            filters={filters}
-            liveMode={isLiveModeEnabled}
-            onFiltersChange={setFilters}
-          />
+          {/* <LogFilters */}
+          {/*   introspection={introspection} */}
+          {/*   searchText={searchText} */}
+          {/*   filters={filters} */}
+          {/*   liveMode={isLiveModeEnabled} */}
+          {/*   onFiltersChange={setFilters} */}
+          {/* /> */}
         </ResizablePanel>
         <ResizableHandle
           withHandle
@@ -222,7 +222,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
           <LogViewer
             ref={viewerRef}
             introspection={introspection}
-            searchText={searchText}
+            term={searchText}
             filters={filters}
             liveMode={isLiveModeEnabled}
             onSearchTextChange={setSearchText}
