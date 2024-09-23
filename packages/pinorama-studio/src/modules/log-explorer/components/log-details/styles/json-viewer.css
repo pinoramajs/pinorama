@@ -1,5 +1,5 @@
 .json-view-container {
-  @apply whitespace-pre-wrap font-mono text-sm pl-1
+  @apply whitespace-pre-wrap font-mono text-[13px] pl-1
 }
 
 .punctuation {
@@ -48,4 +48,3 @@
 
 .collapse-icon {}
 .expand-icon {}
-

@@ -12,7 +12,7 @@ type PinoramaFacetsProps = {
   introspection: PinoramaIntrospection<AnySchema>
   searchText: string
   filters: SearchFilters
-  liveMode: boolean
+  liveModeAt: Date | null
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -25,11 +25,11 @@ export function LogFilters(props: PinoramaFacetsProps) {
     return facetsConfig.definition.map((facet) => facet.name)
   }, [facetsConfig])
 
-  const { data: facets, isFetching } = useFacets(
+  const { data: facets } = useFacets(
     names,
     props.searchText,
     props.filters,
-    props.liveMode
+    props.liveModeAt
   )
 
   return (
@@ -40,7 +40,6 @@ export function LogFilters(props: PinoramaFacetsProps) {
           <Facet
             key={facetDef.name}
             introspection={props.introspection}
-            loading={isFetching}
             name={facetDef.name}
             count={facet?.count ?? 0}
             values={facet?.values ?? {}}

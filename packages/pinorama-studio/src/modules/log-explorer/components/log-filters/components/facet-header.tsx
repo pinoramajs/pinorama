@@ -8,7 +8,7 @@ import type React from "react"
 type FacetHeaderProps = {
   introspection: PinoramaIntrospection<AnySchema>
   name: string
-  loading: boolean
+  loading?: boolean
   count: number
   open: boolean
   onClick: () => void

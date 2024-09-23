@@ -9,7 +9,7 @@ type TableBodyProps = {
 export function TableBody({ virtualizer, rows }: TableBodyProps) {
   return (
     <tbody
-      className="relative font-mono"
+      className="relative font-mono text-[13px]"
       style={{ height: `${virtualizer.getTotalSize()}px` }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {

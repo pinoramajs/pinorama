@@ -20,6 +20,7 @@ import {
   useReactTable
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
+import { LoaderIcon } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { useIntl } from "react-intl"
 import type { SearchFilters } from "../log-filters/types"
@@ -34,7 +35,8 @@ type LogViewerProps = {
   introspection: PinoramaIntrospection<AnySchema>
   filters: SearchFilters
   term: string
-  liveMode: boolean
+  liveModeAt: Date | null
+  onLiveModeAtChange: (date: Date) => void
   onSearchTextChange: (searchText: string) => void
   onSelectedRowChange: (row: any) => void
   onToggleFiltersButtonClick: () => void
@@ -51,6 +53,8 @@ export type ImperativeLogViewerHandle = {
   clearSelection: () => void
   canSelectNextRow: () => boolean
   canSelectPreviousRow: () => boolean
+  startLiveMode: (date: Date) => void
+  resetLiveMode: () => void
 }
 
 export const LogViewer = forwardRef(function LogViewer(
@@ -59,19 +63,26 @@ export const LogViewer = forwardRef(function LogViewer(
 ) {
   const intl = useIntl()
 
-  const staticLogsQuery = useStaticLogs(
-    props.term,
-    props.filters,
-    !props.liveMode
-  )
+  const liveModeActive = props.liveModeAt !== null
 
-  const liveLogsQuery = useLiveLogs(props.term, props.filters, props.liveMode)
+  const staticLogsQuery = useStaticLogs({
+    enabled: !liveModeActive,
+    term: props.term,
+    filters: props.filters
+  })
+
+  const liveLogsQuery = useLiveLogs({
+    enabled: liveModeActive,
+    term: props.term,
+    filters: props.filters
+    // liveModeAt: props.liveModeAt
+  })
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const tableContainerRef = useRef(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
+  const logsQuery = liveModeActive ? liveLogsQuery : staticLogsQuery
   const logs = useMemo(() => logsQuery.data ?? [], [logsQuery.data])
 
   const columnsConfig = useMemo(
@@ -107,10 +118,9 @@ export const LogViewer = forwardRef(function LogViewer(
     props.onSelectedRowChange(original)
   }, [table.getSelectedRowModel()])
 
-  // biome-ignore lint: I need to reset row selection on filters change
-  useEffect(() => {
-    clearSelection()
-  }, [props.filters, props.term])
+  // useEffect(() => {
+  //   clearSelection()
+  // }, [props.filters, props.term])
 
   const clearSelection = useCallback(() => {
     table.setRowSelection({})
@@ -131,9 +141,17 @@ export const LogViewer = forwardRef(function LogViewer(
       },
       clearSelection,
       canSelectNextRow: () => utils.canSelectNextRow(table),
-      canSelectPreviousRow: () => utils.canSelectPreviousRow(table)
+      canSelectPreviousRow: () => utils.canSelectPreviousRow(table),
+      startLiveMode: liveLogsQuery.start,
+      resetLiveMode: liveLogsQuery.reset
     }),
-    [logsQuery.refetch, clearSelection, table]
+    [
+      logsQuery.refetch,
+      clearSelection,
+      table,
+      liveLogsQuery.start,
+      liveLogsQuery.reset
+    ]
   )
 
   const { rows } = table.getRowModel()
@@ -148,8 +166,7 @@ export const LogViewer = forwardRef(function LogViewer(
   const hasError = logsQuery.status === "error"
   const hasNoData = logsQuery.data?.length === 0 || false
 
-  const showLoadMore =
-    !props.liveMode && logsQuery.hasNextPage && !logsQuery.isFetchingNextPage
+  const showLoadMore = !liveModeActive && staticLogsQuery.hasNextPage
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
@@ -158,7 +175,7 @@ export const LogViewer = forwardRef(function LogViewer(
         introspection={props.introspection}
         table={table}
         searchText={props.term}
-        liveMode={props.liveMode}
+        liveModeAt={props.liveModeAt}
         showClearFiltersButton={hasFilters}
         isLoading={logsQuery.isFetching}
         onSearchTextChange={props.onSearchTextChange}
@@ -198,8 +215,22 @@ export const LogViewer = forwardRef(function LogViewer(
           )}
         </table>
         {showLoadMore && (
-          <div className="bottom-0 right-0 p-2 text-muted-foreground/60">
-            <Button onClick={() => logsQuery.fetchNextPage()}>Load more</Button>
+          <div className="flex items-center justify-center m-4">
+            <Button
+              variant="outline2"
+              size="sm"
+              disabled={logsQuery.isFetching}
+              onClick={() => staticLogsQuery.fetchNextPage()}
+            >
+              {logsQuery.isFetching ? (
+                <>
+                  <LoaderIcon className="w-4 h-4 mr-2 animate-spin text-muted-foreground" />
+                  <span>Loading more...</span>
+                </>
+              ) : (
+                <span>Load more</span>
+              )}
+            </Button>
           </div>
         )}
       </div>

@@ -22,7 +22,7 @@ type LogViewerHeaderProps = {
   table: Table<unknown>
   searchText: string
   showClearFiltersButton: boolean
-  liveMode: boolean
+  liveModeAt: Date | null
   isLoading: boolean
   onSearchTextChange: (text: string) => void
   onToggleFiltersButtonClick: () => void
@@ -60,7 +60,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
         onChange={props.onSearchTextChange}
       />
       <ToggleLiveButton
-        pressed={props.liveMode}
+        pressed={props.liveModeAt !== null}
         onPressedChange={props.onToggleLiveButtonClick}
       />
       <IconButton

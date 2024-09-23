@@ -1,75 +1,106 @@
 import { usePinoramaClient } from "@/contexts"
 import { buildPayload } from "@/modules/log-explorer/utils"
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient
+} from "@tanstack/react-query"
+import { useCallback, useState } from "react"
 
 import type { SearchParams } from "@orama/orama"
 import type { BaseOramaPinorama } from "pinorama-types"
-import { fetchTotalCount, getInfiniteQueryItemCount } from "../utils"
 
 const POLL_DELAY = 1500
+const BASE_QUERY_KEY = "live-logs"
 
-export const useLiveLogs = <T extends BaseOramaPinorama>(
-  term?: string,
-  filters?: SearchParams<T>["where"],
+type LiveLogsHookParams<T extends BaseOramaPinorama> = {
+  term?: string
+  filters?: SearchParams<T>["where"]
   enabled?: boolean
-) => {
+}
+
+export const useLiveLogs = <T extends BaseOramaPinorama>({
+  term,
+  filters,
+  enabled
+}: LiveLogsHookParams<T>) => {
   const client = usePinoramaClient()
   const queryClient = useQueryClient()
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const queryKey = ["live-logs", term, filters]
+  const [startAt, setStartAt] = useState<Date | undefined>()
+  const [cursor, setCursor] = useState<number | undefined>()
 
-  const query = useInfiniteQuery({
+  const queryKey = [BASE_QUERY_KEY, term, filters, startAt]
+
+  const _enabled = !!client && !!cursor && enabled
+
+  const query = useQuery({
     queryKey,
-    queryFn: async ({ pageParam }) => {
-      const payload = buildPayload({ term, filters, cursor: pageParam })
+    queryFn: async ({ signal }) => {
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      if (signal.aborted || !client) return []
 
-      const response = await client?.search(payload)
-      const newData = response?.hits.map((hit) => hit.document) ?? []
+      const cachedData = queryClient.getQueryData<T[]>(queryKey) ?? []
 
-      const cachedCount = getInfiniteQueryItemCount(queryClient, queryKey)
-      const totalCount = await fetchTotalCount(client, term, filters)
+      const payload = buildPayload({
+        term,
+        filters,
+        cursor,
+        pageSize: 20_000
+      })
 
-      if (newData.length > 0 && cachedCount + newData.length < totalCount) {
-        const lastItem = newData[newData.length - 1]
-        pageParam = lastItem._pinorama.createdAt
+      const response = await client.search(payload)
+      const data = response?.hits.map((hit) => hit.document) ?? []
+
+      if (data.length > 0) {
+        const lastItem = data[data.length - 1]
+        const nextCursor = lastItem._pinorama.createdAt
+        setCursor(nextCursor)
       }
 
-      return {
-        data: newData,
-        nextCursor: pageParam
-      }
+      const newData = [...cachedData, ...data]
+
+      const logsSizeInMB =
+        new TextEncoder().encode(JSON.stringify(newData)).length / (1024 * 1024)
+      console.log(`Logs size: ${logsSizeInMB.toFixed(2)} MB`)
+
+      return newData
     },
-    initialPageParam: new Date().getTime() - 1000 * 60 * 60 * 24,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    staleTime: Number.POSITIVE_INFINITY,
-    // refetchInterval: POLL_DELAY, // NOTE: This is not working as expected, it doesn't use the nextCursor
-    enabled
+    refetchInterval: cursor ? POLL_DELAY : false,
+    placeholderData: keepPreviousData,
+    enabled: _enabled,
+    staleTime: 0
   })
 
-  const schedulePoll = useCallback(() => {
-    if (enabled) {
-      timeoutRef.current = setTimeout(() => {
-        query.fetchNextPage().finally(schedulePoll)
-      }, POLL_DELAY)
-    }
-  }, [enabled, query.fetchNextPage])
+  const start = useCallback(
+    (date: Date) => {
+      if (_enabled) return
+      queryClient.resetQueries({ queryKey: [BASE_QUERY_KEY] })
+      setStartAt(date)
+      setCursor(date.getTime())
+    },
+    [queryClient, _enabled]
+  )
 
-  useEffect(() => {
-    if (enabled) {
-      query.fetchNextPage().finally(schedulePoll)
-    }
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [enabled, query.fetchNextPage, schedulePoll])
+  const stop = useCallback(() => {
+    if (!_enabled) return
+    queryClient.resetQueries({ queryKey: [BASE_QUERY_KEY] })
+    setCursor(undefined)
+  }, [queryClient, _enabled])
 
-  const flattenedData = useMemo(() => {
-    return query.data?.pages.flatMap((page) => page.data) ?? []
-  }, [query.data])
+  const reset = useCallback(() => {
+    if (!_enabled) return
+    console.log("Resetting query")
+    queryClient.resetQueries({ queryKey: [BASE_QUERY_KEY] })
+    setCursor(startAt?.getTime())
+  }, [queryClient, _enabled, startAt])
 
-  return { ...query, data: flattenedData }
+  // useEffect(() => {
+  //   if (_enabled) {
+  //     console.log("Resetting cursor")
+  //     setCursor(startAt?.getTime())
+  //   }
+  // }, [term, filters, _enabled, startAt])
+
+  return { ...query, start, stop, reset }
 }

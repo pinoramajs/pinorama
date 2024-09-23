@@ -1,7 +1,6 @@
 import { usePinoramaClient } from "@/contexts"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
-import { useState } from "react"
 import type { SearchFilters } from "../types"
 
 export type OramaFacetValue = {
@@ -15,14 +14,12 @@ export const useFacets = (
   names: string[],
   searchText: string,
   filters: SearchFilters,
-  liveMode: boolean
+  liveModeAt: Date | null
 ) => {
   const client = usePinoramaClient()
-  const [startDate, setStartDate] = useState<Date>(new Date())
-  console.log("startDate", startDate)
 
-  const query = useQuery<Record<string, OramaFacetValue>>({
-    queryKey: ["facets", names, searchText, filters, liveMode],
+  const query = useQuery({
+    queryKey: ["facets", names, searchText, filters, liveModeAt],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -43,24 +40,22 @@ export const useFacets = (
 
       if (searchText) {
         payload.term = searchText
-        // payload.properties = [name]
       }
 
       if (filters) {
         payload.where = filters
       }
 
-      if (liveMode) {
-        payload.where["_pinorama.createdAt"] = { gt: startDate.getTime() }
+      if (liveModeAt) {
+        payload.where["_pinorama.createdAt"] = { gt: liveModeAt.getTime() }
       }
-
-      console.log("Fetching facets", payload)
 
       const response = await client?.search(payload)
       return response?.facets
     },
-    placeholderData: keepPreviousData,
-    refetchInterval: liveMode ? POLL_DELAY : false
+    // placeholderData: keepPreviousData,
+    staleTime: Number.POSITIVE_INFINITY,
+    refetchInterval: liveModeAt ? POLL_DELAY : false
   })
 
   return query

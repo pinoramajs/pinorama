@@ -25,6 +25,7 @@ import type { AnyOrama } from "@orama/orama"
 import type { PinoramaDocument } from "pinorama-types"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import type { SearchFilters } from "./log-filters/types"
+import { StatusBar } from "./status-bar/status-bar"
 
 const PANEL_SIZES = {
   filters: { base: 20, min: 10 },
@@ -54,10 +55,13 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const intl = useIntl()
     const appConfig = useAppConfig()
 
+    const [liveModeAt, setLiveModeAt] = useState(() =>
+      appConfig?.config.liveMode ? new Date() : null
+    )
+
     const { isConnected, toggleConnection, introspection } =
       usePinoramaConnection()
 
-    const [liveMode, setLiveMode] = useState<boolean | null>(null)
     const [filters, setFilters] = useState<SearchFilters>({})
     const [searchText, setSearchText] = useState<string>("")
     const [selectedRow, setSelectedRow] =
@@ -71,8 +75,6 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
 
     const viewerRef = useRef<ImperativeLogViewerHandle | null>(null)
     const detailsRef = useRef<ImperativeLogDetailsHandle | null>(null)
-
-    const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
 
     const showFilters = useCallback(() => {
       const panel = filtersPanelRef.current
@@ -118,11 +120,6 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       filtersPanelRef.current?.resize(filtersPanelRef.current?.getSize() - 1)
     }, [])
 
-    const clearFilters = useCallback(() => {
-      setSearchText("")
-      setFilters({})
-    }, [])
-
     const changeSelectedRow = useCallback(
       (row: PinoramaDocument<AnyOrama> | null) => {
         setSelectedRow(row)
@@ -132,6 +129,34 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       },
       [selectedRow]
     )
+
+    const clearFilters = useCallback(() => {
+      // viewerRef.current?.resetLiveMode()
+      setSearchText("")
+      setFilters({})
+    }, [])
+
+    const handleSearchTextChange = useCallback((text: string) => {
+      // viewerRef.current?.resetLiveMode()
+      setSearchText(text)
+    }, [])
+
+    const handleFiltersChange = useCallback((filters: SearchFilters) => {
+      // viewerRef.current?.resetLiveMode()
+      setFilters(filters)
+    }, [])
+
+    const handleToggleLiveMode = useCallback(() => {
+      clearFilters()
+
+      if (liveModeAt) {
+        setLiveModeAt(null)
+      } else {
+        const newLiveModeAt = new Date()
+        setLiveModeAt(newLiveModeAt)
+        viewerRef.current?.startLiveMode(newLiveModeAt)
+      }
+    }, [clearFilters, liveModeAt])
 
     useImperativeHandle(
       ref,
@@ -143,7 +168,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         copyToClipboard: () => {
           detailsRef.current?.copyToClipboard()
         },
-        liveMode: () => setLiveMode((prev) => !prev),
+        liveMode: () => handleToggleLiveMode(),
         refresh: () => viewerRef.current?.refresh(),
         focusSearch: () => viewerRef.current?.focusSearch(),
         selectNextRow: () => viewerRef.current?.selectNextRow(),
@@ -164,7 +189,8 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         incrementFiltersSize,
         decrementFiltersSize,
         incrementDetailsSize,
-        decrementDetailsSize
+        decrementDetailsSize,
+        handleToggleLiveMode
       ]
     )
 
@@ -193,73 +219,77 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     }
 
     return (
-      <ResizablePanelGroup direction="horizontal">
-        {/* Filters */}
-        <ResizablePanel
-          ref={filtersPanelRef}
-          collapsible
-          order={1}
-          minSize={PANEL_SIZES.filters.min}
-          defaultSize={0}
-          onCollapse={() => setFiltersPanelCollapsed(true)}
-          onExpand={() => setFiltersPanelCollapsed(false)}
-        >
-          {/* <LogFilters */}
-          {/*   introspection={introspection} */}
-          {/*   searchText={searchText} */}
-          {/*   filters={filters} */}
-          {/*   liveMode={isLiveModeEnabled} */}
-          {/*   onFiltersChange={setFilters} */}
-          {/* /> */}
-        </ResizablePanel>
-        <ResizableHandle
-          withHandle
-          className={filtersPanelCollapsed ? "hidden" : undefined}
-        />
-
-        {/* Viewer */}
-        <ResizablePanel order={2} className="bg-muted/20">
-          <LogViewer
-            ref={viewerRef}
-            introspection={introspection}
-            term={searchText}
-            filters={filters}
-            liveMode={isLiveModeEnabled}
-            onSearchTextChange={setSearchText}
-            onSelectedRowChange={changeSelectedRow}
-            onToggleFiltersButtonClick={showFilters}
-            onClearFiltersButtonClick={clearFilters}
-            onToggleLiveButtonClick={setLiveMode}
-            onToggleDetailsButtonClick={showDetails}
+      <div className="flex flex-col h-full overflow-auto">
+        <ResizablePanelGroup direction="horizontal">
+          {/* Filters */}
+          <ResizablePanel
+            ref={filtersPanelRef}
+            collapsible
+            order={1}
+            minSize={PANEL_SIZES.filters.min}
+            defaultSize={0}
+            onCollapse={() => setFiltersPanelCollapsed(true)}
+            onExpand={() => setFiltersPanelCollapsed(false)}
+          >
+            <LogFilters
+              introspection={introspection}
+              searchText={searchText}
+              filters={filters}
+              liveModeAt={liveModeAt}
+              onFiltersChange={handleFiltersChange}
+            />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className={filtersPanelCollapsed ? "hidden" : undefined}
           />
-        </ResizablePanel>
-        <ResizableHandle
-          withHandle
-          className={detailsPanelCollapsed ? "hidden" : undefined}
-        />
 
-        {/* Details */}
-        <ResizablePanel
-          ref={detailsPanelRef}
-          collapsible
-          order={3}
-          minSize={PANEL_SIZES.details.min}
-          defaultSize={0}
-          onCollapse={() => setDetailsPanelCollapsed(true)}
-          onExpand={() => setDetailsPanelCollapsed(false)}
-        >
-          <LogDetails
-            ref={detailsRef}
-            data={selectedRow}
-            onMaximize={maximizeDetails}
-            onNext={() => viewerRef.current?.selectNextRow()}
-            onPrevious={() => viewerRef.current?.selectPreviousRow()}
-            onClose={() => detailsPanelRef.current?.collapse()}
-            canNext={viewerRef.current?.canSelectNextRow()}
-            canPrevious={viewerRef.current?.canSelectPreviousRow()}
+          {/* Viewer */}
+          <ResizablePanel order={2} className="bg-muted/20">
+            <LogViewer
+              ref={viewerRef}
+              introspection={introspection}
+              term={searchText}
+              filters={filters}
+              liveModeAt={liveModeAt}
+              onLiveModeAtChange={setLiveModeAt}
+              onSearchTextChange={handleSearchTextChange}
+              onSelectedRowChange={changeSelectedRow}
+              onToggleFiltersButtonClick={showFilters}
+              onClearFiltersButtonClick={clearFilters}
+              onToggleLiveButtonClick={handleToggleLiveMode}
+              onToggleDetailsButtonClick={showDetails}
+            />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className={detailsPanelCollapsed ? "hidden" : undefined}
           />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+
+          {/* Details */}
+          <ResizablePanel
+            ref={detailsPanelRef}
+            collapsible
+            order={3}
+            minSize={PANEL_SIZES.details.min}
+            defaultSize={0}
+            onCollapse={() => setDetailsPanelCollapsed(true)}
+            onExpand={() => setDetailsPanelCollapsed(false)}
+          >
+            <LogDetails
+              ref={detailsRef}
+              data={selectedRow}
+              onMaximize={maximizeDetails}
+              onNext={() => viewerRef.current?.selectNextRow()}
+              onPrevious={() => viewerRef.current?.selectPreviousRow()}
+              onClose={() => detailsPanelRef.current?.collapse()}
+              canNext={viewerRef.current?.canSelectNextRow()}
+              canPrevious={viewerRef.current?.canSelectPreviousRow()}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+        <StatusBar />
+      </div>
     )
   }
 )

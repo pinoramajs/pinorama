@@ -7,15 +7,23 @@ import type { BaseOramaPinorama } from "pinorama-types"
 import { useMemo } from "react"
 import { fetchTotalCount, getInfiniteQueryItemCount } from "../utils"
 
-export const useStaticLogs = <T extends BaseOramaPinorama>(
-  term?: string,
-  filters?: SearchParams<T>["where"],
+const BASE_QUERY_KEY = "static-logs"
+
+type StaticLogsHookParams<T extends BaseOramaPinorama> = {
+  term?: string
+  filters?: SearchParams<T>["where"]
   enabled?: boolean
-) => {
+}
+
+export const useStaticLogs = <T extends BaseOramaPinorama>({
+  term,
+  filters,
+  enabled
+}: StaticLogsHookParams<T>) => {
   const client = usePinoramaClient()
   const queryClient = useQueryClient()
 
-  const queryKey = ["static-logs", term, filters]
+  const queryKey = [BASE_QUERY_KEY, term, filters]
 
   const query = useInfiniteQuery({
     queryKey,
@@ -32,7 +40,7 @@ export const useStaticLogs = <T extends BaseOramaPinorama>(
       const totalCount = await fetchTotalCount(client, term, filters)
 
       let cursor: number | undefined = undefined
-      if (cachedCount + newData.length < totalCount) {
+      if (newData.length > 0 && cachedCount + newData.length < totalCount) {
         const lastItem = newData[newData.length - 1]
         cursor = lastItem._pinorama.createdAt
       }
@@ -44,7 +52,7 @@ export const useStaticLogs = <T extends BaseOramaPinorama>(
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
-    // staleTime: 0,
+    staleTime: Number.POSITIVE_INFINITY,
     enabled
   })
 

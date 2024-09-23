@@ -13,7 +13,7 @@ type FacetProps = {
   introspection: PinoramaIntrospection<AnySchema>
   name: string
   count: number
-  loading: boolean
+  loading?: boolean
   values: Record<string, number>
   type: IntrospectionFacet
   filters: SearchFilters

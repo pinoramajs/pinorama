@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 
 export type AppConfig = {
   connectionIntent: boolean
@@ -37,18 +37,17 @@ const getAppConfigFromQueryParams = () => {
 const AppConfigContext = createContext<AppConfigContextType | null>(null)
 
 export function AppConfigProvider(props: { children: React.ReactNode }) {
-  const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG)
+  const queryConfig = getAppConfigFromQueryParams()
 
-  useEffect(() => {
-    const queryConfig = getAppConfigFromQueryParams()
+  const autoConnect = !!queryConfig.connectionUrl
+  if (autoConnect) {
+    queryConfig.connectionIntent = true
+  }
 
-    const autoConnect = !!queryConfig.connectionUrl
-    if (autoConnect) {
-      queryConfig.connectionIntent = true
-    }
-
-    setConfig((prevConfig) => ({ ...prevConfig, ...queryConfig }))
-  }, [])
+  const [config, setConfig] = useState<AppConfig>({
+    ...DEFAULT_CONFIG,
+    ...queryConfig
+  })
 
   return (
     <AppConfigContext.Provider value={{ config, setConfig }}>
