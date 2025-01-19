@@ -54,7 +54,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 
   const db = fs.existsSync(opts.dbPath as string)
     ? await restoreFromFile(opts.dbFormat, opts.dbPath)
-    : await create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
+    : create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
 
   fastify.decorate("pinoramaOpts", opts)
   fastify.decorate("pinoramaDb", db)

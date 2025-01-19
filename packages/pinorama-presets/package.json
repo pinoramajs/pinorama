@@ -21,7 +21,7 @@
     "directory": "packages/pinorama-presets"
   },
   "devDependencies": {
-    "@orama/orama": "2.0.19",
+    "@orama/orama": "^3.0.4",
     "@types/node": "^20.14.2",
     "pinorama-types": "workspace:*",
     "rimraf": "^5.0.7",
