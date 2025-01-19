@@ -69,7 +69,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@orama/orama": "2.0.19",
+    "@orama/orama": "^3.0.4",
     "@tailwind-plugin/expose-colors": "^1.1.8",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
