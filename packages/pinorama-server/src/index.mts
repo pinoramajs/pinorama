@@ -80,7 +80,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 }
 
 function createServer(
-  pinoramaOptions?: FastifyRegisterOptions<PinoramaServerOptions>,
+  pinoramaOptions: FastifyRegisterOptions<PinoramaServerOptions>,
   fastifyOptions?: FastifyServerOptions
 ): FastifyInstance {
   const fastify = Fastify(fastifyOptions)
@@ -89,7 +89,7 @@ function createServer(
 }
 
 const plugin = fp(fastifyPinoramaServer, {
-  fastify: "4.x",
+  fastify: "5.x",
   name: "fastify-pinorama-server"
 })
 
