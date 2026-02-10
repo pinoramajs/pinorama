@@ -1,3 +1,6 @@
+@reference "tailwindcss";
+@reference "../../../../../styles/globals.css";
+
 .json-view-container {
   @apply whitespace-pre-wrap font-mono text-sm pl-1;
 }
