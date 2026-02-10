@@ -1,5 +1,5 @@
-import { usePinoramaClient } from "@/contexts"
 import { useQuery } from "@tanstack/react-query"
+import { usePinoramaClient } from "@/contexts"
 
 const PINORAMA_STYLES_ID = "pinorama-styles"
 

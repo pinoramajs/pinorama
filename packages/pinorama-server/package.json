@@ -5,7 +5,9 @@
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": "./dist/index.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "tsc"
@@ -21,16 +23,16 @@
     "directory": "packages/pinorama-server"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
-    "rimraf": "^5.0.7",
-    "typescript": "^5.4.5"
+    "@types/node": "^25.2.3",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@orama/orama": "^3.0.4",
-    "@orama/plugin-data-persistence": "3.0.4",
+    "@orama/orama": "^3.1.18",
+    "@orama/plugin-data-persistence": "3.1.18",
     "change-case": "^5.4.4",
-    "fastify": "^5.2.1",
-    "fastify-plugin": "^5.0.1",
+    "fastify": "^5.7.4",
+    "fastify-plugin": "^5.1.0",
     "pinorama-presets": "workspace:*",
     "pinorama-types": "workspace:*"
   },

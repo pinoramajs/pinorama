@@ -8,7 +8,9 @@
   "bin": {
     "pino-pinorama": "./dist/cli.mjs"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
@@ -30,21 +32,21 @@
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/node": "^20.14.2",
-    "@vitest/coverage-v8": "^1.6.0",
-    "pino": "^9.1.0",
+    "@types/node": "^25.2.3",
+    "@vitest/coverage-v8": "^3.2.4",
+    "pino": "^9.11.0",
     "pinorama-client": "workspace:*",
     "pinorama-server": "workspace:*",
     "pinorama-types": "workspace:*",
-    "rimraf": "^5.0.7",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
     "minimist": "^1.2.8",
-    "pino-abstract-transport": "^1.2.0"
+    "pino-abstract-transport": "^2.0.0"
   }
 }

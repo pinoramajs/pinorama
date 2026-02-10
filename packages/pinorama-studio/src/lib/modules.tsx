@@ -1,4 +1,3 @@
-import type { ImportMessages } from "@/i18n"
 import {
   type ComponentRef,
   type ComponentType,
@@ -7,6 +6,7 @@ import {
   useState
 } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
+import type { ImportMessages } from "@/i18n"
 
 export type MethodKeys<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never
@@ -58,6 +58,7 @@ function withHotkeys<T extends ComponentType>(
     }, [])
 
     for (const [method, key] of Object.entries(hotkeys)) {
+      // biome-ignore lint/correctness/useHookAtTopLevel: hotkeys are static per module, the loop count never changes
       useHotkeys(
         key as string,
         (event) => {

@@ -34,7 +34,7 @@ export default [
       }),
       resolve({ browser: true }),
       commonjs(),
-      typescript(),
+      typescript({ outDir: "dist/browser" }),
       terser()
     ],
     external: ["zod"]
@@ -95,7 +95,7 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [resolve(), commonjs(), typescript()],
+    plugins: [resolve(), commonjs(), typescript({ outDir: "dist/node" })],
     external: ["zod"]
   },
 
@@ -109,7 +109,7 @@ export default [
         sourcemap: true
       }
     ],
-    plugins: [resolve(), commonjs(), typescript()],
+    plugins: [resolve(), commonjs(), typescript({ outDir: "dist/node" })],
     external: ["zod"]
   }
 ]

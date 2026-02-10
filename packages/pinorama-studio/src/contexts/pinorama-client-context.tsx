@@ -1,8 +1,7 @@
-import { createContext, useContext } from "react"
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { PinoramaClient } from "pinorama-client/browser"
 import type { BaseOramaPinorama } from "pinorama-types"
+import { createContext, useContext } from "react"
 import { useAppConfig } from "./app-config-context"
 
 type PinoramaClientProviderProps = {

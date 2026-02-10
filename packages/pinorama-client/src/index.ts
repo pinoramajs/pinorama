@@ -1,13 +1,12 @@
-import type { PinoramaIntrospection } from "pinorama-types"
-import { z } from "zod"
-import { setTimeout } from "./platform/node.js"
-
 import type {
   AnyOrama,
   Results,
   SearchParams,
   TypedDocument
 } from "@orama/orama"
+import type { PinoramaIntrospection } from "pinorama-types"
+import { z } from "zod"
+import { setTimeout } from "./platform/node.js"
 
 const clientOptionsSchema = z.object({
   url: z.string(),

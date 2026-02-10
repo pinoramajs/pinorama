@@ -1,11 +1,10 @@
+import type { AnySchema } from "@orama/orama"
+import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { createField } from "@/lib/introspection"
-import { FacetFactoryInput } from "./facet-factory-input"
-
-import type { AnySchema } from "@orama/orama"
-import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import type { SearchFilters } from "../types"
+import { FacetFactoryInput } from "./facet-factory-input"
 
 type FacetItemProps = {
   introspection: PinoramaIntrospection<AnySchema>

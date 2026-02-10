@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { createField } from "@/lib/introspection"
 import type { AnySchema } from "@orama/orama"
 import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import type React from "react"
+import { Button } from "@/components/ui/button"
+import { createField } from "@/lib/introspection"
 
 type FacetHeaderProps = {
   introspection: PinoramaIntrospection<AnySchema>
