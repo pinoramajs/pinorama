@@ -1,3 +1,5 @@
+import { MoonStarIcon, SunIcon } from "lucide-react"
+import { FormattedMessage, useIntl } from "react-intl"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -6,8 +8,6 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { Theme, useTheme } from "@/contexts"
-import { MoonStarIcon, SunIcon } from "lucide-react"
-import { FormattedMessage, useIntl } from "react-intl"
 
 export function ThemeToggleButton() {
   const intl = useIntl()

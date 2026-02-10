@@ -22,7 +22,7 @@
     "directory": "packages/pinorama-docs"
   },
   "devDependencies": {
-    "rimraf": "^5.0.7",
-    "vitepress": "^1.2.3"
+    "rimraf": "^6.1.2",
+    "vitepress": "^1.6.4"
   }
 }

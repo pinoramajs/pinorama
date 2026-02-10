@@ -1,4 +1,4 @@
-import { EmptyStateBlock } from "@/components/empty-state"
+import type { AnyOrama } from "@orama/orama"
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -6,12 +6,13 @@ import {
   MousePointerClickIcon,
   XIcon
 } from "lucide-react"
-import { JsonView } from "react-json-view-lite"
-
-import type { AnyOrama } from "@orama/orama"
 import type { PinoramaDocument } from "pinorama-types"
+import { JsonView } from "react-json-view-lite"
+import { EmptyStateBlock } from "@/components/empty-state"
 
 import "./styles/json-viewer.css"
+import { forwardRef, type Ref, useImperativeHandle, useRef } from "react"
+import { useIntl } from "react-intl"
 import {
   ClipboardButton,
   type ImperativeClipboardButtonHandle
@@ -20,8 +21,6 @@ import { IconButton } from "@/components/icon-button/icon-button"
 import { Separator } from "@/components/ui/separator"
 import { useModuleHotkeys } from "@/hooks/use-module-hotkeys"
 import LogExplorerModule from "@/modules/log-explorer"
-import { type Ref, forwardRef, useImperativeHandle, useRef } from "react"
-import { useIntl } from "react-intl"
 
 const style = {
   container: "json-view-container",

@@ -1,6 +1,6 @@
+import { FormattedMessage } from "react-intl"
 import { Button } from "@/components/ui/button"
 import { usePinoramaConnection } from "@/hooks"
-import { FormattedMessage } from "react-intl"
 
 export function ConnectionToggleButton() {
   const { isConnected, toggleConnection } = usePinoramaConnection()

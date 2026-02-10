@@ -1,3 +1,5 @@
+import { LoaderIcon, type LucideIcon } from "lucide-react"
+import type { ComponentProps } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -6,8 +8,6 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { LoaderIcon, type LucideIcon } from "lucide-react"
-import type { ComponentProps } from "react"
 import { Kbd } from "../kbd/kbd"
 
 type IconButtonProps = ComponentProps<typeof Button> & {

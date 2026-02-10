@@ -17,17 +17,23 @@ const withSearchFilters =
     searchFilters: SearchParams<BaseOramaPinorama>["where"]
   ) =>
   (payload: SearchParams<T>): SearchParams<T> => {
-    const where: SearchParams<T>["where"] = payload.where || {}
-    return { ...payload, where: { ...where, ...searchFilters } }
+    const where = (payload.where || {}) as Record<string, unknown>
+    return {
+      ...payload,
+      where: { ...where, ...searchFilters } as SearchParams<T>["where"]
+    }
   }
 
 const withCursor =
   <T extends BaseOramaPinorama>(cursor: number) =>
   (payload: SearchParams<T>): SearchParams<T> => {
-    const where: SearchParams<T>["where"] = payload.where || {}
+    const where = (payload.where || {}) as Record<string, unknown>
     return {
       ...payload,
-      where: { ...where, "_pinorama.createdAt": { gt: cursor || 0 } }
+      where: {
+        ...where,
+        "_pinorama.createdAt": { gt: cursor || 0 }
+      } as SearchParams<T>["where"]
     }
   }
 
@@ -44,7 +50,9 @@ export const buildPayload = <T extends BaseOramaPinorama>(
   }
 
   if (searchFilters) {
-    const addSearchFilters = withSearchFilters(searchFilters)
+    const addSearchFilters = withSearchFilters(
+      searchFilters as SearchParams<BaseOramaPinorama>["where"]
+    )
     payload = addSearchFilters(payload)
   }
 

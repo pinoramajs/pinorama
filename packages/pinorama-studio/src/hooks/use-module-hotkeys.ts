@@ -1,8 +1,8 @@
+import type { ComponentType } from "react"
+import { useMemo } from "react"
+import { useIntl } from "react-intl"
 import type { Module } from "@/lib/modules"
 import modules from "@/modules"
-import { useMemo } from "react"
-import type { ComponentType } from "react"
-import { useIntl } from "react-intl"
 
 type ModuleHotkey = {
   method: string
@@ -13,6 +13,14 @@ type ModuleHotkey = {
 type ModuleMethod<M extends Module<ComponentType>> = keyof NonNullable<
   M["hotkeys"]
 >
+
+const keystrokeDisplayMap: Record<string, string> = {
+  slash: "/"
+}
+
+function formatKeystroke(key: string): string {
+  return keystrokeDisplayMap[key] ?? key
+}
 
 export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
   const intl = useIntl()
@@ -26,7 +34,7 @@ export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
     for (const [method, key] of Object.entries(mod.hotkeys)) {
       hotkeys[method as ModuleMethod<M>] = {
         method,
-        keystroke: key as string,
+        keystroke: formatKeystroke(key as string),
         description: intl.formatMessage({ id: `${mod.id}.hotkeys.${method}` })
       }
     }
@@ -53,7 +61,7 @@ export function useAllModuleHotkeys() {
       hotkeys[moduleTitle] = Object.entries(mod.hotkeys).map(
         ([method, key]) => ({
           method,
-          keystroke: key as string,
+          keystroke: formatKeystroke(key as string),
           description: intl.formatMessage({ id: `${mod.id}.hotkeys.${method}` })
         })
       )

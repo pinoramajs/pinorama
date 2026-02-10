@@ -1,7 +1,7 @@
-import { usePinoramaClient } from "@/contexts"
 import type { AnySchema } from "@orama/orama"
 import { useQuery } from "@tanstack/react-query"
 import type { PinoramaIntrospection } from "pinorama-types"
+import { usePinoramaClient } from "@/contexts"
 
 export const usePinoramaIntrospection = () => {
   const client = usePinoramaClient()

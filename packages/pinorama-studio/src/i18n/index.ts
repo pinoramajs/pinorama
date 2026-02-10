@@ -22,7 +22,7 @@ export const getMessages = async (locale: Locale) => {
   try {
     const module = await appMessages[locale]()
     messages = module.default
-  } catch (error) {
+  } catch (_error) {
     console.warn(`i18n: could not load app messages for "${locale}"`)
   }
 
@@ -33,7 +33,7 @@ export const getMessages = async (locale: Locale) => {
       try {
         const module = await translationImport()
         messages = { ...messages, ...module.default }
-      } catch (error) {
+      } catch (_error) {
         console.warn(
           `i18n: could not load "${mod.id}" messages for "${locale}"`
         )

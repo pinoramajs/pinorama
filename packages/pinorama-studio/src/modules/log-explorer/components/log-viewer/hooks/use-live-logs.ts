@@ -1,9 +1,8 @@
-import { usePinoramaClient } from "@/contexts"
-import { buildPayload } from "@/modules/log-explorer/utils"
+import type { AnyOrama, SearchParams } from "@orama/orama"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useCallback, useEffect, useMemo, useRef } from "react"
-
-import type { AnyOrama, SearchParams } from "@orama/orama"
+import { usePinoramaClient } from "@/contexts"
+import { buildPayload } from "@/modules/log-explorer/utils"
 
 const POLL_DELAY = 1500
 
@@ -44,7 +43,7 @@ export const useLiveLogs = <T extends AnyOrama>(
         query.fetchNextPage().finally(schedulePoll)
       }, POLL_DELAY)
     }
-  }, [enabled, query.fetchNextPage])
+  }, [enabled, query.fetchNextPage, query])
 
   useEffect(() => {
     if (enabled) {
@@ -57,7 +56,7 @@ export const useLiveLogs = <T extends AnyOrama>(
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [enabled, query.fetchNextPage, schedulePoll])
+  }, [enabled, query.fetchNextPage, schedulePoll, query])
 
   const flattenedData = useMemo(() => {
     return query.data?.pages.flatMap((page) => page.data) ?? []

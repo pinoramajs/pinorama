@@ -1,11 +1,11 @@
 import "./styles/globals.css"
 
 import {
-  RouterProvider,
   createRootRoute,
   createRoute,
   createRouter,
-  redirect
+  Navigate,
+  RouterProvider
 } from "@tanstack/react-router"
 import { StrictMode } from "react"
 
@@ -20,7 +20,8 @@ import App from "./app"
 import modules from "./modules"
 
 const rootRoute = createRootRoute({
-  component: App
+  component: App,
+  notFoundComponent: () => <Navigate to="/" />
 })
 
 const routes = modules.map((mod) =>
@@ -34,12 +35,7 @@ const routes = modules.map((mod) =>
 const router = createRouter({
   routeTree: rootRoute.addChildren(routes),
   defaultPreload: "intent",
-  defaultStaleTime: 5000,
-  notFoundRoute: createRoute({
-    id: "not-found",
-    getParentRoute: () => rootRoute,
-    beforeLoad: () => redirect({ to: "/" })
-  })
+  defaultStaleTime: 5000
 })
 
 export function RootComponent() {

@@ -1,7 +1,6 @@
+import type { IntrospectionFacet } from "pinorama-types"
 import { Checkbox } from "@/components/ui/checkbox"
 import { facetFilterOperationsFactory } from "../lib/operations"
-
-import type { IntrospectionFacet } from "pinorama-types"
 import type { SearchFilters } from "../types"
 
 export function FacetFactoryInput(props: {

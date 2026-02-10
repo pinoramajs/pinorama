@@ -1,3 +1,5 @@
+import { KeyboardIcon } from "lucide-react"
+import { FormattedMessage } from "react-intl"
 import { Kbd } from "@/components/kbd/kbd"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,8 +17,6 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { useAllModuleHotkeys } from "@/hooks/use-module-hotkeys"
-import { KeyboardIcon } from "lucide-react"
-import { FormattedMessage } from "react-intl"
 
 export function HotkeysButton() {
   const hotkeys = useAllModuleHotkeys()

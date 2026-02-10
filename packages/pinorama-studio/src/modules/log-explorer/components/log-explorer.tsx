@@ -1,3 +1,6 @@
+import type { AnyOrama } from "@orama/orama"
+import { UnplugIcon } from "lucide-react"
+import type { PinoramaDocument } from "pinorama-types"
 import {
   forwardRef,
   useCallback,
@@ -5,30 +8,24 @@ import {
   useRef,
   useState
 } from "react"
-
-import { usePinoramaConnection } from "@/hooks"
-import { UnplugIcon } from "lucide-react"
 import { useIntl } from "react-intl"
-
+import type { PanelImperativeHandle } from "react-resizable-panels"
 import { EmptyStateBlock } from "@/components/empty-state"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable"
+import { useAppConfig } from "@/contexts"
+import { usePinoramaConnection } from "@/hooks"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
+import type { SearchFilters } from "./log-filters/types"
 import { type ImperativeLogViewerHandle, LogViewer } from "./log-viewer"
 
-import { useAppConfig } from "@/contexts"
-import type { AnyOrama } from "@orama/orama"
-import type { PinoramaDocument } from "pinorama-types"
-import type { ImperativePanelHandle } from "react-resizable-panels"
-import type { SearchFilters } from "./log-filters/types"
-
 const PANEL_SIZES = {
-  filters: { base: 20, min: 10 },
-  details: { base: 25, min: 25 }
+  filters: { base: "20", min: 200 },
+  details: { base: "25", min: 300 }
 }
 
 export type ImperativeLogExplorerHandle = {
@@ -66,8 +63,8 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
     const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
 
-    const filtersPanelRef = useRef<ImperativePanelHandle | null>(null)
-    const detailsPanelRef = useRef<ImperativePanelHandle | null>(null)
+    const filtersPanelRef = useRef<PanelImperativeHandle | null>(null)
+    const detailsPanelRef = useRef<PanelImperativeHandle | null>(null)
 
     const viewerRef = useRef<ImperativeLogViewerHandle | null>(null)
     const detailsRef = useRef<ImperativeLogDetailsHandle | null>(null)
@@ -78,7 +75,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       const panel = filtersPanelRef.current
 
       if (panel?.isCollapsed()) {
-        panel?.expand(PANEL_SIZES.filters.base)
+        panel?.resize(PANEL_SIZES.filters.base)
       } else {
         panel?.collapse()
       }
@@ -88,34 +85,38 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       const panel = detailsPanelRef.current
 
       if (panel?.isCollapsed()) {
-        panel?.expand(PANEL_SIZES.details.base)
+        panel?.resize(PANEL_SIZES.details.base)
       } else {
         panel?.collapse()
       }
     }, [])
 
     const maximizeDetails = useCallback(() => {
-      if (detailsPanelRef.current?.getSize() !== 100) {
-        detailsPanelRef.current?.resize(100)
+      if (detailsPanelRef.current?.getSize().asPercentage !== 100) {
+        detailsPanelRef.current?.resize("100")
       } else {
         detailsPanelRef.current?.resize(PANEL_SIZES.details.base)
       }
     }, [])
 
     const incrementDetailsSize = useCallback(() => {
-      detailsPanelRef.current?.resize(detailsPanelRef.current?.getSize() + 1)
+      const size = detailsPanelRef.current?.getSize().asPercentage ?? 0
+      detailsPanelRef.current?.resize(`${size + 1}`)
     }, [])
 
     const decrementDetailsSize = useCallback(() => {
-      detailsPanelRef.current?.resize(detailsPanelRef.current?.getSize() - 1)
+      const size = detailsPanelRef.current?.getSize().asPercentage ?? 0
+      detailsPanelRef.current?.resize(`${size - 1}`)
     }, [])
 
     const incrementFiltersSize = useCallback(() => {
-      filtersPanelRef.current?.resize(filtersPanelRef.current?.getSize() + 1)
+      const size = filtersPanelRef.current?.getSize().asPercentage ?? 0
+      filtersPanelRef.current?.resize(`${size + 1}`)
     }, [])
 
     const decrementFiltersSize = useCallback(() => {
-      filtersPanelRef.current?.resize(filtersPanelRef.current?.getSize() - 1)
+      const size = filtersPanelRef.current?.getSize().asPercentage ?? 0
+      filtersPanelRef.current?.resize(`${size - 1}`)
     }, [])
 
     const clearFilters = useCallback(() => {
@@ -126,11 +127,11 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const changeSelectedRow = useCallback(
       (row: PinoramaDocument<AnyOrama> | null) => {
         setSelectedRow(row)
-        if (!selectedRow && row) {
-          detailsPanelRef.current?.expand(PANEL_SIZES.details.base)
+        if (row && detailsPanelRef.current?.isCollapsed()) {
+          detailsPanelRef.current?.resize(PANEL_SIZES.details.base)
         }
       },
-      [selectedRow]
+      []
     )
 
     useImperativeHandle(
@@ -193,16 +194,14 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     }
 
     return (
-      <ResizablePanelGroup direction="horizontal">
+      <ResizablePanelGroup orientation="horizontal">
         {/* Filters */}
         <ResizablePanel
-          ref={filtersPanelRef}
+          panelRef={filtersPanelRef}
           collapsible
-          order={1}
           minSize={PANEL_SIZES.filters.min}
           defaultSize={0}
-          onCollapse={() => setFiltersPanelCollapsed(true)}
-          onExpand={() => setFiltersPanelCollapsed(false)}
+          onResize={(size) => setFiltersPanelCollapsed(size.asPercentage === 0)}
         >
           <LogFilters
             introspection={introspection}
@@ -218,7 +217,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         />
 
         {/* Viewer */}
-        <ResizablePanel order={2} className="bg-muted/20">
+        <ResizablePanel className="bg-muted/20">
           <LogViewer
             ref={viewerRef}
             introspection={introspection}
@@ -240,13 +239,11 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
 
         {/* Details */}
         <ResizablePanel
-          ref={detailsPanelRef}
+          panelRef={detailsPanelRef}
           collapsible
-          order={3}
           minSize={PANEL_SIZES.details.min}
           defaultSize={0}
-          onCollapse={() => setDetailsPanelCollapsed(true)}
-          onExpand={() => setDetailsPanelCollapsed(false)}
+          onResize={(size) => setDetailsPanelCollapsed(size.asPercentage === 0)}
         >
           <LogDetails
             ref={detailsRef}

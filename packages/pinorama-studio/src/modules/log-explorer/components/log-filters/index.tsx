@@ -1,9 +1,7 @@
-import { useMemo } from "react"
-
-import { Facet } from "./components/facet"
-
 import type { AnySchema } from "@orama/orama"
 import type { PinoramaIntrospection } from "pinorama-types"
+import { useMemo } from "react"
+import { Facet } from "./components/facet"
 import { getFacetsConfig } from "./lib/utils"
 import type { SearchFilters } from "./types"
 
