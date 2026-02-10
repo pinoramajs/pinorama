@@ -1,9 +1,9 @@
-import { createField } from "@/lib/introspection"
-import { cn } from "@/lib/utils"
 import type { AnySchema } from "@orama/orama"
 import type { ColumnDef, Table } from "@tanstack/react-table"
-import debounce from "debounce"
+import type { Virtualizer } from "@tanstack/react-virtual"
 import type { PinoramaIntrospection } from "pinorama-types"
+import { createField } from "@/lib/introspection"
+import { cn } from "@/lib/utils"
 
 const DEFAULT_COLUMN_SIZE = 150
 
@@ -60,23 +60,12 @@ export const getColumnsConfig = (
   }
 }
 
-const debouncedScrollIntoView = debounce((element: Element) => {
-  element.scrollIntoView({
-    block: "center",
-    behavior: "smooth"
-  })
-}, 50)
-
 export const selectRowByIndex = (index: number, table: Table<unknown>) => {
   const totalRows = table.getRowModel().rows.length
-  const validIndex = Math.max(0, Math.min(index, totalRows - 1))
+  if (index < 0 || index >= totalRows) return false
 
   table.setRowSelection({ [index]: true })
-
-  const row = document.querySelector(`[data-index="${validIndex}"]`)
-  if (row) {
-    debouncedScrollIntoView(row)
-  }
+  return true
 }
 
 export const getCurrentRowIndex = (table: Table<unknown>) => {
@@ -92,4 +81,15 @@ export const canSelectNextRow = (table: Table<unknown>) => {
 export const canSelectPreviousRow = (table: Table<unknown>) => {
   const currentRowIndex = getCurrentRowIndex(table)
   return currentRowIndex > 0
+}
+
+export const scrollRowIntoView = (
+  virtualizer: Virtualizer<Element, Element>,
+  index: number
+) => {
+  virtualizer.scrollToIndex(index, { align: "auto" })
+  requestAnimationFrame(() => {
+    const row = document.querySelector(`[data-index="${index}"]`)
+    row?.scrollIntoView({ block: "nearest" })
+  })
 }

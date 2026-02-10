@@ -1,6 +1,14 @@
+import type { AnySchema } from "@orama/orama"
 import {
-  type Ref,
+  getCoreRowModel,
+  type RowSelectionState,
+  useReactTable
+} from "@tanstack/react-table"
+import { useVirtualizer } from "@tanstack/react-virtual"
+import type { PinoramaIntrospection } from "pinorama-types"
+import {
   forwardRef,
+  type Ref,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -8,19 +16,10 @@ import {
   useRef,
   useState
 } from "react"
-
+import { useIntl } from "react-intl"
 import { EmptyStateInline } from "@/components/empty-state/empty-state"
 import { ErrorState } from "@/components/error-state/error-state"
 import { LoadingState } from "@/components/loading-state/loading-state"
-import type { AnySchema } from "@orama/orama"
-import {
-  type RowSelectionState,
-  getCoreRowModel,
-  useReactTable
-} from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
-import type { PinoramaIntrospection } from "pinorama-types"
-import { useIntl } from "react-intl"
 import type { SearchFilters } from "../log-filters/types"
 import { LogViewerHeader } from "./components/header/header"
 import { TableBody } from "./components/tbody"
@@ -119,26 +118,6 @@ export const LogViewer = forwardRef(function LogViewer(
     table.setRowSelection({})
   }, [table])
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      refresh: () => logsQuery.refetch(),
-      focusSearch: () => searchInputRef.current?.focus(),
-      selectNextRow: () => {
-        const currentIndex = utils.getCurrentRowIndex(table)
-        utils.selectRowByIndex(currentIndex + 1, table)
-      },
-      selectPreviousRow: () => {
-        const currentIndex = utils.getCurrentRowIndex(table)
-        utils.selectRowByIndex(currentIndex - 1, table)
-      },
-      clearSelection,
-      canSelectNextRow: () => utils.canSelectNextRow(table),
-      canSelectPreviousRow: () => utils.canSelectPreviousRow(table)
-    }),
-    [logsQuery.refetch, clearSelection, table]
-  )
-
   const { rows } = table.getRowModel()
 
   const virtualizer = useVirtualizer({
@@ -146,6 +125,32 @@ export const LogViewer = forwardRef(function LogViewer(
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 24
   })
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      refresh: () => logsQuery.refetch(),
+      focusSearch: () => searchInputRef.current?.focus(),
+      selectNextRow: () => {
+        const currentIndex = utils.getCurrentRowIndex(table)
+        const nextIndex = currentIndex + 1
+        if (utils.selectRowByIndex(nextIndex, table)) {
+          utils.scrollRowIntoView(virtualizer, nextIndex)
+        }
+      },
+      selectPreviousRow: () => {
+        const currentIndex = utils.getCurrentRowIndex(table)
+        const prevIndex = currentIndex - 1
+        if (utils.selectRowByIndex(prevIndex, table)) {
+          utils.scrollRowIntoView(virtualizer, prevIndex)
+        }
+      },
+      clearSelection,
+      canSelectNextRow: () => utils.canSelectNextRow(table),
+      canSelectPreviousRow: () => utils.canSelectPreviousRow(table)
+    }),
+    [logsQuery.refetch, clearSelection, table, logsQuery, virtualizer]
+  )
 
   const isLoading = logsQuery.status === "pending"
   const hasError = logsQuery.status === "error"
