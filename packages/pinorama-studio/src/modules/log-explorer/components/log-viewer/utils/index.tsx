@@ -84,7 +84,7 @@ export const canSelectPreviousRow = (table: Table<unknown>) => {
 }
 
 export const scrollRowIntoView = (
-  virtualizer: Virtualizer<Element, Element>,
+  virtualizer: Virtualizer<any, Element>,
   index: number
 ) => {
   virtualizer.scrollToIndex(index, { align: "auto" })

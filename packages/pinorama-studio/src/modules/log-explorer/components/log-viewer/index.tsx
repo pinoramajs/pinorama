@@ -70,8 +70,9 @@ export const LogViewer = forwardRef(function LogViewer(
   )
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const tableContainerRef = useRef(null)
+  const tableContainerRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const shouldAutoScrollRef = useRef(true)
 
   const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
   const logs = useMemo(() => logsQuery.data ?? [], [logsQuery.data])
@@ -123,8 +124,28 @@ export const LogViewer = forwardRef(function LogViewer(
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => tableContainerRef.current,
-    estimateSize: () => 24
+    estimateSize: () => 20
   })
+
+  const handleScroll = useCallback(() => {
+    const el = tableContainerRef.current
+    if (!el) return
+    const threshold = 50
+    shouldAutoScrollRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < threshold
+  }, [])
+
+  useEffect(() => {
+    if (props.liveMode) {
+      shouldAutoScrollRef.current = true
+    }
+  }, [props.liveMode])
+
+  useEffect(() => {
+    if (props.liveMode && shouldAutoScrollRef.current && rows.length > 0) {
+      virtualizer.scrollToIndex(rows.length - 1, { align: "end" })
+    }
+  }, [props.liveMode, rows.length, virtualizer])
 
   useImperativeHandle(
     ref,
@@ -177,8 +198,9 @@ export const LogViewer = forwardRef(function LogViewer(
       <div
         className="w-full h-full relative overflow-auto"
         ref={tableContainerRef}
+        onScroll={handleScroll}
       >
-        <table className="text-sm w-full">
+        <table className="text-xs w-full">
           <TableHead table={table} />
           {isLoading || hasNoData || hasError ? (
             <tbody className="relative">
