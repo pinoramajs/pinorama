@@ -1,8 +1,7 @@
-import { type Locale, type Messages, getMessages } from "@/i18n"
-import { useContext, useEffect, useState } from "react"
-import { createContext } from "react"
 import type React from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
+import { getMessages, type Locale, type Messages } from "@/i18n"
 
 type I18nProviderProps = {
   children: React.ReactNode

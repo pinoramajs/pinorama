@@ -1,9 +1,8 @@
+import type { Transform } from "node:stream"
 import { setInterval } from "node:timers"
 import abstractTransport from "pino-abstract-transport"
-import { PinoramaClient } from "pinorama-client/node"
-
-import type { Transform } from "node:stream"
 import type { PinoramaClientOptions } from "pinorama-client/node"
+import { PinoramaClient } from "pinorama-client/node"
 import type { BaseOramaPinorama, PinoramaDocument } from "pinorama-types"
 
 type BulkOptions = {

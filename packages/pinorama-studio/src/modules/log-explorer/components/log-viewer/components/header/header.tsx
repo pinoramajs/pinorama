@@ -1,10 +1,3 @@
-import { SearchInput } from "@/components/search-input"
-import { useIntl } from "react-intl"
-import { ToggleLiveButton } from "./toggle-live-button"
-
-import { IconButton } from "@/components/icon-button/icon-button"
-import { useModuleHotkeys } from "@/hooks/use-module-hotkeys"
-import LogExplorerModule from "@/modules/log-explorer"
 import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
 import {
@@ -14,10 +7,16 @@ import {
   RefreshCwIcon
 } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
+import { useIntl } from "react-intl"
+import { IconButton } from "@/components/icon-button/icon-button"
+import { SearchInput } from "@/components/search-input"
+import { useModuleHotkeys } from "@/hooks/use-module-hotkeys"
+import LogExplorerModule from "@/modules/log-explorer"
 import { ToggleColumnsButton } from "./toggle-columns-button"
+import { ToggleLiveButton } from "./toggle-live-button"
 
 type LogViewerHeaderProps = {
-  searchInputRef: React.RefObject<HTMLInputElement>
+  searchInputRef: React.RefObject<HTMLInputElement | null>
   introspection: PinoramaIntrospection<AnySchema>
   table: Table<unknown>
   searchText: string

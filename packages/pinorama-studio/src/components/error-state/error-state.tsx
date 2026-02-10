@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
 import { FormattedMessage } from "react-intl"
+import { cn } from "@/lib/utils"
 
 type ErrorStateProps = {
   error: Error

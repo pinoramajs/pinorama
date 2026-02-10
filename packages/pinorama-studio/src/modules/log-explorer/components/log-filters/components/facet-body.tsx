@@ -1,10 +1,9 @@
-import { FacetItem } from "./facet-item"
-
 import type { AnySchema } from "@orama/orama"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import { useRef } from "react"
 import type { FacetValue, SearchFilters } from "../types"
+import { FacetItem } from "./facet-item"
 
 type FacetBodyProps = {
   introspection: PinoramaIntrospection<AnySchema>

@@ -1,3 +1,4 @@
+import { SettingsIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -5,7 +6,6 @@ import {
   TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { SettingsIcon } from "lucide-react"
 
 export function SettingsButton() {
   const handleClick = () => {}
