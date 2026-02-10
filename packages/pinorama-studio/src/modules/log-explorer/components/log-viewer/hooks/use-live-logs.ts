@@ -1,10 +1,12 @@
 import type { AnyOrama, SearchParams } from "@orama/orama"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { usePinoramaClient } from "@/contexts"
+import {
+  MAX_CONSECUTIVE_ERRORS,
+  POLL_DELAY
+} from "@/modules/log-explorer/constants"
 import { buildPayload } from "@/modules/log-explorer/utils"
-
-const POLL_DELAY = 1500
 
 export const useLiveLogs = <T extends AnyOrama>(
   searchText?: string,
@@ -12,7 +14,6 @@ export const useLiveLogs = <T extends AnyOrama>(
   enabled?: boolean
 ) => {
   const client = usePinoramaClient()
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const query = useInfiniteQuery({
     queryKey: ["live-logs", searchText, searchFilters],
@@ -33,33 +34,53 @@ export const useLiveLogs = <T extends AnyOrama>(
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Number.POSITIVE_INFINITY,
-    // refetchInterval: POLL_DELAY, // NOTE: This is not working as expected, it doesn't use the nextCursor
     enabled: false
   })
 
-  const schedulePoll = useCallback(() => {
-    if (enabled) {
-      timeoutRef.current = setTimeout(() => {
-        query.fetchNextPage().finally(schedulePoll)
-      }, POLL_DELAY)
-    }
-  }, [enabled, query.fetchNextPage, query])
+  const fetchNextPageRef = useRef(query.fetchNextPage)
+  fetchNextPageRef.current = query.fetchNextPage
+
+  const isFetchingRef = useRef(false)
+  const consecutiveErrorsRef = useRef(0)
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset error counter when search criteria change
+  useEffect(() => {
+    consecutiveErrorsRef.current = 0
+  }, [searchText, searchFilters])
 
   useEffect(() => {
-    if (enabled) {
-      query.fetchNextPage().finally(() => {
-        schedulePoll()
-      })
-    }
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
+    if (!enabled) return
+
+    const poll = async () => {
+      if (isFetchingRef.current) return
+      isFetchingRef.current = true
+      try {
+        await fetchNextPageRef.current()
+        consecutiveErrorsRef.current = 0
+      } catch {
+        consecutiveErrorsRef.current += 1
+        if (consecutiveErrorsRef.current >= MAX_CONSECUTIVE_ERRORS) {
+          clearInterval(intervalId)
+        }
+      } finally {
+        isFetchingRef.current = false
       }
     }
-  }, [enabled, query.fetchNextPage, schedulePoll, query])
+
+    poll()
+    const intervalId = setInterval(poll, POLL_DELAY)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [enabled])
 
   const flattenedData = useMemo(() => {
-    return query.data?.pages.flatMap((page) => page.data) ?? []
+    return (
+      query.data?.pages
+        .filter((page) => page.data.length > 0)
+        .flatMap((page) => page.data) ?? []
+    )
   }, [query.data])
 
   return { ...query, data: flattenedData }
