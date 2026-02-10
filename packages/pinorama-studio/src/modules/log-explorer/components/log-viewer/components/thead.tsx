@@ -1,4 +1,4 @@
-import { type Table, flexRender } from "@tanstack/react-table"
+import { flexRender, type Table } from "@tanstack/react-table"
 
 export function TableHead({ table }: { table: Table<unknown> }) {
   return (
@@ -19,6 +19,7 @@ export function TableHead({ table }: { table: Table<unknown> }) {
                     header.getContext()
                   )}
               {header.column.getCanResize() && (
+                // biome-ignore lint/a11y/noStaticElementInteractions: resize handle requires mouse/touch events
                 <div
                   onMouseDown={header.getResizeHandler()}
                   onTouchStart={header.getResizeHandler()}

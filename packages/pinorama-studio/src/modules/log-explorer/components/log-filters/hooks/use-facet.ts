@@ -1,5 +1,5 @@
-import { usePinoramaClient } from "@/contexts"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { usePinoramaClient } from "@/contexts"
 
 import type { SearchFilters } from "../types"
 

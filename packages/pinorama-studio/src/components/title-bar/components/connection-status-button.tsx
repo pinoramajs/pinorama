@@ -1,5 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-
+import { useForm } from "react-hook-form"
+import { FormattedMessage } from "react-intl"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,10 +20,6 @@ import {
 } from "@/components/ui/popover"
 import { useAppConfig } from "@/contexts"
 import { ConnectionStatus, usePinoramaConnection } from "@/hooks"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { FormattedMessage } from "react-intl"
-import { z } from "zod"
 
 const formSchema = z.object({
   connectionUrl: z.string().url("Invalid URL")

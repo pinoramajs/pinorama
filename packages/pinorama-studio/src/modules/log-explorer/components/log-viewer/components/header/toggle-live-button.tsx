@@ -1,12 +1,12 @@
+import { Tooltip, TooltipPortal, TooltipTrigger } from "@radix-ui/react-tooltip"
+import { PlayCircleIcon, StopCircleIcon } from "lucide-react"
+import { useIntl } from "react-intl"
 import { Kbd } from "@/components/kbd/kbd"
 import { Toggle } from "@/components/ui/toggle"
 import { TooltipContent } from "@/components/ui/tooltip"
 import { useModuleHotkeys } from "@/hooks/use-module-hotkeys"
 import { cn } from "@/lib/utils"
 import LogExplorerModule from "@/modules/log-explorer"
-import { Tooltip, TooltipPortal, TooltipTrigger } from "@radix-ui/react-tooltip"
-import { PlayCircleIcon, StopCircleIcon } from "lucide-react"
-import { useIntl } from "react-intl"
 
 type ToggleLiveButtonProps = {
   pressed?: boolean

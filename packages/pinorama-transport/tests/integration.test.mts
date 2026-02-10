@@ -1,9 +1,8 @@
-import { beforeEach, describe, expect, it } from "vitest"
-
 import { setTimeout } from "node:timers/promises"
 import { pino } from "pino"
 import { PinoramaClient } from "pinorama-client"
 import { createServer } from "pinorama-server"
+import { beforeEach, describe, expect, it } from "vitest"
 import pinoramaTransport from "../src/lib.mjs"
 
 describe("pinoramaTransport", async () => {

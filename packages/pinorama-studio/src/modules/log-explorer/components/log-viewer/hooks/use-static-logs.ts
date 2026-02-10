@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query"
 import { usePinoramaClient } from "@/contexts"
 import { buildPayload } from "@/modules/log-explorer/utils"
-import { useQuery } from "@tanstack/react-query"
 
 import type { SearchFilters } from "../../log-filters/types"
 

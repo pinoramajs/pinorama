@@ -1,15 +1,14 @@
-import { EmptyStateInline } from "@/components/empty-state/empty-state"
-import { ErrorState } from "@/components/error-state/error-state"
-import { useCallback, useMemo, useState } from "react"
-import { useIntl } from "react-intl"
-import { useFacet } from "../hooks/use-facet"
-import { facetFilterOperationsFactory } from "../lib/operations"
-import { FacetBody } from "./facet-body"
-import { FacetHeader } from "./facet-header"
-
 import type { AnySchema } from "@orama/orama"
 import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
+import { useCallback, useMemo, useState } from "react"
+import { useIntl } from "react-intl"
+import { EmptyStateInline } from "@/components/empty-state/empty-state"
+import { ErrorState } from "@/components/error-state/error-state"
+import { useFacet } from "../hooks/use-facet"
+import { facetFilterOperationsFactory } from "../lib/operations"
 import type { FacetFilter, FacetValue, SearchFilters } from "../types"
+import { FacetBody } from "./facet-body"
+import { FacetHeader } from "./facet-header"
 
 type FacetProps = {
   introspection: PinoramaIntrospection<AnySchema>
@@ -44,7 +43,7 @@ export function Facet(props: FacetProps) {
       delete filters[props.name]
       props.onFiltersChange(filters)
     },
-    [props.onFiltersChange, props.name, props.filters]
+    [props.onFiltersChange, props.name, props.filters, props]
   )
 
   const selectedValuesNotInDataSource = useMemo(() => {

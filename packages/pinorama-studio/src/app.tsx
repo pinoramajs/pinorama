@@ -1,5 +1,5 @@
-import { TitleBar } from "@/components/title-bar"
 import { Outlet } from "@tanstack/react-router"
+import { TitleBar } from "@/components/title-bar"
 
 export default function App() {
   return (
