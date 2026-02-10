@@ -10,7 +10,7 @@ export default createModule({
     it: () => import("./messages/it.json")
   },
   hotkeys: {
-    focusSearch: "/",
+    focusSearch: "slash",
     showFilters: "f",
     showDetails: "o",
     maximizeDetails: "m",
