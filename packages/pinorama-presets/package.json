@@ -4,7 +4,9 @@
   "type": "module",
   "types": "./dist/presets/index.d.mts",
   "exports": "./dist/presets/index.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "tsc"
@@ -21,11 +23,11 @@
     "directory": "packages/pinorama-presets"
   },
   "devDependencies": {
-    "@orama/orama": "^3.0.4",
-    "@types/node": "^20.14.2",
+    "@orama/orama": "^3.1.18",
+    "@types/node": "^25.2.3",
     "pinorama-types": "workspace:*",
-    "rimraf": "^5.0.7",
-    "typescript": "^5.4.5"
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"
