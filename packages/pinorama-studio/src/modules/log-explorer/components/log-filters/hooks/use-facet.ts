@@ -1,14 +1,13 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { usePinoramaClient } from "@/contexts"
 
+import { POLL_DELAY } from "@/modules/log-explorer/constants"
 import type { SearchFilters } from "../types"
 
 type OramaFacetValue = {
   count: number
   values: Record<string | number, number>
 }
-
-const POLL_DELAY = 1500
 
 export const useFacet = (
   name: string,
