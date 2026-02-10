@@ -12,24 +12,14 @@ export const en = defineConfig({
         activeMatch: "/guide/"
       },
       {
-        text: "Studio",
-        link: "/guide/pinorama-studio/",
-        activeMatch: "/guide/pinorama-studio/"
+        text: "Packages",
+        link: "/packages/studio",
+        activeMatch: "/packages/"
       },
       {
-        text: "Client",
-        link: "/guide/pinorama-client/",
-        activeMatch: "/guide/pinorama-client/"
-      },
-      {
-        text: "Server",
-        link: "/guide/pinorama-server/",
-        activeMatch: "/guide/pinorama-server/"
-      },
-      {
-        text: "Transport",
-        link: "/guide/pinorama-transport/",
-        activeMatch: "/guide/pinorama-transport/"
+        text: "Advanced",
+        link: "/advanced/presets",
+        activeMatch: "/advanced/"
       },
       {
         text: `v${version}`,
@@ -57,90 +47,40 @@ export const en = defineConfig({
           {
             text: "Quick Start",
             link: "/guide/quick-start"
-          },
-          {
-            text: "Use Cases",
-            link: "/guide/use-cases"
           }
         ]
       },
       {
-        text: "Studio ⭐",
+        text: "Packages",
         items: [
           {
-            text: "Overview",
-            link: "/pinorama-studio"
+            text: "Studio",
+            link: "/packages/studio"
           },
           {
-            text: "Installation",
-            link: "/pinorama-studio/installation"
+            text: "Server",
+            link: "/packages/server"
           },
           {
-            text: "Usage",
-            link: "/pinorama-studio/usage"
+            text: "Transport",
+            link: "/packages/transport"
           },
           {
-            text: "CLI",
-            link: "/pinorama-studio/api"
+            text: "Client",
+            link: "/packages/client"
           }
         ]
       },
       {
-        text: "Client",
+        text: "Advanced",
         items: [
           {
-            text: "Overview",
-            link: "/pinorama-client"
+            text: "Presets",
+            link: "/advanced/presets"
           },
           {
-            text: "Installation",
-            link: "/pinorama-client/installation"
-          },
-          {
-            text: "Usage",
-            link: "/pinorama-client/usage"
-          },
-          {
-            text: "API Reference",
-            link: "/pinorama-client/api"
-          }
-        ]
-      },
-      {
-        text: "Server",
-        items: [
-          {
-            text: "Overview",
-            link: "/pinorama-server"
-          },
-          {
-            text: "Installation",
-            link: "/pinorama-server/installation"
-          },
-          {
-            text: "Configuration",
-            link: "/pinorama-server/configuration"
-          },
-          {
-            text: "API Reference",
-            link: "/pinorama-server/api"
-          }
-        ]
-      },
-      {
-        text: "Transport",
-        items: [
-          {
-            text: "Overview",
-            link: "/pinorama-transport"
-          },
-          {
-            text: "Installation",
-            link: "/pinorama-transport/installation"
-          },
-          {
-            text: "Usage",
-            link: "/pinorama-transport/usage"
+            text: "Persistence",
+            link: "/advanced/persistence"
           }
         ]
       }
