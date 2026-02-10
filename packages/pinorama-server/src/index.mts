@@ -1,15 +1,7 @@
 import fs from "node:fs"
+import type { AnyOrama, AnySchema } from "@orama/orama"
 import { create } from "@orama/orama"
 import { restoreFromFile } from "@orama/plugin-data-persistence/server"
-import Fastify from "fastify"
-import fp from "fastify-plugin"
-
-import { pino as defaultPreset } from "pinorama-presets"
-import * as plugins from "./plugins/index.mjs"
-import * as routes from "./routes/index.mjs"
-import { withPinoramaMetadataSchema } from "./utils/metadata.mjs"
-
-import type { AnyOrama, AnySchema } from "@orama/orama"
 import type {
   FastifyInstance,
   FastifyPluginAsync,
@@ -18,7 +10,13 @@ import type {
   LogLevel,
   RegisterOptions
 } from "fastify"
+import Fastify from "fastify"
+import fp from "fastify-plugin"
+import { pino as defaultPreset } from "pinorama-presets"
 import type { PinoramaIntrospection } from "pinorama-types"
+import * as plugins from "./plugins/index.mjs"
+import * as routes from "./routes/index.mjs"
+import { withPinoramaMetadataSchema } from "./utils/metadata.mjs"
 
 declare module "fastify" {
   interface FastifyInstance {
