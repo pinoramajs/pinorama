@@ -2,7 +2,7 @@ import { flexRender, type Row } from "@tanstack/react-table"
 import type { Virtualizer } from "@tanstack/react-virtual"
 
 type TableBodyProps = {
-  virtualizer: Virtualizer<Element, Element>
+  virtualizer: Virtualizer<any, Element>
   rows: Row<unknown>[]
 }
 
@@ -30,7 +30,7 @@ export function TableBody({ virtualizer, rows }: TableBodyProps) {
                 <td
                   key={cell.id}
                   className={
-                    "overflow-hidden overflow-ellipsis whitespace-nowrap h-[24px] px-3"
+                    "overflow-hidden overflow-ellipsis whitespace-nowrap h-[20px] px-3 leading-[20px]"
                   }
                   style={{ width: cell.column.getSize() }}
                 >
