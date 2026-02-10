@@ -1,3 +1,8 @@
+import type { AnySchema } from "@orama/orama"
+import type { Table } from "@tanstack/react-table"
+import { ListChecksIcon } from "lucide-react"
+import type { PinoramaIntrospection } from "pinorama-types"
+import { FormattedMessage, useIntl } from "react-intl"
 import { IconButton } from "@/components/icon-button/icon-button"
 import {
   DropdownMenu,
@@ -8,11 +13,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { createField } from "@/lib/introspection"
-import type { AnySchema } from "@orama/orama"
-import type { Table } from "@tanstack/react-table"
-import { ListChecksIcon } from "lucide-react"
-import type { PinoramaIntrospection } from "pinorama-types"
-import { FormattedMessage } from "react-intl"
 
 type ToggleColumnsButtonProps = {
   introspection: PinoramaIntrospection<AnySchema>
@@ -20,10 +20,15 @@ type ToggleColumnsButtonProps = {
 }
 
 export function ToggleColumnsButton(props: ToggleColumnsButtonProps) {
+  const intl = useIntl()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <IconButton icon={ListChecksIcon} />
+        <IconButton
+          icon={ListChecksIcon}
+          tooltip={intl.formatMessage({ id: "logExplorer.columns" })}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-44">
         {props.table
