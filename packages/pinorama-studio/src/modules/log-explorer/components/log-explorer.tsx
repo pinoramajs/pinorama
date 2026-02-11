@@ -61,6 +61,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       usePinoramaConnection()
 
     const [liveMode, setLiveMode] = useState<boolean | null>(null)
+    const [liveSessionStart, setLiveSessionStart] = useState(0)
     const [filters, setFilters] = useState<SearchFilters>({})
     const [searchText, setSearchText] = useState<string>("")
     const [selectedRow, setSelectedRow] =
@@ -135,6 +136,17 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       setFilters({})
     }, [])
 
+    const toggleLiveMode = useCallback(
+      (value: boolean) => {
+        setLiveMode(value)
+        if (value) {
+          clearFilters()
+          setLiveSessionStart(Date.now())
+        }
+      },
+      [clearFilters]
+    )
+
     const changeSelectedRow = useCallback(
       (row: PinoramaDocument<AnyOrama> | null) => {
         setSelectedRow(row)
@@ -155,7 +167,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         copyToClipboard: () => {
           detailsRef.current?.copyToClipboard()
         },
-        liveMode: () => setLiveMode((prev) => !prev),
+        liveMode: () => toggleLiveMode(!isLiveModeEnabled),
         refresh: () => viewerRef.current?.refresh(),
         focusSearch: () => viewerRef.current?.focusSearch(),
         selectNextRow: () => viewerRef.current?.selectNextRow(),
@@ -173,6 +185,8 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         showDetails,
         maximizeDetails,
         clearFilters,
+        toggleLiveMode,
+        isLiveModeEnabled,
         incrementFiltersSize,
         decrementFiltersSize,
         incrementDetailsSize,
@@ -222,6 +236,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
               searchText={searchText}
               filters={filters}
               liveMode={isLiveModeEnabled}
+              liveSessionStart={liveSessionStart}
               onFiltersChange={setFilters}
             />
           </ResizablePanel>
@@ -238,11 +253,12 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
               searchText={searchText}
               filters={filters}
               liveMode={isLiveModeEnabled}
+              liveSessionStart={liveSessionStart}
               onSearchTextChange={setSearchText}
               onSelectedRowChange={changeSelectedRow}
               onToggleFiltersButtonClick={showFilters}
               onClearFiltersButtonClick={clearFilters}
-              onToggleLiveButtonClick={setLiveMode}
+              onToggleLiveButtonClick={toggleLiveMode}
               onToggleDetailsButtonClick={showDetails}
               onStatusChange={setViewerStatus}
             />

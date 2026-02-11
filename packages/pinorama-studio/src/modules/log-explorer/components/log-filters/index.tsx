@@ -10,6 +10,7 @@ type PinoramaFacetsProps = {
   searchText: string
   filters: SearchFilters
   liveMode: boolean
+  liveSessionStart: number
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -30,6 +31,7 @@ export function LogFilters(props: PinoramaFacetsProps) {
             searchText={props.searchText}
             filters={props.filters}
             liveMode={props.liveMode}
+            liveSessionStart={props.liveSessionStart}
             onFiltersChange={props.onFiltersChange}
           />
         )

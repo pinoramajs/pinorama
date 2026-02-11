@@ -46,6 +46,7 @@ type LogViewerProps = {
   filters: SearchFilters
   searchText: string
   liveMode: boolean
+  liveSessionStart: number
   onSearchTextChange: (searchText: string) => void
   onSelectedRowChange: (row: any) => void
   onToggleFiltersButtonClick: () => void
@@ -85,7 +86,8 @@ export const LogViewer = forwardRef(function LogViewer(
   const liveLogsQuery = useLiveLogs(
     props.searchText,
     props.filters,
-    props.liveMode
+    props.liveMode,
+    props.liveSessionStart
   )
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
