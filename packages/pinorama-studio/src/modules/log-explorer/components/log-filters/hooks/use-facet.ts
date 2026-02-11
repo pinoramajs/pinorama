@@ -14,11 +14,13 @@ export const useFacet = (
   searchText: string,
   filters: SearchFilters,
   liveMode: boolean,
-  liveSessionStart: number
+  liveSessionStart: number,
+  enabled = true
 ) => {
   const client = usePinoramaClient()
 
   const query = useQuery<OramaFacetValue>({
+    enabled,
     queryKey: ["facets", name, searchText, filters, liveMode, liveSessionStart],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
