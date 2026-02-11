@@ -1,8 +1,17 @@
 import type { SearchParams } from "@orama/orama"
 import type { BaseOramaPinorama } from "pinorama-types"
+import { DEFAULT_PAGE_SIZE } from "../constants"
 
-const createBasePayload = <T extends BaseOramaPinorama>(): SearchParams<T> => ({
-  limit: 10_000,
+type BuildPayloadOptions = {
+  limit?: number
+  offset?: number
+  cursor?: number
+}
+
+const createBasePayload = <T extends BaseOramaPinorama>(
+  limit: number
+): SearchParams<T> => ({
+  limit,
   sortBy: { property: "_pinorama.createdAt" }
 })
 
@@ -37,12 +46,20 @@ const withCursor =
     }
   }
 
+const withOffset =
+  <T extends BaseOramaPinorama>(offset: number) =>
+  (payload: SearchParams<T>): SearchParams<T> => {
+    return { ...payload, offset }
+  }
+
 export const buildPayload = <T extends BaseOramaPinorama>(
   searchText?: string,
   searchFilters?: SearchParams<T>["where"],
-  cursor?: number
+  options?: BuildPayloadOptions
 ) => {
-  let payload = createBasePayload()
+  const { limit = DEFAULT_PAGE_SIZE, offset, cursor } = options ?? {}
+
+  let payload = createBasePayload(limit)
 
   if (searchText) {
     const addSearchText = withSearchText(searchText)
@@ -54,6 +71,11 @@ export const buildPayload = <T extends BaseOramaPinorama>(
       searchFilters as SearchParams<BaseOramaPinorama>["where"]
     )
     payload = addSearchFilters(payload)
+  }
+
+  if (offset !== undefined && offset > 0) {
+    const addOffset = withOffset(offset)
+    payload = addOffset(payload)
   }
 
   if (cursor) {
