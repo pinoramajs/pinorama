@@ -48,6 +48,7 @@ export function ToggleColumnsButton(props: ToggleColumnsButtonProps) {
                 }
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                onSelect={(e) => e.preventDefault()}
               >
                 {field.getDisplayLabel()}
               </DropdownMenuCheckboxItem>
