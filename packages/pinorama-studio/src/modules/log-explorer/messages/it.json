@@ -24,5 +24,17 @@
   "logExplorer.hotkeys.decrementFiltersSize": "Diminuisci l'area dei filtri",
   "logExplorer.hotkeys.incrementDetailsSize": "Aumenta l'area dei dettagli",
   "logExplorer.hotkeys.decrementDetailsSize": "Diminuisci l'area dei dettagli",
-  "logExplorer.hotkeys.clearSelection": "Cancella la selezione"
+  "logExplorer.hotkeys.clearSelection": "Cancella la selezione",
+  "logExplorer.scrollToBottom": "Scorri in fondo",
+  "logExplorer.statusBar.showing": "Visualizzando",
+  "logExplorer.statusBar.page": "Pagina",
+  "logExplorer.statusBar.rowsPerPage": "Righe per pagina",
+  "logExplorer.statusBar.firstPage": "Prima pagina",
+  "logExplorer.statusBar.previousPage": "Pagina precedente",
+  "logExplorer.statusBar.nextPage": "Pagina successiva",
+  "logExplorer.statusBar.lastPage": "Ultima pagina",
+  "logExplorer.statusBar.buffer": "Buffer: {count} / {max}",
+  "logExplorer.statusBar.bufferFull": "Buffer pieno — i log più vecchi vengono scartati",
+  "logExplorer.statusBar.dbDocs": "Documenti nel database",
+  "logExplorer.statusBar.memory": "Memoria del server"
 }
