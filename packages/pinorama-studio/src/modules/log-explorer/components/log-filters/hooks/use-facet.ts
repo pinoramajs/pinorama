@@ -13,12 +13,13 @@ export const useFacet = (
   name: string,
   searchText: string,
   filters: SearchFilters,
-  liveMode: boolean
+  liveMode: boolean,
+  liveSessionStart: number
 ) => {
   const client = usePinoramaClient()
 
   const query = useQuery<OramaFacetValue>({
-    queryKey: ["facets", name, searchText, filters],
+    queryKey: ["facets", name, searchText, filters, liveMode, liveSessionStart],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -33,11 +34,16 @@ export const useFacet = (
 
       if (searchText) {
         payload.term = searchText
-        // payload.properties = [name]
       }
 
-      if (filters) {
-        payload.where = filters
+      const where: any = { ...filters }
+
+      if (liveMode && liveSessionStart > 0) {
+        where["_pinorama.createdAt"] = { gte: liveSessionStart }
+      }
+
+      if (Object.keys(where).length > 0) {
+        payload.where = where
       }
 
       const response: any = await client?.search(payload)

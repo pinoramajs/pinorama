@@ -12,23 +12,22 @@ import { buildPayload } from "@/modules/log-explorer/utils"
 export const useLiveLogs = <T extends AnyOrama>(
   searchText?: string,
   searchFilters?: SearchParams<T>["where"],
-  enabled?: boolean
+  enabled?: boolean,
+  liveSessionStart?: number
 ) => {
   const client = usePinoramaClient()
   const queryClient = useQueryClient()
-  const sessionRef = useRef(0)
 
   useEffect(() => {
-    if (enabled) {
-      sessionRef.current = Date.now()
+    if (enabled && liveSessionStart) {
       queryClient.removeQueries({ queryKey: ["live-logs"] })
     }
-  }, [enabled, queryClient])
+  }, [enabled, liveSessionStart, queryClient])
 
   const query = useInfiniteQuery({
     queryKey: ["live-logs", searchText, searchFilters],
     queryFn: async ({ pageParam }) => {
-      const cursor = pageParam || sessionRef.current
+      const cursor = pageParam || liveSessionStart || Date.now()
       const payload = buildPayload(searchText, searchFilters, { cursor })
 
       const response = await client?.search(payload)

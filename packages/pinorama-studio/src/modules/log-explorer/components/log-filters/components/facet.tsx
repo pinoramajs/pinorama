@@ -17,6 +17,7 @@ type FacetProps = {
   searchText: string
   filters: SearchFilters
   liveMode: boolean
+  liveSessionStart: number
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -30,7 +31,13 @@ export function Facet(props: FacetProps) {
     fetchStatus,
     status,
     error
-  } = useFacet(props.name, props.searchText, props.filters, props.liveMode)
+  } = useFacet(
+    props.name,
+    props.searchText,
+    props.filters,
+    props.liveMode,
+    props.liveSessionStart
+  )
 
   const operations: any = facetFilterOperationsFactory(props.type)
   const criteria = props.filters[props.name] || operations.create()
