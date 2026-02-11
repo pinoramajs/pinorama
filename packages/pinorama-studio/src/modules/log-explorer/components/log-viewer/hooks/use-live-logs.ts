@@ -1,9 +1,10 @@
 import type { AnyOrama, SearchParams } from "@orama/orama"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef } from "react"
 import { usePinoramaClient } from "@/contexts"
 import {
-  MAX_CONSECUTIVE_ERRORS,
+  DEFAULT_PAGE_SIZE,
+  LIVE_BUFFER_SIZE,
   POLL_DELAY
 } from "@/modules/log-explorer/constants"
 import { buildPayload } from "@/modules/log-explorer/utils"
@@ -14,25 +15,36 @@ export const useLiveLogs = <T extends AnyOrama>(
   enabled?: boolean
 ) => {
   const client = usePinoramaClient()
+  const queryClient = useQueryClient()
+  const sessionRef = useRef(0)
+
+  useEffect(() => {
+    if (enabled) {
+      sessionRef.current = Date.now()
+      queryClient.removeQueries({ queryKey: ["live-logs"] })
+    }
+  }, [enabled, queryClient])
 
   const query = useInfiniteQuery({
     queryKey: ["live-logs", searchText, searchFilters],
     queryFn: async ({ pageParam }) => {
-      const payload = buildPayload(searchText, searchFilters, pageParam)
+      const cursor = pageParam || sessionRef.current
+      const payload = buildPayload(searchText, searchFilters, { cursor })
 
       const response = await client?.search(payload)
       const newData = response?.hits.map((hit) => hit.document) ?? []
 
+      let nextCursor = cursor
       if (newData.length > 0) {
         const lastItem = newData[newData.length - 1]
-        const metadata = lastItem._pinorama
-        pageParam = metadata.createdAt
+        nextCursor = lastItem._pinorama.createdAt
       }
 
-      return { data: newData, nextCursor: pageParam }
+      return { data: newData, nextCursor }
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
+    maxPages: Math.ceil(LIVE_BUFFER_SIZE / DEFAULT_PAGE_SIZE),
     staleTime: Number.POSITIVE_INFINITY,
     enabled: false
   })
@@ -41,12 +53,6 @@ export const useLiveLogs = <T extends AnyOrama>(
   fetchNextPageRef.current = query.fetchNextPage
 
   const isFetchingRef = useRef(false)
-  const consecutiveErrorsRef = useRef(0)
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reset error counter when search criteria change
-  useEffect(() => {
-    consecutiveErrorsRef.current = 0
-  }, [searchText, searchFilters])
 
   useEffect(() => {
     if (!enabled) return
@@ -54,16 +60,11 @@ export const useLiveLogs = <T extends AnyOrama>(
     const poll = async () => {
       if (isFetchingRef.current) return
       isFetchingRef.current = true
-      try {
-        await fetchNextPageRef.current()
-        consecutiveErrorsRef.current = 0
-      } catch {
-        consecutiveErrorsRef.current += 1
-        if (consecutiveErrorsRef.current >= MAX_CONSECUTIVE_ERRORS) {
-          clearInterval(intervalId)
-        }
-      } finally {
-        isFetchingRef.current = false
+      const result = await fetchNextPageRef.current()
+      isFetchingRef.current = false
+
+      if (result.isError) {
+        clearInterval(intervalId)
       }
     }
 
@@ -76,12 +77,22 @@ export const useLiveLogs = <T extends AnyOrama>(
   }, [enabled])
 
   const flattenedData = useMemo(() => {
-    return (
+    const all =
       query.data?.pages
         .filter((page) => page.data.length > 0)
         .flatMap((page) => page.data) ?? []
-    )
+
+    if (all.length > LIVE_BUFFER_SIZE) {
+      return all.slice(all.length - LIVE_BUFFER_SIZE)
+    }
+
+    return all
   }, [query.data])
 
-  return { ...query, data: flattenedData }
+  return {
+    ...query,
+    data: flattenedData,
+    bufferCount: flattenedData.length,
+    bufferMax: LIVE_BUFFER_SIZE
+  }
 }
