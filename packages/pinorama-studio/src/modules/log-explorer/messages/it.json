@@ -36,5 +36,7 @@
   "logExplorer.statusBar.buffer": "Buffer: {count} / {max}",
   "logExplorer.statusBar.bufferFull": "Buffer pieno — i log più vecchi vengono scartati",
   "logExplorer.statusBar.dbDocs": "Documenti nel database",
-  "logExplorer.statusBar.memory": "Memoria del server"
+  "logExplorer.statusBar.memory": "Memoria del server",
+  "labels.from": "Da",
+  "labels.to": "A"
 }

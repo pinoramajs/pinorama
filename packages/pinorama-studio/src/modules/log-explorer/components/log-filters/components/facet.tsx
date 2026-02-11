@@ -7,6 +7,7 @@ import { ErrorState } from "@/components/error-state/error-state"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
 import type { FacetFilter, FacetValue, SearchFilters } from "../types"
+import { DateFacetBody } from "./date-facet-body"
 import { FacetBody } from "./facet-body"
 import { FacetHeader } from "./facet-header"
 
@@ -24,6 +25,7 @@ type FacetProps = {
 export function Facet(props: FacetProps) {
   const intl = useIntl()
 
+  const isDateFacet = props.type === "date"
   const [open, setOpen] = useState(true)
 
   const {
@@ -36,7 +38,8 @@ export function Facet(props: FacetProps) {
     props.searchText,
     props.filters,
     props.liveMode,
-    props.liveSessionStart
+    props.liveSessionStart,
+    !isDateFacet
   )
 
   const operations: any = facetFilterOperationsFactory(props.type)
@@ -54,6 +57,8 @@ export function Facet(props: FacetProps) {
   )
 
   const selectedValuesNotInDataSource = useMemo(() => {
+    if (isDateFacet) return []
+
     const selectedItems: FacetValue[] = operations
       .values(props.filters[props.name] as FacetFilter)
       .map((value: string | number) => {
@@ -66,9 +71,11 @@ export function Facet(props: FacetProps) {
     return selectedItems.filter(
       (item) => !(item.value in (facet?.values || {}))
     )
-  }, [props.filters, props.name, facet?.values, operations])
+  }, [isDateFacet, props.filters, props.name, facet?.values, operations])
 
   const allValues = useMemo(() => {
+    if (isDateFacet) return []
+
     const currentValues = Object.entries(facet?.values || {})
       .filter(([value]) => value !== "") // NOTE: Don't show empty values
       .map(([value, count]) => {
@@ -82,41 +89,59 @@ export function Facet(props: FacetProps) {
       })
 
     return [...selectedValuesNotInDataSource, ...currentValues]
-  }, [selectedValuesNotInDataSource, facet?.values, props.type])
+  }, [isDateFacet, selectedValuesNotInDataSource, facet?.values, props.type])
 
   const hasError = status === "error"
   const hasNoData = allValues.length === 0
+
+  const renderBody = () => {
+    if (isDateFacet) {
+      return (
+        <DateFacetBody
+          name={props.name}
+          filters={props.filters}
+          onFiltersChange={props.onFiltersChange}
+        />
+      )
+    }
+
+    if (hasError) {
+      return <ErrorState error={error} className="my-2 mx-0" />
+    }
+
+    if (hasNoData) {
+      return (
+        <EmptyStateInline
+          message={intl.formatMessage({ id: "labels.noResultFound" })}
+          className="my-2 mx-0"
+        />
+      )
+    }
+
+    return (
+      <FacetBody
+        introspection={props.introspection}
+        name={props.name}
+        type={props.type}
+        values={allValues}
+        filters={props.filters}
+        onFiltersChange={props.onFiltersChange}
+      />
+    )
+  }
 
   return (
     <div>
       <FacetHeader
         introspection={props.introspection}
         name={props.name}
-        loading={fetchStatus === "fetching"}
+        loading={!isDateFacet && fetchStatus === "fetching"}
         count={selelectedOptionCount}
         open={open}
         onClick={() => setOpen((value) => !value)}
         onCountClick={handleReset}
       />
-      {open ? (
-        hasError ? (
-          <ErrorState error={error} className="my-2 mx-0" />
-        ) : hasNoData ? (
-          <EmptyStateInline
-            message={intl.formatMessage({ id: "labels.noResultFound" })}
-            className="my-2 mx-0"
-          />
-        ) : (
-          <FacetBody
-            introspection={props.introspection}
-            name={props.name}
-            type={props.type}
-            values={allValues}
-            filters={props.filters}
-            onFiltersChange={props.onFiltersChange}
-          />
-        )
-      ) : null}
+      {open ? renderBody() : null}
     </div>
   )
 }

@@ -22,6 +22,7 @@ export const fastify = createPreset(
   },
   {
     facets: {
+      time: "date",
       level: "enum",
       msg: "string",
       "req.method": "string",

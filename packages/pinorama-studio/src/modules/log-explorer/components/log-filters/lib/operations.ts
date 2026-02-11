@@ -1,5 +1,5 @@
 import type { IntrospectionFacet } from "pinorama-types"
-import type { EnumFilter, StringFilter } from "../types"
+import type { DateFilter, EnumFilter, StringFilter } from "../types"
 
 export const facetFilterOperationsFactory = (type: IntrospectionFacet) => {
   switch (type) {
@@ -7,6 +7,8 @@ export const facetFilterOperationsFactory = (type: IntrospectionFacet) => {
       return createEnumOperations()
     case "string":
       return createStringOperations()
+    case "date":
+      return createDateOperations()
     default:
       throw new Error(`unsupported type "${type}" for facet operations`)
   }
@@ -40,4 +42,17 @@ const createStringOperations = (): FacetOperations<StringFilter, string> => ({
   values: (c) => c || [],
   add: (c, v) => [...c, v],
   remove: (c, v) => c.filter((_v) => _v !== v)
+})
+
+const createDateOperations = (): FacetOperations<DateFilter, number> => ({
+  create: () => ({}) as DateFilter,
+  exists: (_v, _c) => false,
+  length: (c) => {
+    if (!c || Object.keys(c).length === 0) return 0
+    if ("between" in c) return 2
+    return 1
+  },
+  values: () => [],
+  add: (c, v) => ({ ...c, gte: v }),
+  remove: () => ({}) as DateFilter
 })

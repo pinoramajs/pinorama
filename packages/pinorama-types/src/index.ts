@@ -30,7 +30,7 @@ export type PinoramaIntrospection<T extends AnySchema> = {
   }>
 }
 
-export type IntrospectionFacet = "enum" | "string"
+export type IntrospectionFacet = "enum" | "string" | "date"
 
 export type IntrospectionColumn = {
   visible: boolean

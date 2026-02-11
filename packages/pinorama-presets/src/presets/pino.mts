@@ -10,6 +10,7 @@ export const pino = createPreset(
   },
   {
     facets: {
+      time: "date",
       level: "enum",
       msg: "string",
       pid: "enum",
