@@ -21,7 +21,13 @@ import { usePinoramaConnection } from "@/hooks"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
 import type { SearchFilters } from "./log-filters/types"
-import { type ImperativeLogViewerHandle, LogViewer } from "./log-viewer"
+import {
+  type ImperativeLogViewerHandle,
+  LogViewer,
+  type LogViewerStatus
+} from "./log-viewer"
+import { StatusBar } from "./log-viewer/components/status-bar"
+import { useStats } from "./log-viewer/hooks/use-stats"
 
 const PANEL_SIZES = {
   filters: { base: "20", min: 200 },
@@ -60,8 +66,13 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const [selectedRow, setSelectedRow] =
       useState<PinoramaDocument<AnyOrama> | null>(null)
 
+    const [viewerStatus, setViewerStatus] = useState<LogViewerStatus | null>(
+      null
+    )
     const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
     const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
+
+    const statsQuery = useStats()
 
     const filtersPanelRef = useRef<PanelImperativeHandle | null>(null)
     const detailsPanelRef = useRef<PanelImperativeHandle | null>(null)
@@ -194,69 +205,90 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     }
 
     return (
-      <ResizablePanelGroup orientation="horizontal">
-        {/* Filters */}
-        <ResizablePanel
-          panelRef={filtersPanelRef}
-          collapsible
-          minSize={PANEL_SIZES.filters.min}
-          defaultSize={0}
-          onResize={(size) => setFiltersPanelCollapsed(size.asPercentage === 0)}
-        >
-          <LogFilters
-            introspection={introspection}
-            searchText={searchText}
-            filters={filters}
-            liveMode={isLiveModeEnabled}
-            onFiltersChange={setFilters}
+      <div className="grid grid-rows-[1fr_auto] h-full overflow-hidden">
+        <ResizablePanelGroup orientation="horizontal">
+          {/* Filters */}
+          <ResizablePanel
+            panelRef={filtersPanelRef}
+            collapsible
+            minSize={PANEL_SIZES.filters.min}
+            defaultSize={0}
+            onResize={(size) =>
+              setFiltersPanelCollapsed(size.asPercentage === 0)
+            }
+          >
+            <LogFilters
+              introspection={introspection}
+              searchText={searchText}
+              filters={filters}
+              liveMode={isLiveModeEnabled}
+              onFiltersChange={setFilters}
+            />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className={filtersPanelCollapsed ? "hidden" : undefined}
           />
-        </ResizablePanel>
-        <ResizableHandle
-          withHandle
-          className={filtersPanelCollapsed ? "hidden" : undefined}
-        />
 
-        {/* Viewer */}
-        <ResizablePanel className="bg-muted/20">
-          <LogViewer
-            ref={viewerRef}
-            introspection={introspection}
-            searchText={searchText}
-            filters={filters}
-            liveMode={isLiveModeEnabled}
-            onSearchTextChange={setSearchText}
-            onSelectedRowChange={changeSelectedRow}
-            onToggleFiltersButtonClick={showFilters}
-            onClearFiltersButtonClick={clearFilters}
-            onToggleLiveButtonClick={setLiveMode}
-            onToggleDetailsButtonClick={showDetails}
+          {/* Viewer */}
+          <ResizablePanel className="bg-muted/20">
+            <LogViewer
+              ref={viewerRef}
+              introspection={introspection}
+              searchText={searchText}
+              filters={filters}
+              liveMode={isLiveModeEnabled}
+              onSearchTextChange={setSearchText}
+              onSelectedRowChange={changeSelectedRow}
+              onToggleFiltersButtonClick={showFilters}
+              onClearFiltersButtonClick={clearFilters}
+              onToggleLiveButtonClick={setLiveMode}
+              onToggleDetailsButtonClick={showDetails}
+              onStatusChange={setViewerStatus}
+            />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className={detailsPanelCollapsed ? "hidden" : undefined}
           />
-        </ResizablePanel>
-        <ResizableHandle
-          withHandle
-          className={detailsPanelCollapsed ? "hidden" : undefined}
-        />
 
-        {/* Details */}
-        <ResizablePanel
-          panelRef={detailsPanelRef}
-          collapsible
-          minSize={PANEL_SIZES.details.min}
-          defaultSize={0}
-          onResize={(size) => setDetailsPanelCollapsed(size.asPercentage === 0)}
-        >
-          <LogDetails
-            ref={detailsRef}
-            data={selectedRow}
-            onMaximize={maximizeDetails}
-            onNext={() => viewerRef.current?.selectNextRow()}
-            onPrevious={() => viewerRef.current?.selectPreviousRow()}
-            onClose={() => detailsPanelRef.current?.collapse()}
-            canNext={viewerRef.current?.canSelectNextRow()}
-            canPrevious={viewerRef.current?.canSelectPreviousRow()}
+          {/* Details */}
+          <ResizablePanel
+            panelRef={detailsPanelRef}
+            collapsible
+            minSize={PANEL_SIZES.details.min}
+            defaultSize={0}
+            onResize={(size) =>
+              setDetailsPanelCollapsed(size.asPercentage === 0)
+            }
+          >
+            <LogDetails
+              ref={detailsRef}
+              data={selectedRow}
+              onMaximize={maximizeDetails}
+              onNext={() => viewerRef.current?.selectNextRow()}
+              onPrevious={() => viewerRef.current?.selectPreviousRow()}
+              onClose={() => detailsPanelRef.current?.collapse()}
+              canNext={viewerRef.current?.canSelectNextRow()}
+              canPrevious={viewerRef.current?.canSelectPreviousRow()}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+
+        {viewerStatus && (
+          <StatusBar
+            liveMode={isLiveModeEnabled}
+            page={viewerStatus.page}
+            pageSize={viewerStatus.pageSize}
+            totalCount={viewerStatus.totalCount}
+            bufferCount={viewerStatus.bufferCount}
+            bufferMax={viewerStatus.bufferMax}
+            stats={statsQuery.data}
+            onPageChange={viewerStatus.onPageChange}
+            onPageSizeChange={viewerStatus.onPageSizeChange}
           />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        )}
+      </div>
     )
   }
 )
