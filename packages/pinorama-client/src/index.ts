@@ -8,6 +8,11 @@ import type { PinoramaIntrospection } from "pinorama-types"
 import { z } from "zod"
 import { setTimeout } from "./platform/node.js"
 
+export type PinoramaStats = {
+  totalDocs: number
+  memoryUsage: number
+}
+
 const clientOptionsSchema = z.object({
   url: z.string(),
   maxRetries: z.number().min(2),
@@ -159,6 +164,26 @@ export class PinoramaClient<T extends AnyOrama> {
       return json
     } catch (error) {
       console.error("error fetching introspection:", error)
+      throw error
+    }
+  }
+
+  public async stats(): Promise<PinoramaStats> {
+    try {
+      const response = await fetch(`${this.url}/stats`, {
+        method: "GET",
+        headers: this.defaultHeaders
+      })
+
+      if (!response.ok) {
+        throw new Error("[TODO ERROR]: PinoramaClient.stats failed")
+      }
+
+      const json: PinoramaStats = await response.json()
+
+      return json
+    } catch (error) {
+      console.error("error fetching stats:", error)
       throw error
     }
   }
