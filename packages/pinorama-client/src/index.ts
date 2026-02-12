@@ -168,6 +168,16 @@ export class PinoramaClient<T extends AnyOrama> {
     }
   }
 
+  public async clear(): Promise<void> {
+    const response = await fetch(`${this.url}/clear`, {
+      method: "POST"
+    })
+
+    if (!response.ok) {
+      throw new Error("[TODO ERROR]: PinoramaClient.clear failed")
+    }
+  }
+
   public async stats(): Promise<PinoramaStats> {
     try {
       const response = await fetch(`${this.url}/stats`, {

@@ -25,6 +25,7 @@
   "logExplorer.hotkeys.incrementDetailsSize": "Increase details area",
   "logExplorer.hotkeys.decrementDetailsSize": "Decrease details area",
   "logExplorer.hotkeys.clearSelection": "Clear selection",
+  "logExplorer.clearLogs": "Clear logs",
   "logExplorer.scrollToBottom": "Scroll to bottom",
   "logExplorer.statusBar.showing": "Showing",
   "logExplorer.statusBar.page": "Page",

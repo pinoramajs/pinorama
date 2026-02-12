@@ -5,9 +5,9 @@ export async function gracefulSaveHook(fastify: FastifyInstance) {
   fastify.addHook("onClose", async (req) => {
     try {
       const savedPath = await persistToFile(
-        fastify.pinoramaDb,
-        fastify.pinoramaOpts.dbFormat,
-        fastify.pinoramaOpts.dbPath
+        fastify.pinorama.db,
+        fastify.pinorama.opts.dbFormat,
+        fastify.pinorama.opts.dbPath
       )
       req.log.info(`database saved to ${savedPath}`)
     } catch (error) {

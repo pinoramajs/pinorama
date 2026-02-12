@@ -9,7 +9,7 @@ export async function searchRoute(fastify: FastifyInstance) {
     handler: async (req, res) => {
       try {
         const result: Results<PinoramaDocument<AnyOrama>> = await search(
-          fastify.pinoramaDb,
+          fastify.pinorama.db,
           req.body as any
         )
         res.code(200).send(result)

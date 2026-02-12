@@ -7,7 +7,7 @@ export async function statsRoute(fastify: FastifyInstance) {
     method: "get",
     handler: async () => {
       return {
-        totalDocs: count(fastify.pinoramaDb),
+        totalDocs: count(fastify.pinorama.db),
         memoryUsage: process.memoryUsage().heapUsed
       }
     }

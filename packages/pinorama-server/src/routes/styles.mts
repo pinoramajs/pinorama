@@ -5,7 +5,7 @@ import { generateCSS } from "../utils/styles.mjs"
 const CSS_MIME_TYPE = "text/css"
 
 export async function stylesRoute(fastify: FastifyInstance) {
-  const styles = fastify.pinoramaOpts?.introspection?.styles as
+  const styles = fastify.pinorama.opts?.introspection?.styles as
     | Record<string, IntrospectionStyle>
     | undefined
 

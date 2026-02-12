@@ -52,6 +52,7 @@ type LogViewerProps = {
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
   onToggleLiveButtonClick: (live: boolean) => void
+  onClearLogsButtonClick: () => void
   onToggleDetailsButtonClick: () => void
   onStatusChange?: (status: LogViewerStatus) => void
 }
@@ -249,6 +250,7 @@ export const LogViewer = forwardRef(function LogViewer(
         onToggleLiveButtonClick={props.onToggleLiveButtonClick}
         onClearFiltersButtonClick={props.onClearFiltersButtonClick}
         onRefreshButtonClick={logsQuery.refetch}
+        onClearLogsButtonClick={props.onClearLogsButtonClick}
         onToggleDetailsButtonClick={props.onToggleDetailsButtonClick}
       />
 

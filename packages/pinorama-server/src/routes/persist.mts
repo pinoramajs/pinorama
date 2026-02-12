@@ -8,9 +8,9 @@ export async function persistRoute(fastify: FastifyInstance) {
     handler: async (req, res) => {
       try {
         await persistToFile(
-          fastify.pinoramaDb,
-          fastify.pinoramaOpts.dbFormat,
-          fastify.pinoramaOpts.dbPath
+          fastify.pinorama.db,
+          fastify.pinorama.opts.dbFormat,
+          fastify.pinorama.opts.dbPath
         )
         res.code(204).send()
       } catch (e) {
