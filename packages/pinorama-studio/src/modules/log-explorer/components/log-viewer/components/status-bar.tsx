@@ -57,7 +57,7 @@ export function StatusBar(props: StatusBarProps) {
   const isBufferFull = props.bufferCount >= props.bufferMax
 
   return (
-    <div className="flex items-center whitespace-nowrap px-3 py-1 text-xs text-muted-foreground border-t bg-background shrink-0 gap-3">
+    <div className="flex items-center h-8 whitespace-nowrap px-3 text-xs text-muted-foreground border-t bg-background shrink-0 gap-3">
       {props.liveMode ? (
         <span className="flex items-center gap-1.5">
           Buffer: <Value>{props.bufferCount.toLocaleString()}</Value> /{" "}
