@@ -20,8 +20,7 @@ import { withPinoramaMetadataSchema } from "./utils/metadata.mjs"
 
 declare module "fastify" {
   interface FastifyInstance {
-    pinoramaDb: AnyOrama
-    pinoramaOpts: PinoramaServerOptions
+    pinorama: { db: AnyOrama; opts: PinoramaServerOptions }
   }
 }
 
@@ -54,8 +53,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     ? await restoreFromFile(opts.dbFormat, opts.dbPath)
     : create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
 
-  fastify.decorate("pinoramaOpts", opts)
-  fastify.decorate("pinoramaDb", db)
+  fastify.decorate("pinorama", { db, opts })
 
   const registerOpts: RegisterOptions = {}
 
@@ -68,6 +66,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   }
 
   fastify.register(routes.bulkRoute, registerOpts)
+  fastify.register(routes.clearRoute, registerOpts)
   fastify.register(routes.introspectionRoute, registerOpts)
   fastify.register(routes.persistRoute, registerOpts)
   fastify.register(routes.searchRoute, registerOpts)

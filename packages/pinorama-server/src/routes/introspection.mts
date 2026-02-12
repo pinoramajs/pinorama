@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify"
 
 export async function introspectionRoute(fastify: FastifyInstance) {
-  const { introspection } = fastify.pinoramaOpts
+  const { introspection } = fastify.pinorama.opts
 
   fastify.route({
     url: "/introspection",

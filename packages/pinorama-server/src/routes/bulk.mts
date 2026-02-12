@@ -9,7 +9,7 @@ export async function bulkRoute(fastify: FastifyInstance) {
     handler: async (req, res) => {
       try {
         await insertMultiple(
-          fastify.pinoramaDb,
+          fastify.pinorama.db,
           (req.body as any).map(withPinoramaMetadataValue)
         )
         res.code(201).send({ success: true })

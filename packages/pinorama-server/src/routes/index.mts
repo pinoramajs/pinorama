@@ -1,4 +1,5 @@
 export * from "./bulk.mjs"
+export * from "./clear.mjs"
 export * from "./introspection.mjs"
 export * from "./persist.mjs"
 export * from "./search.mjs"

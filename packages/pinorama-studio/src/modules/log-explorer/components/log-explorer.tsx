@@ -1,4 +1,5 @@
 import type { AnyOrama } from "@orama/orama"
+import { useQueryClient } from "@tanstack/react-query"
 import { UnplugIcon } from "lucide-react"
 import type { PinoramaDocument } from "pinorama-types"
 import {
@@ -16,7 +17,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable"
-import { useAppConfig } from "@/contexts"
+import { useAppConfig, usePinoramaClient } from "@/contexts"
 import { usePinoramaConnection } from "@/hooks"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
@@ -73,15 +74,27 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
     const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
 
+    const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
+
     const statsQuery = useStats()
+
+    const client = usePinoramaClient()
+    const queryClient = useQueryClient()
+
+    const clearLogs = useCallback(() => {
+      setSelectedRow(null)
+      setFilters({})
+      setSearchText("")
+      setLiveSessionStart(Date.now())
+      queryClient.removeQueries()
+      client?.clear()
+    }, [client, queryClient])
 
     const filtersPanelRef = useRef<PanelImperativeHandle | null>(null)
     const detailsPanelRef = useRef<PanelImperativeHandle | null>(null)
 
     const viewerRef = useRef<ImperativeLogViewerHandle | null>(null)
     const detailsRef = useRef<ImperativeLogDetailsHandle | null>(null)
-
-    const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
 
     const showFilters = useCallback(() => {
       const panel = filtersPanelRef.current
@@ -259,6 +272,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
               onToggleFiltersButtonClick={showFilters}
               onClearFiltersButtonClick={clearFilters}
               onToggleLiveButtonClick={toggleLiveMode}
+              onClearLogsButtonClick={clearLogs}
               onToggleDetailsButtonClick={showDetails}
               onStatusChange={setViewerStatus}
             />

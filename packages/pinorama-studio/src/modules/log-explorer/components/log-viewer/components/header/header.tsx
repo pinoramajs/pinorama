@@ -4,7 +4,8 @@ import {
   FilterIcon,
   FilterXIcon,
   PanelRightIcon,
-  RefreshCwIcon
+  RefreshCwIcon,
+  Trash2Icon
 } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { useIntl } from "react-intl"
@@ -28,6 +29,7 @@ type LogViewerHeaderProps = {
   onClearFiltersButtonClick: () => void
   onToggleLiveButtonClick: (live: boolean) => void
   onRefreshButtonClick: () => void
+  onClearLogsButtonClick: () => void
   onToggleDetailsButtonClick: () => void
 }
 
@@ -62,14 +64,23 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
         pressed={props.liveMode}
         onPressedChange={props.onToggleLiveButtonClick}
       />
-      <IconButton
-        aria-label={hotkeys.refresh?.description}
-        tooltip={hotkeys.refresh?.description}
-        keystroke={hotkeys.refresh?.keystroke}
-        icon={RefreshCwIcon}
-        onClick={props.onRefreshButtonClick}
-        loading={props.isLoading}
-      />
+      {props.liveMode ? (
+        <IconButton
+          aria-label={intl.formatMessage({ id: "logExplorer.clearLogs" })}
+          tooltip={intl.formatMessage({ id: "logExplorer.clearLogs" })}
+          icon={Trash2Icon}
+          onClick={props.onClearLogsButtonClick}
+        />
+      ) : (
+        <IconButton
+          aria-label={hotkeys.refresh?.description}
+          tooltip={hotkeys.refresh?.description}
+          keystroke={hotkeys.refresh?.keystroke}
+          icon={RefreshCwIcon}
+          onClick={props.onRefreshButtonClick}
+          loading={props.isLoading}
+        />
+      )}
       {props.showClearFiltersButton ? (
         <IconButton
           aria-label={hotkeys.clearFilters?.description}
