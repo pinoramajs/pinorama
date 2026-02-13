@@ -1,4 +1,5 @@
-import { KeyboardIcon } from "lucide-react"
+import { KeyboardIcon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { FormattedMessage } from "react-intl"
 import { Kbd } from "@/components/kbd/kbd"
 import { Button } from "@/components/ui/button"
@@ -13,7 +14,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { useAllModuleHotkeys } from "@/hooks/use-module-hotkeys"
@@ -26,23 +26,29 @@ export function HotkeysButton() {
   return (
     <Dialog>
       <Tooltip>
-        <TooltipTrigger>
-          <DialogTrigger asChild>
-            <Button
-              aria-label={"Settings"}
-              variant={"secondary"}
-              size={"sm"}
-              onClick={handleClick}
-            >
-              <KeyboardIcon className="h-4 w-4" />
-            </Button>
-          </DialogTrigger>
+        <TooltipTrigger
+          render={
+            <DialogTrigger
+              render={
+                <Button
+                  aria-label={"Settings"}
+                  variant={"secondary"}
+                  size={"sm"}
+                  onClick={handleClick}
+                />
+              }
+            />
+          }
+        >
+          <HugeiconsIcon
+            icon={KeyboardIcon}
+            strokeWidth={2}
+            className="h-4 w-4"
+          />
         </TooltipTrigger>
-        <TooltipPortal>
-          <TooltipContent>
-            <FormattedMessage id="labels.keyboardShortcuts" />
-          </TooltipContent>
-        </TooltipPortal>
+        <TooltipContent>
+          <FormattedMessage id="labels.keyboardShortcuts" />
+        </TooltipContent>
       </Tooltip>
       <DialogContent className="w-80">
         <DialogHeader>

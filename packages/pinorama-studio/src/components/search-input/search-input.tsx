@@ -1,4 +1,5 @@
-import { SearchIcon, XIcon } from "lucide-react"
+import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { forwardRef } from "react"
 import { Kbd } from "../kbd"
 import { Button } from "../ui/button"
@@ -19,7 +20,11 @@ export const SearchInput = forwardRef(function SearchInput(
 
   return (
     <div className="relative flex items-center w-full">
-      <SearchIcon className="h-4 w-4 absolute left-3 text-muted-foreground" />
+      <HugeiconsIcon
+        icon={Search01Icon}
+        strokeWidth={2}
+        className="h-4 w-4 absolute left-3 text-muted-foreground"
+      />
       <Input
         ref={ref}
         type="text"
@@ -41,7 +46,11 @@ export const SearchInput = forwardRef(function SearchInput(
           className="absolute right-8"
           onClick={() => props.onChange("")}
         >
-          <XIcon className="h-4 w-4" />
+          <HugeiconsIcon
+            icon={Cancel01Icon}
+            strokeWidth={2}
+            className="h-4 w-4"
+          />
         </Button>
       ) : null}
       {props.keystroke ? (

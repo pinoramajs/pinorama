@@ -1,4 +1,4 @@
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons"
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react"
 import { useIntl } from "react-intl"
 import { IconButton } from "../icon-button/icon-button"
@@ -49,7 +49,7 @@ export const ClipboardButton = forwardRef<
       variant="ghost"
       keystroke={props.keystroke}
       disabled={!props.textToCopy}
-      icon={isCopied ? CheckIcon : CopyIcon}
+      icon={isCopied ? Tick02Icon : Copy01Icon}
       aria-label={intl.formatMessage({ id: "labels.copyToClipboard" })}
       tooltip={intl.formatMessage({ id: "labels.copyToClipboard" })}
       onClick={handleClick}
