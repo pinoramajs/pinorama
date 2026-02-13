@@ -1,5 +1,11 @@
+import {
+  ArrowDown01Icon,
+  ArrowRight01Icon,
+  CancelCircleIcon,
+  Loading03Icon
+} from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnySchema } from "@orama/orama"
-import { ChevronDown, ChevronRight, CircleX, LoaderIcon } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import type React from "react"
 import { Button } from "@/components/ui/button"
@@ -17,7 +23,7 @@ type FacetHeaderProps = {
 
 export function FacetHeader(props: FacetHeaderProps) {
   const field = createField(props.name, props.introspection)
-  const ChevronIcon = props.open ? ChevronDown : ChevronRight
+  const chevronIcon = props.open ? ArrowDown01Icon : ArrowRight01Icon
 
   return (
     <Button
@@ -26,24 +32,34 @@ export function FacetHeader(props: FacetHeaderProps) {
       className={`w-full text-left justify-between text-sm font-normal px-2 ${props.open ? "hover:bg-transparent" : "text-muted-foreground"}`}
     >
       <div className="flex items-center">
-        <ChevronIcon className="mr-2 w-5 h-5" />
+        <HugeiconsIcon
+          icon={chevronIcon}
+          strokeWidth={2}
+          className="mr-2 w-5 h-5"
+        />
         {field.getDisplayLabel()}
         {props.loading ? (
-          <LoaderIcon className="w-4 h-4 ml-2 animate-spin text-muted-foreground" />
+          <HugeiconsIcon
+            icon={Loading03Icon}
+            strokeWidth={2}
+            className="w-4 h-4 ml-2 animate-spin text-muted-foreground"
+          />
         ) : null}
       </div>
       {props.count > 0 ? (
         <Button
-          asChild
+          render={<div />}
           variant={"outline"}
-          size={"badge"}
-          className="flex text-muted-foreground"
+          size={"xs"}
+          className="flex text-muted-foreground rounded-full"
           onClick={props.onCountClick}
         >
-          <div>
-            <CircleX className="w-4 h-4" />
-            <div className="px-1.5 text-xs">{props.count}</div>
-          </div>
+          <HugeiconsIcon
+            icon={CancelCircleIcon}
+            strokeWidth={2}
+            className="w-4 h-4"
+          />
+          <div className="px-1.5 text-xs">{props.count}</div>
         </Button>
       ) : null}
     </Button>

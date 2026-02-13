@@ -1,3 +1,5 @@
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnySchema } from "@orama/orama"
 import {
   getCoreRowModel,
@@ -5,7 +7,6 @@ import {
   useReactTable
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { ArrowDownIcon } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import {
   forwardRef,
@@ -18,9 +19,7 @@ import {
   useState
 } from "react"
 import { useIntl } from "react-intl"
-import { EmptyStateInline } from "@/components/empty-state/empty-state"
-import { ErrorState } from "@/components/error-state/error-state"
-import { LoadingState } from "@/components/loading-state/loading-state"
+import { InlineStatus } from "@/components/inline-status"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PAGE_SIZE } from "@/modules/log-explorer/constants"
 import type { SearchFilters } from "../log-filters/types"
@@ -47,11 +46,13 @@ type LogViewerProps = {
   searchText: string
   liveMode: boolean
   liveSessionStart: number
+  dbTotalDocs: number
   onSearchTextChange: (searchText: string) => void
   onSelectedRowChange: (row: any) => void
   onToggleFiltersButtonClick: () => void
   onClearFiltersButtonClick: () => void
   onToggleLiveButtonClick: (live: boolean) => void
+  onRefreshButtonClick: () => void
   onClearLogsButtonClick: () => void
   onToggleDetailsButtonClick: () => void
   onStatusChange?: (status: LogViewerStatus) => void
@@ -234,6 +235,7 @@ export const LogViewer = forwardRef(function LogViewer(
   const isLoading = logsQuery.status === "pending"
   const hasError = logsQuery.status === "error"
   const hasNoData = logsQuery.data?.length === 0
+  const isDbEmpty = props.dbTotalDocs === 0
 
   return (
     <div className="flex flex-col h-full bg-muted/20">
@@ -249,7 +251,7 @@ export const LogViewer = forwardRef(function LogViewer(
         onToggleFiltersButtonClick={props.onToggleFiltersButtonClick}
         onToggleLiveButtonClick={props.onToggleLiveButtonClick}
         onClearFiltersButtonClick={props.onClearFiltersButtonClick}
-        onRefreshButtonClick={logsQuery.refetch}
+        onRefreshButtonClick={props.onRefreshButtonClick}
         onClearLogsButtonClick={props.onClearLogsButtonClick}
         onToggleDetailsButtonClick={props.onToggleDetailsButtonClick}
       />
@@ -265,15 +267,23 @@ export const LogViewer = forwardRef(function LogViewer(
             {isLoading || hasNoData || hasError ? (
               <tbody className="relative">
                 <tr>
-                  <td className="text-muted-foreground">
+                  <td className="text-muted-foreground p-2">
                     {isLoading ? (
-                      <LoadingState />
+                      <InlineStatus variant="loading" />
                     ) : hasError ? (
-                      <ErrorState error={logsQuery.error} />
+                      <InlineStatus
+                        variant="error"
+                        error={logsQuery.error as Error}
+                      />
                     ) : hasNoData ? (
-                      <EmptyStateInline
+                      <InlineStatus
+                        variant="empty"
                         message={intl.formatMessage({
-                          id: "logExplorer.noLogsFound"
+                          id: isDbEmpty
+                            ? props.liveMode
+                              ? "logExplorer.waitingForLogs"
+                              : "logExplorer.noLogsYet"
+                            : "logExplorer.noLogsMatch"
                         })}
                       />
                     ) : null}
@@ -295,7 +305,11 @@ export const LogViewer = forwardRef(function LogViewer(
               id: "logExplorer.scrollToBottom"
             })}
           >
-            <ArrowDownIcon className="h-4 w-4" />
+            <HugeiconsIcon
+              icon={ArrowDown01Icon}
+              strokeWidth={2}
+              className="h-4 w-4"
+            />
           </Button>
         )}
       </div>
