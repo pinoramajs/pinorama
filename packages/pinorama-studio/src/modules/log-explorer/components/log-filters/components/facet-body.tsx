@@ -15,6 +15,7 @@ type FacetBodyProps = {
 }
 
 export function FacetBody(props: FacetBodyProps) {
+  "use no memo"
   const parentRef = useRef<HTMLDivElement>(null)
 
   const rowVirtualizer = useVirtualizer({

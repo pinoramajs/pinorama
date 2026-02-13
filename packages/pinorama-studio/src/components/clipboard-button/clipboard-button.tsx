@@ -1,9 +1,10 @@
 import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons"
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react"
+import { useImperativeHandle, useState } from "react"
 import { useIntl } from "react-intl"
 import { IconButton } from "../icon-button/icon-button"
 
 type ClipboardButtonProps = {
+  ref?: React.Ref<ImperativeClipboardButtonHandle>
   textToCopy: string
   keystroke?: string
 }
@@ -12,14 +13,11 @@ export type ImperativeClipboardButtonHandle = {
   copyToClipboard: () => void
 }
 
-export const ClipboardButton = forwardRef<
-  ImperativeClipboardButtonHandle,
-  ClipboardButtonProps
->(function ClipboardButton(props, ref) {
+export function ClipboardButton(props: ClipboardButtonProps) {
   const intl = useIntl()
   const [isCopied, setIsCopied] = useState(false)
 
-  const handleClick = useCallback(async () => {
+  const handleClick = async () => {
     if (isCopied || !props.textToCopy) {
       return
     }
@@ -34,15 +32,11 @@ export const ClipboardButton = forwardRef<
     } catch (err) {
       console.error("Failed to copy to clipboard", err)
     }
-  }, [props.textToCopy, isCopied])
+  }
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      copyToClipboard: handleClick
-    }),
-    [handleClick]
-  )
+  useImperativeHandle(props.ref, () => ({
+    copyToClipboard: handleClick
+  }))
 
   return (
     <IconButton
@@ -55,4 +49,4 @@ export const ClipboardButton = forwardRef<
       onClick={handleClick}
     />
   )
-})
+}

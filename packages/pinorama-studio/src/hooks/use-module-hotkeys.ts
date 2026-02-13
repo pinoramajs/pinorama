@@ -1,5 +1,4 @@
 import type { ComponentType } from "react"
-import { useMemo } from "react"
 import { useIntl } from "react-intl"
 import type { Module } from "@/lib/modules"
 import modules from "@/modules"
@@ -25,7 +24,7 @@ function formatKeystroke(key: string): string {
 export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
   const intl = useIntl()
 
-  const hotkeysMap = useMemo(() => {
+  const hotkeysMap = (() => {
     const hotkeys: Partial<Record<ModuleMethod<M>, ModuleHotkey>> = {}
 
     const mod = modules.find((m) => m.id === module.id)
@@ -40,7 +39,7 @@ export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
     }
 
     return hotkeys
-  }, [intl, module.id])
+  })()
 
   const getHotkey = (method: ModuleMethod<M>) => hotkeysMap[method]
 
@@ -50,23 +49,19 @@ export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
 export function useAllModuleHotkeys() {
   const intl = useIntl()
 
-  return useMemo(() => {
-    const hotkeys: Record<string, ModuleHotkey[]> = {}
+  const hotkeys: Record<string, ModuleHotkey[]> = {}
 
-    for (const mod of modules) {
-      if (!mod.hotkeys) continue
+  for (const mod of modules) {
+    if (!mod.hotkeys) continue
 
-      const moduleTitle = intl.formatMessage({ id: `${mod.id}.title` })
+    const moduleTitle = intl.formatMessage({ id: `${mod.id}.title` })
 
-      hotkeys[moduleTitle] = Object.entries(mod.hotkeys).map(
-        ([method, key]) => ({
-          method,
-          keystroke: formatKeystroke(key as string),
-          description: intl.formatMessage({ id: `${mod.id}.hotkeys.${method}` })
-        })
-      )
-    }
+    hotkeys[moduleTitle] = Object.entries(mod.hotkeys).map(([method, key]) => ({
+      method,
+      keystroke: formatKeystroke(key as string),
+      description: intl.formatMessage({ id: `${mod.id}.hotkeys.${method}` })
+    }))
+  }
 
-    return hotkeys
-  }, [intl])
+  return hotkeys
 }

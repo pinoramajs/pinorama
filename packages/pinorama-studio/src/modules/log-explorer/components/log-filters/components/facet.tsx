@@ -1,6 +1,6 @@
 import type { AnySchema } from "@orama/orama"
 import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
-import { useCallback, useMemo, useState } from "react"
+import { useState } from "react"
 import { useIntl } from "react-intl"
 import { InlineStatus } from "@/components/inline-status"
 import { useFacet } from "../hooks/use-facet"
@@ -47,17 +47,14 @@ export function Facet(props: FacetProps) {
   const criteria = props.filters[props.name] || operations.create()
   const selelectedOptionCount = operations.length(criteria)
 
-  const handleReset = useCallback(
-    (event: React.MouseEvent) => {
-      event.stopPropagation()
-      const filters = { ...props.filters }
-      delete filters[props.name]
-      props.onFiltersChange(filters)
-    },
-    [props.onFiltersChange, props.name, props.filters, props]
-  )
+  const handleReset = (event: React.MouseEvent) => {
+    event.stopPropagation()
+    const filters = { ...props.filters }
+    delete filters[props.name]
+    props.onFiltersChange(filters)
+  }
 
-  const selectedValuesNotInDataSource = useMemo(() => {
+  const selectedValuesNotInDataSource = (() => {
     if (isDateFacet) return []
 
     const selectedItems: FacetValue[] = operations
@@ -72,9 +69,9 @@ export function Facet(props: FacetProps) {
     return selectedItems.filter(
       (item) => !(item.value in (facet?.values || {}))
     )
-  }, [isDateFacet, props.filters, props.name, facet?.values, operations])
+  })()
 
-  const allValues = useMemo(() => {
+  const allValues = (() => {
     if (isDateFacet) return []
 
     const currentValues = Object.entries(facet?.values || {})
@@ -90,7 +87,7 @@ export function Facet(props: FacetProps) {
       })
 
     return [...selectedValuesNotInDataSource, ...currentValues]
-  }, [isDateFacet, selectedValuesNotInDataSource, facet?.values, props.type])
+  })()
 
   const hasError = status === "error"
   const hasNoData = allValues.length === 0

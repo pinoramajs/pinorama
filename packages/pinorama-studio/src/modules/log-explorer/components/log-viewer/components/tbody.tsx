@@ -7,6 +7,7 @@ type TableBodyProps = {
 }
 
 export function TableBody({ virtualizer, rows }: TableBodyProps) {
+  "use no memo"
   return (
     <tbody
       className="relative font-mono"

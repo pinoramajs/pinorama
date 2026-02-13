@@ -1,5 +1,5 @@
 import type { AnyOrama, SearchParams } from "@orama/orama"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { usePinoramaClient } from "@/contexts"
 import { LIVE_BUFFER_SIZE, POLL_DELAY } from "@/modules/log-explorer/constants"
 import { buildPayload } from "@/modules/log-explorer/utils"
@@ -79,9 +79,9 @@ export const useLiveLogs = <T extends AnyOrama>(
     }
   }, [enabled, searchText, searchFilters, liveSessionStart, client, refreshKey])
 
-  const refetch = useCallback(() => {
+  const refetch = () => {
     setRefreshKey((k) => k + 1)
-  }, [])
+  }
 
   return {
     data,
