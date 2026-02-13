@@ -2,8 +2,7 @@ import type { AnySchema } from "@orama/orama"
 import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import { useCallback, useMemo, useState } from "react"
 import { useIntl } from "react-intl"
-import { EmptyStateInline } from "@/components/empty-state/empty-state"
-import { ErrorState } from "@/components/error-state/error-state"
+import { InlineStatus } from "@/components/inline-status"
 import { useFacet } from "../hooks/use-facet"
 import { facetFilterOperationsFactory } from "../lib/operations"
 import type { FacetFilter, FacetValue, SearchFilters } from "../types"
@@ -19,6 +18,8 @@ type FacetProps = {
   filters: SearchFilters
   liveMode: boolean
   liveSessionStart: number
+  isDbEmpty: boolean
+  defaultOpen?: boolean
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -26,7 +27,7 @@ export function Facet(props: FacetProps) {
   const intl = useIntl()
 
   const isDateFacet = props.type === "date"
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(props.defaultOpen ?? false)
 
   const {
     data: facet,
@@ -39,7 +40,7 @@ export function Facet(props: FacetProps) {
     props.filters,
     props.liveMode,
     props.liveSessionStart,
-    !isDateFacet
+    !isDateFacet && !props.isDbEmpty
   )
 
   const operations: any = facetFilterOperationsFactory(props.type)
@@ -105,15 +106,20 @@ export function Facet(props: FacetProps) {
       )
     }
 
+    if (props.isDbEmpty) {
+      return null
+    }
+
     if (hasError) {
-      return <ErrorState error={error} className="my-2 mx-0" />
+      return <InlineStatus variant="error" error={error} className="my-2" />
     }
 
     if (hasNoData) {
       return (
-        <EmptyStateInline
+        <InlineStatus
+          variant="empty"
           message={intl.formatMessage({ id: "labels.noResultFound" })}
-          className="my-2 mx-0"
+          className="my-2"
         />
       )
     }

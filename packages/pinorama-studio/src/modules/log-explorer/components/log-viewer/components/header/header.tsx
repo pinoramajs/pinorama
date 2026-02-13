@@ -1,12 +1,12 @@
+import {
+  Delete02Icon,
+  FilterIcon,
+  FilterRemoveIcon,
+  PanelRightIcon,
+  Refresh01Icon
+} from "@hugeicons/core-free-icons"
 import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
-import {
-  FilterIcon,
-  FilterXIcon,
-  PanelRightIcon,
-  RefreshCwIcon,
-  Trash2Icon
-} from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { useIntl } from "react-intl"
 import { IconButton } from "@/components/icon-button/icon-button"
@@ -68,7 +68,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
         <IconButton
           aria-label={intl.formatMessage({ id: "logExplorer.clearLogs" })}
           tooltip={intl.formatMessage({ id: "logExplorer.clearLogs" })}
-          icon={Trash2Icon}
+          icon={Delete02Icon}
           onClick={props.onClearLogsButtonClick}
         />
       ) : (
@@ -76,7 +76,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
           aria-label={hotkeys.refresh?.description}
           tooltip={hotkeys.refresh?.description}
           keystroke={hotkeys.refresh?.keystroke}
-          icon={RefreshCwIcon}
+          icon={Refresh01Icon}
           onClick={props.onRefreshButtonClick}
           loading={props.isLoading}
         />
@@ -86,7 +86,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
           aria-label={hotkeys.clearFilters?.description}
           tooltip={hotkeys.clearFilters?.description}
           keystroke={hotkeys.clearFilters?.keystroke}
-          icon={FilterXIcon}
+          icon={FilterRemoveIcon}
           onClick={props.onClearFiltersButtonClick}
         />
       ) : null}

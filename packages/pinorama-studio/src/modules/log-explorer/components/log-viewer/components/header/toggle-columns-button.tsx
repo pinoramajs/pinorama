@@ -1,6 +1,6 @@
+import { CheckListIcon } from "@hugeicons/core-free-icons"
 import type { AnySchema } from "@orama/orama"
 import type { Table } from "@tanstack/react-table"
-import { ListChecksIcon } from "lucide-react"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { FormattedMessage, useIntl } from "react-intl"
 import { IconButton } from "@/components/icon-button/icon-button"
@@ -26,7 +26,7 @@ export function ToggleColumnsButton(props: ToggleColumnsButtonProps) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <IconButton
-          icon={ListChecksIcon}
+          icon={CheckListIcon}
           tooltip={intl.formatMessage({ id: "logExplorer.columns" })}
         />
       </DropdownMenuTrigger>

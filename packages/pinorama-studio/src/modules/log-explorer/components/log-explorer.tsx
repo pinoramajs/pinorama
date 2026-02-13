@@ -1,6 +1,7 @@
+import { Plug01Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnyOrama } from "@orama/orama"
 import { useQueryClient } from "@tanstack/react-query"
-import { UnplugIcon } from "lucide-react"
 import type { PinoramaDocument } from "pinorama-types"
 import {
   forwardRef,
@@ -11,13 +12,21 @@ import {
 } from "react"
 import { useIntl } from "react-intl"
 import type { PanelImperativeHandle } from "react-resizable-panels"
-import { EmptyStateBlock } from "@/components/empty-state"
+import { Button } from "@/components/ui/button"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable"
-import { useAppConfig, usePinoramaClient } from "@/contexts"
+import { useAppConfig } from "@/contexts"
 import { usePinoramaConnection } from "@/hooks"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
@@ -32,7 +41,7 @@ import { useStats } from "./log-viewer/hooks/use-stats"
 
 const PANEL_SIZES = {
   filters: { base: "20", min: 200 },
-  details: { base: "25", min: 300 }
+  details: { base: "25", min: 200 }
 }
 
 export type ImperativeLogExplorerHandle = {
@@ -77,8 +86,8 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
     const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
 
     const statsQuery = useStats()
+    const isDbEmpty = (statsQuery.data?.totalDocs ?? 0) === 0
 
-    const client = usePinoramaClient()
     const queryClient = useQueryClient()
 
     const clearLogs = useCallback(() => {
@@ -86,9 +95,8 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
       setFilters({})
       setSearchText("")
       setLiveSessionStart(Date.now())
-      queryClient.removeQueries()
-      client?.clear()
-    }, [client, queryClient])
+      queryClient.invalidateQueries({ queryKey: ["stats"] })
+    }, [queryClient])
 
     const filtersPanelRef = useRef<PanelImperativeHandle | null>(null)
     const detailsPanelRef = useRef<PanelImperativeHandle | null>(null)
@@ -156,9 +164,15 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
           clearFilters()
           setLiveSessionStart(Date.now())
         }
+        queryClient.invalidateQueries({ queryKey: ["stats"] })
       },
-      [clearFilters]
+      [clearFilters, queryClient]
     )
+
+    const handleRefresh = useCallback(() => {
+      viewerRef.current?.refresh()
+      queryClient.invalidateQueries({ queryKey: ["facets"] })
+    }, [queryClient])
 
     const changeSelectedRow = useCallback(
       (row: PinoramaDocument<AnyOrama> | null) => {
@@ -181,7 +195,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
           detailsRef.current?.copyToClipboard()
         },
         liveMode: () => toggleLiveMode(!isLiveModeEnabled),
-        refresh: () => viewerRef.current?.refresh(),
+        refresh: handleRefresh,
         focusSearch: () => viewerRef.current?.focusSearch(),
         selectNextRow: () => viewerRef.current?.selectNextRow(),
         selectPreviousRow: () => viewerRef.current?.selectPreviousRow(),
@@ -200,6 +214,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
         clearFilters,
         toggleLiveMode,
         isLiveModeEnabled,
+        handleRefresh,
         incrementFiltersSize,
         decrementFiltersSize,
         incrementDetailsSize,
@@ -209,21 +224,28 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
 
     if (!isConnected) {
       return (
-        <EmptyStateBlock
-          icon={UnplugIcon}
-          title={intl.formatMessage({ id: "logExplorer.notConnected.title" })}
-          message={intl.formatMessage({
-            id: "logExplorer.notConnected.message"
-          })}
-          buttons={[
-            {
-              text: intl.formatMessage({
+        <Empty>
+          <EmptyHeader className="max-w-[250px]">
+            <EmptyMedia variant="icon">
+              <HugeiconsIcon icon={Plug01Icon} strokeWidth={2} />
+            </EmptyMedia>
+            <EmptyTitle>
+              {intl.formatMessage({ id: "logExplorer.notConnected.title" })}
+            </EmptyTitle>
+            <EmptyDescription>
+              {intl.formatMessage({
+                id: "logExplorer.notConnected.message"
+              })}
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button size="sm" onClick={toggleConnection}>
+              {intl.formatMessage({
                 id: "logExplorer.notConnected.action"
-              }),
-              onClick: toggleConnection
-            }
-          ]}
-        />
+              })}
+            </Button>
+          </EmptyContent>
+        </Empty>
       )
     }
 
@@ -250,6 +272,7 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
               filters={filters}
               liveMode={isLiveModeEnabled}
               liveSessionStart={liveSessionStart}
+              isDbEmpty={isDbEmpty}
               onFiltersChange={setFilters}
             />
           </ResizablePanel>
@@ -267,10 +290,12 @@ export const LogExplorer = forwardRef<ImperativeLogExplorerHandle>(
               filters={filters}
               liveMode={isLiveModeEnabled}
               liveSessionStart={liveSessionStart}
+              dbTotalDocs={statsQuery.data?.totalDocs ?? 0}
               onSearchTextChange={setSearchText}
               onSelectedRowChange={changeSelectedRow}
               onToggleFiltersButtonClick={showFilters}
               onClearFiltersButtonClick={clearFilters}
+              onRefreshButtonClick={handleRefresh}
               onToggleLiveButtonClick={toggleLiveMode}
               onClearLogsButtonClick={clearLogs}
               onToggleDetailsButtonClick={showDetails}

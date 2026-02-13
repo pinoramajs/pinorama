@@ -1,12 +1,13 @@
 import {
-  AlertTriangleIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
+  Alert02Icon,
+  ArrowLeft01Icon,
+  ArrowLeftDoubleIcon,
+  ArrowRight01Icon,
+  ArrowRightDoubleIcon,
   DatabaseIcon,
-  MemoryStickIcon
-} from "lucide-react"
+  RamMemoryIcon
+} from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import type { PinoramaStats } from "pinorama-client"
 import { useIntl } from "react-intl"
 import { Button } from "@/components/ui/button"
@@ -33,7 +34,7 @@ function formatBytes(bytes: number): string {
 }
 
 function Value({ children }: { children: React.ReactNode }) {
-  return <span className="text-foreground">{children}</span>
+  return <span className="font-mono text-foreground">{children}</span>
 }
 
 type StatusBarProps = {
@@ -64,8 +65,12 @@ export function StatusBar(props: StatusBarProps) {
           <Value>{props.bufferMax.toLocaleString()}</Value>
           {isBufferFull && (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <AlertTriangleIcon className="h-3.5 w-3.5 text-yellow-500" />
+              <TooltipTrigger render={<span className="inline-flex" />}>
+                <HugeiconsIcon
+                  icon={Alert02Icon}
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5 text-yellow-500"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 {intl.formatMessage({
@@ -93,18 +98,24 @@ export function StatusBar(props: StatusBarProps) {
               <Value>{props.page + 1}</Value> / <Value>{totalPages}</Value>
             </span>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => props.onPageChange(0)}
-                  disabled={props.page === 0}
-                  aria-label={intl.formatMessage({
-                    id: "logExplorer.statusBar.firstPage"
-                  })}
-                >
-                  <ChevronsLeftIcon className="h-3.5 w-3.5" />
-                </Button>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => props.onPageChange(0)}
+                    disabled={props.page === 0}
+                    aria-label={intl.formatMessage({
+                      id: "logExplorer.statusBar.firstPage"
+                    })}
+                  />
+                }
+              >
+                <HugeiconsIcon
+                  icon={ArrowLeftDoubleIcon}
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 {intl.formatMessage({
@@ -113,18 +124,24 @@ export function StatusBar(props: StatusBarProps) {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => props.onPageChange(props.page - 1)}
-                  disabled={props.page === 0}
-                  aria-label={intl.formatMessage({
-                    id: "logExplorer.statusBar.previousPage"
-                  })}
-                >
-                  <ChevronLeftIcon className="h-3.5 w-3.5" />
-                </Button>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => props.onPageChange(props.page - 1)}
+                    disabled={props.page === 0}
+                    aria-label={intl.formatMessage({
+                      id: "logExplorer.statusBar.previousPage"
+                    })}
+                  />
+                }
+              >
+                <HugeiconsIcon
+                  icon={ArrowLeft01Icon}
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 {intl.formatMessage({
@@ -133,18 +150,24 @@ export function StatusBar(props: StatusBarProps) {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => props.onPageChange(props.page + 1)}
-                  disabled={props.page >= totalPages - 1}
-                  aria-label={intl.formatMessage({
-                    id: "logExplorer.statusBar.nextPage"
-                  })}
-                >
-                  <ChevronRightIcon className="h-3.5 w-3.5" />
-                </Button>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => props.onPageChange(props.page + 1)}
+                    disabled={props.page >= totalPages - 1}
+                    aria-label={intl.formatMessage({
+                      id: "logExplorer.statusBar.nextPage"
+                    })}
+                  />
+                }
+              >
+                <HugeiconsIcon
+                  icon={ArrowRight01Icon}
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 {intl.formatMessage({
@@ -153,18 +176,24 @@ export function StatusBar(props: StatusBarProps) {
               </TooltipContent>
             </Tooltip>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  onClick={() => props.onPageChange(totalPages - 1)}
-                  disabled={props.page >= totalPages - 1}
-                  aria-label={intl.formatMessage({
-                    id: "logExplorer.statusBar.lastPage"
-                  })}
-                >
-                  <ChevronsRightIcon className="h-3.5 w-3.5" />
-                </Button>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => props.onPageChange(totalPages - 1)}
+                    disabled={props.page >= totalPages - 1}
+                    aria-label={intl.formatMessage({
+                      id: "logExplorer.statusBar.lastPage"
+                    })}
+                  />
+                }
+              >
+                <HugeiconsIcon
+                  icon={ArrowRightDoubleIcon}
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5"
+                />
               </TooltipTrigger>
               <TooltipContent>
                 {intl.formatMessage({
@@ -186,10 +215,10 @@ export function StatusBar(props: StatusBarProps) {
               value={String(props.pageSize)}
               onValueChange={(v) => props.onPageSizeChange(Number(v))}
             >
-              <SelectTrigger className="h-6 min-w-[70px] text-xs border-input">
+              <SelectTrigger size="sm" className="h-5! min-w-[70px] text-xs">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="p-1">
                 {PAGE_SIZE_OPTIONS.map((size) => (
                   <SelectItem
                     key={size}
@@ -210,22 +239,30 @@ export function StatusBar(props: StatusBarProps) {
       {props.stats && (
         <>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="flex items-center gap-1">
-                <DatabaseIcon className="h-3.5 w-3.5" />
-                <Value>{props.stats.totalDocs.toLocaleString()}</Value>
-              </span>
+            <TooltipTrigger
+              render={<span className="flex items-center gap-1" />}
+            >
+              <HugeiconsIcon
+                icon={DatabaseIcon}
+                strokeWidth={2}
+                className="h-3.5 w-3.5"
+              />
+              <Value>{props.stats.totalDocs.toLocaleString()}</Value>
             </TooltipTrigger>
             <TooltipContent>
               {intl.formatMessage({ id: "logExplorer.statusBar.dbDocs" })}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="flex items-center gap-1">
-                <MemoryStickIcon className="h-3.5 w-3.5" />
-                <Value>{formatBytes(props.stats.memoryUsage)}</Value>
-              </span>
+            <TooltipTrigger
+              render={<span className="flex items-center gap-1" />}
+            >
+              <HugeiconsIcon
+                icon={RamMemoryIcon}
+                strokeWidth={2}
+                className="h-3.5 w-3.5"
+              />
+              <Value>{formatBytes(props.stats.memoryUsage)}</Value>
             </TooltipTrigger>
             <TooltipContent>
               {intl.formatMessage({ id: "logExplorer.statusBar.memory" })}

@@ -11,6 +11,7 @@ type PinoramaFacetsProps = {
   filters: SearchFilters
   liveMode: boolean
   liveSessionStart: number
+  isDbEmpty: boolean
   onFiltersChange: (filters: SearchFilters) => void
 }
 
@@ -21,17 +22,19 @@ export function LogFilters(props: PinoramaFacetsProps) {
 
   return (
     <div className="flex flex-col h-full p-3 overflow-auto">
-      {facetsConfig.definition.map((facet) => {
+      {facetsConfig.definition.map((facet, index) => {
         return (
           <Facet
             key={facet.name}
             introspection={props.introspection}
             name={facet.name}
             type={facet.type}
+            defaultOpen={index === 0}
             searchText={props.searchText}
             filters={props.filters}
             liveMode={props.liveMode}
             liveSessionStart={props.liveSessionStart}
+            isDbEmpty={props.isDbEmpty}
             onFiltersChange={props.onFiltersChange}
           />
         )

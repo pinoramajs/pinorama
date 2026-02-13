@@ -1,7 +1,11 @@
 {
   "logExplorer.title": "Log Explorer",
   "logExplorer.searchLogs": "Cerca nei log...",
-  "logExplorer.noLogsFound": "Nessun log trovato. Si prega di controllare i filtri.",
+  "logExplorer.noLogsYet": "Nessun log presente",
+  "logExplorer.noLogsYet.message": "I log appariranno qui una volta ricevuti.",
+  "logExplorer.waitingForLogs": "In attesa di log...",
+  "logExplorer.waitingForLogs.message": "I log in arrivo appariranno qui in tempo reale.",
+  "logExplorer.noLogsMatch": "Nessun log corrisponde ai filtri.",
   "logExplorer.liveMode": "Modalità Live",
   "logExplorer.columns": "Colonne",
   "logExplorer.resetColumns": "Reimposta colonne",
@@ -9,7 +13,7 @@
   "logExplorer.notConnected.message": "Sei attualmente disconnesso. Connettiti per visualizzare i log.",
   "logExplorer.notConnected.action": "Connetti",
   "logExplorer.noDataSelected.title": "Nessun dato selezionato",
-  "logExplorer.noDataSelected.message": "Seleziona una riga per visualizzarne i dettagli.",
+  "logExplorer.noDataSelected.message": "Seleziona una riga dal log viewer per ispezionarne il payload completo.",
   "logExplorer.hotkeys.focusSearch": "Focus sulla barra di ricerca",
   "logExplorer.hotkeys.showFilters": "Mostra o nascondi i filtri",
   "logExplorer.hotkeys.showDetails": "Mostra o nascondi i dettagli",
@@ -39,5 +43,8 @@
   "logExplorer.statusBar.dbDocs": "Documenti nel database",
   "logExplorer.statusBar.memory": "Memoria del server",
   "labels.from": "Da",
-  "labels.to": "A"
+  "labels.to": "A",
+  "labels.dateFrom": "Data Da",
+  "labels.dateTo": "Data A",
+  "labels.apply": "Applica"
 }
