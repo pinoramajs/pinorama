@@ -1,24 +1,27 @@
+import {
+  ArrowDown01Icon,
+  Calendar03Icon,
+  Cancel01Icon
+} from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { format } from "date-fns"
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useIntl } from "react-intl"
+import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover"
 import type { DateFilter, SearchFilters } from "../types"
 
 type DateFacetBodyProps = {
   name: string
   filters: SearchFilters
   onFiltersChange: (filters: SearchFilters) => void
-}
-
-const toDatetimeLocal = (ms?: number) => {
-  if (!ms) return ""
-  return format(new Date(ms), "yyyy-MM-dd'T'HH:mm")
-}
-
-const fromDatetimeLocal = (value: string): number | undefined => {
-  if (!value) return undefined
-  return new Date(value).getTime()
 }
 
 const getFromMs = (filter: DateFilter | undefined): number | undefined => {
@@ -45,6 +48,148 @@ const buildDateFilter = (
   return undefined
 }
 
+type DateTimeFieldProps = {
+  placeholder: string
+  value?: number
+  onChange: (ms?: number) => void
+}
+
+function DateTimeField({ placeholder, value, onChange }: DateTimeFieldProps) {
+  const intl = useIntl()
+  const [open, setOpen] = useState(false)
+  const [localDate, setLocalDate] = useState<Date | undefined>(
+    value ? new Date(value) : undefined
+  )
+
+  useEffect(() => {
+    setLocalDate(value ? new Date(value) : undefined)
+  }, [value])
+
+  const handleDateSelect = useCallback(
+    (selected: Date | undefined) => {
+      if (!selected) {
+        setLocalDate(undefined)
+        return
+      }
+      const d = new Date(selected)
+      if (localDate) {
+        d.setHours(
+          localDate.getHours(),
+          localDate.getMinutes(),
+          localDate.getSeconds(),
+          0
+        )
+      }
+      setLocalDate(d)
+    },
+    [localDate]
+  )
+
+  const handleTimeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const timeStr = e.target.value
+      if (!timeStr) return
+      const parts = timeStr.split(":").map(Number)
+      const [hours, minutes, seconds] = parts
+      const d = localDate ? new Date(localDate) : new Date()
+      if (!localDate) {
+        d.setMilliseconds(0)
+      }
+      d.setHours(hours, minutes, seconds || 0)
+      setLocalDate(d)
+    },
+    [localDate]
+  )
+
+  const handleApply = useCallback(() => {
+    onChange(localDate?.getTime())
+    setOpen(false)
+  }, [localDate, onChange])
+
+  const handleClear = useCallback(() => {
+    onChange(undefined)
+  }, [onChange])
+
+  const isDirty = localDate?.getTime() !== value
+
+  return (
+    <ButtonGroup className="w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
+          render={
+            <Button
+              variant="outline"
+              className="flex-1 min-w-0 justify-start font-normal"
+            />
+          }
+        >
+          <HugeiconsIcon
+            icon={Calendar03Icon}
+            strokeWidth={2}
+            className="text-muted-foreground"
+          />
+          <span className="flex-1 truncate text-left">
+            {value ? (
+              format(value, "MMM d, yyyy HH:mm:ss")
+            ) : (
+              <span className="text-muted-foreground">{placeholder}</span>
+            )}
+          </span>
+          <HugeiconsIcon
+            icon={ArrowDown01Icon}
+            strokeWidth={2}
+            className="text-muted-foreground"
+          />
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-auto overflow-hidden p-0"
+          side="right"
+          align="start"
+        >
+          <Calendar
+            mode="single"
+            selected={localDate}
+            onSelect={handleDateSelect}
+            defaultMonth={localDate}
+          />
+          <div className="space-y-3 border-t p-3">
+            <Input
+              type="time"
+              step="1"
+              className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              value={localDate ? format(localDate, "HH:mm:ss") : "00:00:00"}
+              onChange={handleTimeChange}
+            />
+            <Button
+              variant="outline"
+              className="w-full"
+              disabled={!isDirty}
+              onClick={handleApply}
+            >
+              {intl.formatMessage({ id: "labels.apply" })} ↵
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+      {value != null && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="shrink-0"
+          onClick={handleClear}
+          aria-label="Clear"
+        >
+          <HugeiconsIcon
+            icon={Cancel01Icon}
+            strokeWidth={2}
+            className="text-muted-foreground"
+          />
+        </Button>
+      )}
+    </ButtonGroup>
+  )
+}
+
 export function DateFacetBody({
   name,
   filters,
@@ -55,9 +200,6 @@ export function DateFacetBody({
 
   const currentFrom = getFromMs(current)
   const currentTo = getToMs(current)
-
-  const fromValue = useMemo(() => toDatetimeLocal(currentFrom), [currentFrom])
-  const toValue = useMemo(() => toDatetimeLocal(currentTo), [currentTo])
 
   const updateFilter = useCallback(
     (from?: number, to?: number) => {
@@ -76,43 +218,31 @@ export function DateFacetBody({
   )
 
   const handleFromChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateFilter(fromDatetimeLocal(e.target.value), currentTo)
+    (ms?: number) => {
+      updateFilter(ms, currentTo)
     },
     [updateFilter, currentTo]
   )
 
   const handleToChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateFilter(currentFrom, fromDatetimeLocal(e.target.value))
+    (ms?: number) => {
+      updateFilter(currentFrom, ms)
     },
     [updateFilter, currentFrom]
   )
 
   return (
-    <div className="border rounded-md p-3 my-2 space-y-2">
-      <div className="space-y-1">
-        <Label className="text-xs text-muted-foreground">
-          {intl.formatMessage({ id: "labels.from" })}
-        </Label>
-        <Input
-          type="datetime-local"
-          className="h-8 text-xs"
-          value={fromValue}
-          onChange={handleFromChange}
-        />
-      </div>
-      <div className="space-y-1">
-        <Label className="text-xs text-muted-foreground">
-          {intl.formatMessage({ id: "labels.to" })}
-        </Label>
-        <Input
-          type="datetime-local"
-          className="h-8 text-xs"
-          value={toValue}
-          onChange={handleToChange}
-        />
-      </div>
+    <div className="my-2 space-y-2">
+      <DateTimeField
+        placeholder={intl.formatMessage({ id: "labels.dateFrom" })}
+        value={currentFrom}
+        onChange={handleFromChange}
+      />
+      <DateTimeField
+        placeholder={intl.formatMessage({ id: "labels.dateTo" })}
+        value={currentTo}
+        onChange={handleToChange}
+      />
     </div>
   )
 }
