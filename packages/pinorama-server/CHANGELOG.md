@@ -1,5 +1,16 @@
 # pinorama-server
 
+## 0.3.0
+
+### Minor Changes
+
+- fc1d5c6: update to orama v3
+- 85b1358: update to fastify v5
+
+### Patch Changes
+
+- aa54245: upgrade deps and adapt to latest api changes
+
 ## 0.2.1
 
 ### Patch Changes

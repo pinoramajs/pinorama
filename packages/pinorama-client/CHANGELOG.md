@@ -1,5 +1,11 @@
 # pinorama-client
 
+## 0.2.2
+
+### Patch Changes
+
+- aa54245: upgrade deps and adapt to latest api changes
+
 ## 0.2.1
 
 ### Patch Changes

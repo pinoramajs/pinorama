@@ -1,5 +1,23 @@
 # pinorama-studio
 
+## 0.5.0
+
+### Minor Changes
+
+- fc1d5c6: update to orama v3
+- aa54245: tailwind v4, react-resizable-panels v4, tanstack router v1, fix hotkey/keyboard/tooltip
+- 85b1358: update to fastify v5
+
+### Patch Changes
+
+- 35e9638: perf(studio): optimize table scrolling
+- Updated dependencies [fc1d5c6]
+- Updated dependencies [85b1358]
+- Updated dependencies [aa54245]
+  - pinorama-server@0.3.0
+  - pinorama-transport@0.1.4
+  - pinorama-client@0.2.2
+
 ## 0.4.0
 
 ### Minor Changes
