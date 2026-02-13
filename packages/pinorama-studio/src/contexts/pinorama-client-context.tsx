@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { PinoramaClient } from "pinorama-client/browser"
 import type { BaseOramaPinorama } from "pinorama-types"
-import { createContext, useContext } from "react"
+import { createContext, use } from "react"
 import { useAppConfig } from "./app-config-context"
 
 type PinoramaClientProviderProps = {
@@ -31,15 +31,15 @@ export function PinoramaClientProvider({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PinoramaClientContext.Provider value={pinoramaClient}>
+      <PinoramaClientContext value={pinoramaClient}>
         {children}
-      </PinoramaClientContext.Provider>
+      </PinoramaClientContext>
     </QueryClientProvider>
   )
 }
 
 export const usePinoramaClient = () => {
-  const context = useContext(PinoramaClientContext)
+  const context = use(PinoramaClientContext)
 
   if (context === undefined) {
     throw new Error(

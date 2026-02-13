@@ -1,5 +1,5 @@
 import type React from "react"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, use, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
 import { getMessages, type Locale, type Messages } from "@/i18n"
 
@@ -44,16 +44,16 @@ export function I18nProvider(props: I18nProviderProps) {
   }
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale: handleChangeLocale }}>
+    <LocaleContext value={{ locale, setLocale: handleChangeLocale }}>
       <IntlProvider locale={locale} messages={messages}>
         {props.children}
       </IntlProvider>
-    </LocaleContext.Provider>
+    </LocaleContext>
   )
 }
 
 export const useLocale = (): LocaleContextProps => {
-  const context = useContext(LocaleContext)
+  const context = use(LocaleContext)
   if (!context) {
     throw new Error("useLocale must be used within an I18nProvider")
   }
