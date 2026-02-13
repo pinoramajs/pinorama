@@ -1,17 +1,30 @@
-import type { AnyOrama } from "@orama/orama"
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  Maximize2Icon,
-  MousePointerClickIcon,
-  XIcon
-} from "lucide-react"
+  ArrowDown01Icon,
+  ArrowUp01Icon,
+  Cancel01Icon,
+  Maximize01Icon,
+  MouseLeftClick01Icon
+} from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
+import type { AnyOrama } from "@orama/orama"
 import type { PinoramaDocument } from "pinorama-types"
 import { JsonView } from "react-json-view-lite"
-import { EmptyStateBlock } from "@/components/empty-state"
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty"
 
 import "./styles/json-viewer.css"
-import { forwardRef, type Ref, useImperativeHandle, useRef } from "react"
+import {
+  forwardRef,
+  type Ref,
+  useImperativeHandle,
+  useMemo,
+  useRef
+} from "react"
 import { useIntl } from "react-intl"
 import {
   ClipboardButton,
@@ -63,6 +76,12 @@ export const LogDetails = forwardRef(function LogDetails(
 
   const copyButtonRef = useRef<ImperativeClipboardButtonHandle>(null)
 
+  const displayData = useMemo(() => {
+    if (!props.data) return null
+    const { _pinorama, ...rest } = props.data as Record<string, unknown>
+    return rest
+  }, [props.data])
+
   const hotkeys = {
     maximizeDetails: moduleHotkeys.getHotkey("maximizeDetails"),
     copyToClipboard: moduleHotkeys.getHotkey("copyToClipboard"),
@@ -91,14 +110,14 @@ export const LogDetails = forwardRef(function LogDetails(
             aria-label={hotkeys.maximizeDetails?.description}
             tooltip={hotkeys.maximizeDetails?.description}
             keystroke={hotkeys.maximizeDetails?.keystroke}
-            icon={Maximize2Icon}
+            icon={Maximize01Icon}
             onClick={props.onMaximize}
           />
           <div className="flex items-center justify-end">
             <div className="space-x-1.5">
               <ClipboardButton
                 ref={copyButtonRef}
-                textToCopy={JSON.stringify(props.data, null, 2)}
+                textToCopy={JSON.stringify(displayData, null, 2)}
                 keystroke={hotkeys.copyToClipboard?.keystroke}
               />
               <IconButton
@@ -107,7 +126,7 @@ export const LogDetails = forwardRef(function LogDetails(
                 aria-label={hotkeys.selectNextRow?.description}
                 tooltip={hotkeys.selectNextRow?.description}
                 keystroke={hotkeys.selectNextRow?.keystroke}
-                icon={ArrowDownIcon}
+                icon={ArrowDown01Icon}
                 onClick={props.onNext}
               />
               <IconButton
@@ -116,7 +135,7 @@ export const LogDetails = forwardRef(function LogDetails(
                 aria-label={hotkeys.selectPreviousRow?.description}
                 tooltip={hotkeys.selectPreviousRow?.description}
                 keystroke={hotkeys.selectPreviousRow?.keystroke}
-                icon={ArrowUpIcon}
+                icon={ArrowUp01Icon}
                 onClick={props.onPrevious}
               />
             </div>
@@ -126,7 +145,7 @@ export const LogDetails = forwardRef(function LogDetails(
               aria-label={hotkeys.showDetails?.description}
               tooltip={hotkeys.showDetails?.description}
               keystroke={hotkeys.showDetails?.keystroke}
-              icon={XIcon}
+              icon={Cancel01Icon}
               onClick={props.onClose}
             />
           </div>
@@ -134,20 +153,28 @@ export const LogDetails = forwardRef(function LogDetails(
       </div>
 
       {/* JSON Viewer */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex flex-col flex-1 overflow-auto">
         {!props.data ? (
-          <EmptyStateBlock
-            icon={MousePointerClickIcon}
-            title={intl.formatMessage({
-              id: "logExplorer.noDataSelected.title"
-            })}
-            message={intl.formatMessage({
-              id: "logExplorer.noDataSelected.message"
-            })}
-          />
-        ) : (
-          <JsonView data={props.data} style={style} clickToExpandNode={true} />
-        )}
+          <Empty>
+            <EmptyHeader className="max-w-[250px]">
+              <EmptyMedia variant="icon">
+                <HugeiconsIcon icon={MouseLeftClick01Icon} strokeWidth={2} />
+              </EmptyMedia>
+              <EmptyTitle>
+                {intl.formatMessage({
+                  id: "logExplorer.noDataSelected.title"
+                })}
+              </EmptyTitle>
+              <EmptyDescription>
+                {intl.formatMessage({
+                  id: "logExplorer.noDataSelected.message"
+                })}
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : displayData ? (
+          <JsonView data={displayData} style={style} clickToExpandNode={true} />
+        ) : null}
       </div>
     </div>
   )

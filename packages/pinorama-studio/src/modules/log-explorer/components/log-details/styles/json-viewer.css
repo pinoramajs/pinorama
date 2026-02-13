@@ -40,19 +40,28 @@
 
 .label,
 .clickable-label {
-  @apply mr-2 font-semibold;
+  @apply mr-2 text-foreground;
 }
 
 .value-string {
-  @apply text-sky-400;
+  @apply text-lime-500 dark:text-lime-400;
 }
 
-.value-number,
-.value-boolean,
+.value-number {
+  @apply text-cyan-500 dark:text-cyan-400;
+}
+
+.value-boolean {
+  @apply text-purple-500 dark:text-purple-400;
+}
+
 .value-null,
-.value-undefined,
+.value-undefined {
+  @apply text-gray-400 dark:text-gray-500 italic;
+}
+
 .value-other {
-  @apply text-rose-400;
+  @apply text-yellow-500 dark:text-yellow-400;
 }
 
 /* .collapse-icon {} */
