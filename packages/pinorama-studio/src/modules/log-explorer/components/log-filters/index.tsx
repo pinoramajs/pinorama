@@ -1,6 +1,5 @@
 import type { AnySchema } from "@orama/orama"
 import type { PinoramaIntrospection } from "pinorama-types"
-import { useMemo } from "react"
 import { Facet } from "./components/facet"
 import { getFacetsConfig } from "./lib/utils"
 import type { SearchFilters } from "./types"
@@ -16,9 +15,7 @@ type PinoramaFacetsProps = {
 }
 
 export function LogFilters(props: PinoramaFacetsProps) {
-  const facetsConfig = useMemo(() => {
-    return getFacetsConfig(props.introspection)
-  }, [props.introspection])
+  const facetsConfig = getFacetsConfig(props.introspection)
 
   return (
     <div className="flex flex-col h-full p-3 overflow-auto">

@@ -1,6 +1,7 @@
 import { flexRender, type Table } from "@tanstack/react-table"
 
 export function TableHead({ table }: { table: Table<unknown> }) {
+  "use no memo"
   return (
     <thead className="group sticky top-0 z-10 bg-background select-none flex">
       {table.getHeaderGroups().map((headerGroup) => (

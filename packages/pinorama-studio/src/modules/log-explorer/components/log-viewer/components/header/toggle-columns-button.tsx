@@ -20,6 +20,7 @@ type ToggleColumnsButtonProps = {
 }
 
 export function ToggleColumnsButton(props: ToggleColumnsButtonProps) {
+  "use no memo"
   const intl = useIntl()
 
   return (

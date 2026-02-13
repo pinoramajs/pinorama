@@ -5,7 +5,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { format } from "date-fns"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useIntl } from "react-intl"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
@@ -65,50 +65,44 @@ function DateTimeField({ placeholder, value, onChange }: DateTimeFieldProps) {
     setLocalDate(value ? new Date(value) : undefined)
   }, [value])
 
-  const handleDateSelect = useCallback(
-    (selected: Date | undefined) => {
-      if (!selected) {
-        setLocalDate(undefined)
-        return
-      }
-      const d = new Date(selected)
-      if (localDate) {
-        d.setHours(
-          localDate.getHours(),
-          localDate.getMinutes(),
-          localDate.getSeconds(),
-          0
-        )
-      }
-      setLocalDate(d)
-    },
-    [localDate]
-  )
+  const handleDateSelect = (selected: Date | undefined) => {
+    if (!selected) {
+      setLocalDate(undefined)
+      return
+    }
+    const d = new Date(selected)
+    if (localDate) {
+      d.setHours(
+        localDate.getHours(),
+        localDate.getMinutes(),
+        localDate.getSeconds(),
+        0
+      )
+    }
+    setLocalDate(d)
+  }
 
-  const handleTimeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const timeStr = e.target.value
-      if (!timeStr) return
-      const parts = timeStr.split(":").map(Number)
-      const [hours, minutes, seconds] = parts
-      const d = localDate ? new Date(localDate) : new Date()
-      if (!localDate) {
-        d.setMilliseconds(0)
-      }
-      d.setHours(hours, minutes, seconds || 0)
-      setLocalDate(d)
-    },
-    [localDate]
-  )
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const timeStr = e.target.value
+    if (!timeStr) return
+    const parts = timeStr.split(":").map(Number)
+    const [hours, minutes, seconds] = parts
+    const d = localDate ? new Date(localDate) : new Date()
+    if (!localDate) {
+      d.setMilliseconds(0)
+    }
+    d.setHours(hours, minutes, seconds || 0)
+    setLocalDate(d)
+  }
 
-  const handleApply = useCallback(() => {
+  const handleApply = () => {
     onChange(localDate?.getTime())
     setOpen(false)
-  }, [localDate, onChange])
+  }
 
-  const handleClear = useCallback(() => {
+  const handleClear = () => {
     onChange(undefined)
-  }, [onChange])
+  }
 
   const isDirty = localDate?.getTime() !== value
 
@@ -201,35 +195,26 @@ export function DateFacetBody({
   const currentFrom = getFromMs(current)
   const currentTo = getToMs(current)
 
-  const updateFilter = useCallback(
-    (from?: number, to?: number) => {
-      const newFilters = { ...filters }
-      const dateFilter = buildDateFilter(from, to)
+  const updateFilter = (from?: number, to?: number) => {
+    const newFilters = { ...filters }
+    const dateFilter = buildDateFilter(from, to)
 
-      if (dateFilter) {
-        newFilters[name] = dateFilter
-      } else {
-        delete newFilters[name]
-      }
+    if (dateFilter) {
+      newFilters[name] = dateFilter
+    } else {
+      delete newFilters[name]
+    }
 
-      onFiltersChange(newFilters)
-    },
-    [filters, name, onFiltersChange]
-  )
+    onFiltersChange(newFilters)
+  }
 
-  const handleFromChange = useCallback(
-    (ms?: number) => {
-      updateFilter(ms, currentTo)
-    },
-    [updateFilter, currentTo]
-  )
+  const handleFromChange = (ms?: number) => {
+    updateFilter(ms, currentTo)
+  }
 
-  const handleToChange = useCallback(
-    (ms?: number) => {
-      updateFilter(currentFrom, ms)
-    },
-    [updateFilter, currentFrom]
-  )
+  const handleToChange = (ms?: number) => {
+    updateFilter(currentFrom, ms)
+  }
 
   return (
     <div className="my-2 space-y-2">

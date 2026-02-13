@@ -18,13 +18,7 @@ import {
 } from "@/components/ui/empty"
 
 import "./styles/json-viewer.css"
-import {
-  forwardRef,
-  type Ref,
-  useImperativeHandle,
-  useMemo,
-  useRef
-} from "react"
+import { useImperativeHandle, useRef } from "react"
 import { useIntl } from "react-intl"
 import {
   ClipboardButton,
@@ -54,6 +48,7 @@ const style = {
 }
 
 type LogDetailsProps = {
+  ref?: React.Ref<ImperativeLogDetailsHandle>
   data: PinoramaDocument<AnyOrama> | null
   onClose: () => void
   onNext: () => void
@@ -67,20 +62,17 @@ export type ImperativeLogDetailsHandle = {
   copyToClipboard: () => void
 }
 
-export const LogDetails = forwardRef(function LogDetails(
-  props: LogDetailsProps,
-  ref: Ref<ImperativeLogDetailsHandle>
-) {
+export function LogDetails(props: LogDetailsProps) {
   const intl = useIntl()
   const moduleHotkeys = useModuleHotkeys(LogExplorerModule)
 
   const copyButtonRef = useRef<ImperativeClipboardButtonHandle>(null)
 
-  const displayData = useMemo(() => {
+  const displayData = (() => {
     if (!props.data) return null
     const { _pinorama, ...rest } = props.data as Record<string, unknown>
     return rest
-  }, [props.data])
+  })()
 
   const hotkeys = {
     maximizeDetails: moduleHotkeys.getHotkey("maximizeDetails"),
@@ -91,7 +83,7 @@ export const LogDetails = forwardRef(function LogDetails(
   }
 
   useImperativeHandle(
-    ref,
+    props.ref,
     () => ({
       copyToClipboard: () => {
         copyButtonRef.current?.copyToClipboard()
@@ -178,4 +170,4 @@ export const LogDetails = forwardRef(function LogDetails(
       </div>
     </div>
   )
-})
+}

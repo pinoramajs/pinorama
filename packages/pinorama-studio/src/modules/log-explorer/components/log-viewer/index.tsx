@@ -9,8 +9,6 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual"
 import type { PinoramaIntrospection } from "pinorama-types"
 import {
-  forwardRef,
-  type Ref,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -41,6 +39,7 @@ export type LogViewerStatus = {
 }
 
 type LogViewerProps = {
+  ref?: React.Ref<ImperativeLogViewerHandle>
   introspection: PinoramaIntrospection<AnySchema>
   filters: SearchFilters
   searchText: string
@@ -68,10 +67,8 @@ export type ImperativeLogViewerHandle = {
   canSelectPreviousRow: () => boolean
 }
 
-export const LogViewer = forwardRef(function LogViewer(
-  props: LogViewerProps,
-  ref: Ref<ImperativeLogViewerHandle>
-) {
+export function LogViewer(props: LogViewerProps) {
+  "use no memo"
   const intl = useIntl()
 
   const [page, setPage] = useState(0)
@@ -201,7 +198,7 @@ export const LogViewer = forwardRef(function LogViewer(
   }, [props.liveMode, rows.length, virtualizer])
 
   useImperativeHandle(
-    ref,
+    props.ref,
     () => ({
       refresh: () => logsQuery.refetch(),
       focusSearch: () => searchInputRef.current?.focus(),
@@ -223,7 +220,7 @@ export const LogViewer = forwardRef(function LogViewer(
       canSelectNextRow: () => utils.canSelectNextRow(table),
       canSelectPreviousRow: () => utils.canSelectPreviousRow(table)
     }),
-    [logsQuery.refetch, clearSelection, table, logsQuery, virtualizer]
+    [logsQuery, clearSelection, table, virtualizer]
   )
 
   const scrollToBottom = useCallback(() => {
@@ -315,4 +312,4 @@ export const LogViewer = forwardRef(function LogViewer(
       </div>
     </div>
   )
-})
+}

@@ -1,21 +1,18 @@
 import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { forwardRef } from "react"
 import { Kbd } from "../kbd"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 
 type SearchInputProps = {
+  ref?: React.Ref<HTMLInputElement>
   value: string
   onChange: (text: string) => void
   placeholder: string
   keystroke?: string
 }
 
-export const SearchInput = forwardRef(function SearchInput(
-  props: SearchInputProps,
-  ref: React.Ref<HTMLInputElement>
-) {
+export function SearchInput(props: SearchInputProps) {
   const hasValue = props.value.length > 0
 
   return (
@@ -26,7 +23,7 @@ export const SearchInput = forwardRef(function SearchInput(
         className="h-4 w-4 absolute left-3 text-muted-foreground"
       />
       <Input
-        ref={ref}
+        ref={props.ref}
         type="text"
         placeholder={props.placeholder}
         className="pl-9 pr-16"
@@ -58,4 +55,4 @@ export const SearchInput = forwardRef(function SearchInput(
       ) : null}
     </div>
   )
-})
+}
