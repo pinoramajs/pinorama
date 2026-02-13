@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, use, useEffect, useState } from "react"
 
 export type AppConfig = {
   connectionIntent: boolean
@@ -51,14 +51,14 @@ export function AppConfigProvider(props: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <AppConfigContext.Provider value={{ config, setConfig }}>
+    <AppConfigContext value={{ config, setConfig }}>
       {props.children}
-    </AppConfigContext.Provider>
+    </AppConfigContext>
   )
 }
 
 export const useAppConfig = () => {
-  const context = useContext(AppConfigContext)
+  const context = use(AppConfigContext)
 
   if (context === undefined) {
     throw new Error("useAppConfig must be used within a AppConfigProvider")
