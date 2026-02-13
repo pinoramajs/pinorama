@@ -1,10 +1,10 @@
-import { MoonStarIcon, SunIcon } from "lucide-react"
+import { Moon02Icon, Sun01Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { FormattedMessage, useIntl } from "react-intl"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
-  TooltipPortal,
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { Theme, useTheme } from "@/contexts"
@@ -17,25 +17,25 @@ export function ThemeToggleButton() {
     setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light)
   }
 
-  const Icon = theme === Theme.Dark ? MoonStarIcon : SunIcon
+  const icon = theme === Theme.Dark ? Moon02Icon : Sun01Icon
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          aria-label={intl.formatMessage({ id: `theme.${theme}` })}
-          variant="secondary"
-          size="sm"
-          onClick={handleClick}
-        >
-          <Icon className="h-4 w-4" />
-        </Button>
+      <TooltipTrigger
+        render={
+          <Button
+            aria-label={intl.formatMessage({ id: `theme.${theme}` })}
+            variant="secondary"
+            size="sm"
+            onClick={handleClick}
+          />
+        }
+      >
+        <HugeiconsIcon icon={icon} strokeWidth={2} className="h-4 w-4" />
       </TooltipTrigger>
-      <TooltipPortal>
-        <TooltipContent>
-          <FormattedMessage id={`theme.${theme}`} />
-        </TooltipContent>
-      </TooltipPortal>
+      <TooltipContent>
+        <FormattedMessage id={`theme.${theme}`} />
+      </TooltipContent>
     </Tooltip>
   )
 }
