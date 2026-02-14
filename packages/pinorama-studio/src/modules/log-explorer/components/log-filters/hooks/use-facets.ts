@@ -4,13 +4,15 @@ import { usePinoramaClient } from "@/contexts"
 import { POLL_DELAY } from "@/modules/log-explorer/constants"
 import type { SearchFilters } from "../types"
 
-type OramaFacetValue = {
+export type OramaFacetValue = {
   count: number
   values: Record<string | number, number>
 }
 
-export const useFacet = (
-  name: string,
+export type FacetsData = Record<string, OramaFacetValue>
+
+export const useFacets = (
+  names: string[],
   searchText: string,
   filters: SearchFilters,
   liveMode: boolean,
@@ -19,19 +21,31 @@ export const useFacet = (
 ) => {
   const client = usePinoramaClient()
 
-  const query = useQuery<OramaFacetValue>({
-    enabled,
-    queryKey: ["facets", name, searchText, filters, liveMode, liveSessionStart],
+  const query = useQuery<FacetsData>({
+    enabled: enabled && names.length > 0,
+    queryKey: [
+      "facets",
+      names,
+      searchText,
+      filters,
+      liveMode,
+      liveSessionStart
+    ],
     queryFn: async ({ signal }) => {
       await new Promise((resolve) => setTimeout(resolve, 500))
 
       if (signal.aborted) {
-        return
+        return {}
+      }
+
+      const facets: Record<string, object> = {}
+      for (const name of names) {
+        facets[name] = {}
       }
 
       const payload: any = {
         preflight: true,
-        facets: { [name]: {} }
+        facets
       }
 
       if (searchText) {
@@ -49,7 +63,7 @@ export const useFacet = (
       }
 
       const response: any = await client?.search(payload)
-      return response.facets[name]
+      return response.facets as FacetsData
     },
     placeholderData: keepPreviousData,
     refetchInterval: liveMode ? POLL_DELAY : false
