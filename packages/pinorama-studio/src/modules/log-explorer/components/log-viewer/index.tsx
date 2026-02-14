@@ -43,6 +43,7 @@ type LogViewerProps = {
   introspection: PinoramaIntrospection<AnySchema>
   filters: SearchFilters
   searchText: string
+  debouncedSearchText: string
   liveMode: boolean
   liveSessionStart: number
   dbTotalDocs: number
@@ -75,7 +76,7 @@ export function LogViewer(props: LogViewerProps) {
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
 
   const staticLogsQuery = useStaticLogs(
-    props.searchText,
+    props.debouncedSearchText,
     props.filters,
     !props.liveMode,
     page,
@@ -83,7 +84,7 @@ export function LogViewer(props: LogViewerProps) {
   )
 
   const liveLogsQuery = useLiveLogs(
-    props.searchText,
+    props.debouncedSearchText,
     props.filters,
     props.liveMode,
     props.liveSessionStart
@@ -122,7 +123,8 @@ export function LogViewer(props: LogViewerProps) {
   })
 
   const hasFilters =
-    props.searchText.length > 0 && Object.keys(props.filters).length > 0
+    props.debouncedSearchText.length > 0 &&
+    Object.keys(props.filters).length > 0
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally tracking row model reference changes
   useEffect(() => {
@@ -135,7 +137,7 @@ export function LogViewer(props: LogViewerProps) {
   useEffect(() => {
     clearSelection()
     setPage(0)
-  }, [props.filters, props.searchText])
+  }, [props.filters, props.debouncedSearchText])
 
   const handlePageSizeChange = useCallback((newPageSize: number) => {
     setPageSize(newPageSize)
@@ -288,7 +290,11 @@ export function LogViewer(props: LogViewerProps) {
                 </tr>
               </tbody>
             ) : (
-              <TableBody virtualizer={virtualizer} rows={rows} />
+              <TableBody
+                virtualizer={virtualizer}
+                rows={rows}
+                introspection={props.introspection}
+              />
             )}
           </table>
         </div>
