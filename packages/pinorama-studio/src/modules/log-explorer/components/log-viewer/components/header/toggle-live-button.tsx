@@ -1,7 +1,7 @@
 import { PlayCircleIcon, StopCircleIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useIntl } from "react-intl"
-import { Kbd } from "@/components/kbd/kbd"
+import { Kbd } from "@/components/ui/kbd"
 import { Toggle } from "@/components/ui/toggle"
 import {
   Tooltip,
@@ -51,7 +51,7 @@ export function ToggleLiveButton(props: ToggleLiveButtonProps) {
           <div className="whitespace-nowrap">{label}</div>
         </div>
       </TooltipTrigger>
-      <TooltipContent className="flex space-x-1.5">
+      <TooltipContent className="flex items-center space-x-1.5">
         <div>{hotkey?.description}</div>
         <Kbd>{hotkey?.keystroke}</Kbd>
       </TooltipContent>

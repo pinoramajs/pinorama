@@ -9,7 +9,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { Kbd } from "../kbd/kbd"
+import { Kbd } from "../ui/kbd"
 
 type IconButtonProps = ComponentProps<typeof Button> & {
   icon: IconSvgElement
@@ -51,7 +51,7 @@ function withTooltip(
   return (
     <Tooltip>
       <TooltipTrigger render={wrappedComponent} />
-      <TooltipContent className="flex space-x-1.5">
+      <TooltipContent className="flex items-center space-x-1.5">
         <div>{tooltip}</div>
         {keystroke ? <Kbd>{keystroke}</Kbd> : null}
       </TooltipContent>

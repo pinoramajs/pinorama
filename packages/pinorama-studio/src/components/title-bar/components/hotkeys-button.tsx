@@ -1,7 +1,6 @@
 import { KeyboardIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { FormattedMessage } from "react-intl"
-import { Kbd } from "@/components/kbd/kbd"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -11,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
+import { Kbd } from "@/components/ui/kbd"
 import {
   Tooltip,
   TooltipContent,

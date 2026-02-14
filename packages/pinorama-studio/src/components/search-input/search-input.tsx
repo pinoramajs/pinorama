@@ -1,8 +1,8 @@
 import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Kbd } from "../kbd"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { Kbd } from "../ui/kbd"
 
 type SearchInputProps = {
   ref?: React.Ref<HTMLInputElement>
