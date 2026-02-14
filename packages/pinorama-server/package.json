@@ -1,6 +1,6 @@
 {
   "name": "pinorama-server",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "type": "module",
   "types": "./dist/index.d.mts",

@@ -1,5 +1,19 @@
 # pinorama-fastify-example
 
+## 0.2.0
+
+### Minor Changes
+
+- 85b1358: update to fastify v5
+
+### Patch Changes
+
+- Updated dependencies [fc1d5c6]
+- Updated dependencies [85b1358]
+- Updated dependencies [aa54245]
+  - pinorama-server@0.3.0
+  - pinorama-transport@0.1.4
+
 ## 0.1.4
 
 ### Patch Changes
