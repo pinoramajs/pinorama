@@ -1,9 +1,10 @@
 import type { AnySchema } from "@orama/orama"
+import type { FetchStatus } from "@tanstack/react-query"
 import type { IntrospectionFacet, PinoramaIntrospection } from "pinorama-types"
 import { useState } from "react"
 import { useIntl } from "react-intl"
 import { InlineStatus } from "@/components/inline-status"
-import { useFacet } from "../hooks/use-facet"
+import type { OramaFacetValue } from "../hooks/use-facets"
 import { facetFilterOperationsFactory } from "../lib/operations"
 import type { FacetFilter, FacetValue, SearchFilters } from "../types"
 import { DateFacetBody } from "./date-facet-body"
@@ -14,13 +15,14 @@ type FacetProps = {
   introspection: PinoramaIntrospection<AnySchema>
   name: string
   type: IntrospectionFacet
-  searchText: string
   filters: SearchFilters
-  liveMode: boolean
-  liveSessionStart: number
   isDbEmpty: boolean
   defaultOpen?: boolean
   onFiltersChange: (filters: SearchFilters) => void
+  facetData?: OramaFacetValue
+  facetFetchStatus: FetchStatus
+  facetStatus: "error" | "success" | "pending"
+  facetError: Error | null
 }
 
 export function Facet(props: FacetProps) {
@@ -29,19 +31,7 @@ export function Facet(props: FacetProps) {
   const isDateFacet = props.type === "date"
   const [open, setOpen] = useState(props.defaultOpen ?? false)
 
-  const {
-    data: facet,
-    fetchStatus,
-    status,
-    error
-  } = useFacet(
-    props.name,
-    props.searchText,
-    props.filters,
-    props.liveMode,
-    props.liveSessionStart,
-    !isDateFacet && !props.isDbEmpty
-  )
+  const facet = props.facetData
 
   const operations: any = facetFilterOperationsFactory(props.type)
   const criteria = props.filters[props.name] || operations.create()
@@ -89,7 +79,7 @@ export function Facet(props: FacetProps) {
     return [...selectedValuesNotInDataSource, ...currentValues]
   })()
 
-  const hasError = status === "error"
+  const hasError = props.facetStatus === "error"
   const hasNoData = allValues.length === 0
 
   const renderBody = () => {
@@ -108,7 +98,13 @@ export function Facet(props: FacetProps) {
     }
 
     if (hasError) {
-      return <InlineStatus variant="error" error={error} className="my-2" />
+      return (
+        <InlineStatus
+          variant="error"
+          error={props.facetError as Error}
+          className="my-2"
+        />
+      )
     }
 
     if (hasNoData) {
@@ -138,7 +134,7 @@ export function Facet(props: FacetProps) {
       <FacetHeader
         introspection={props.introspection}
         name={props.name}
-        loading={!isDateFacet && fetchStatus === "fetching"}
+        loading={!isDateFacet && props.facetFetchStatus === "fetching"}
         count={selelectedOptionCount}
         open={open}
         onClick={() => setOpen((value) => !value)}
