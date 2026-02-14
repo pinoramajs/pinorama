@@ -45,7 +45,7 @@ export function RootComponent() {
         <AppConfigProvider>
           <PinoramaClientProvider>
             <ThemeProvider>
-              <TooltipProvider>
+              <TooltipProvider delay={700}>
                 <RouterProvider router={router} />
               </TooltipProvider>
             </ThemeProvider>

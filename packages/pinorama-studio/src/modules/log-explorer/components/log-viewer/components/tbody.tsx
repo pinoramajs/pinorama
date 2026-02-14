@@ -1,12 +1,25 @@
+import type { AnySchema } from "@orama/orama"
 import { flexRender, type Row } from "@tanstack/react-table"
 import type { Virtualizer } from "@tanstack/react-virtual"
+import type { PinoramaIntrospection } from "pinorama-types"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
+import { createField } from "@/lib/introspection"
 
 type TableBodyProps = {
   virtualizer: Virtualizer<any, Element>
   rows: Row<unknown>[]
+  introspection: PinoramaIntrospection<AnySchema>
 }
 
-export function TableBody({ virtualizer, rows }: TableBodyProps) {
+export function TableBody({
+  virtualizer,
+  rows,
+  introspection
+}: TableBodyProps) {
   "use no memo"
   return (
     <tbody
@@ -27,15 +40,30 @@ export function TableBody({ virtualizer, rows }: TableBodyProps) {
             style={{ transform: `translateY(${virtualItem.start}px)` }}
           >
             {cells.map((cell) => {
+              const field = createField(cell.column.id, introspection)
+              const value = cell.getValue() as string | number
+
               return (
                 <td
                   key={cell.id}
-                  className={
-                    "overflow-hidden overflow-ellipsis whitespace-nowrap h-[20px] px-3 leading-[20px]"
-                  }
+                  className="h-[20px] px-2 leading-[20px]"
                   style={{ width: cell.column.getSize() }}
                 >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <span className="block overflow-hidden text-ellipsis whitespace-nowrap" />
+                      }
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent side="right" align="center" sideOffset={8}>
+                      {value ? String(field.format(value)) : "—"}
+                    </TooltipContent>
+                  </Tooltip>
                 </td>
               )
             })}
