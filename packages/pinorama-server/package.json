@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "clean": "rimraf dist node_modules",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "homepage": "https://github.com/pinoramajs/pinorama#readme",
   "bugs": {
@@ -25,7 +27,8 @@
   "devDependencies": {
     "@types/node": "^25.2.3",
     "rimraf": "^6.1.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@orama/orama": "^3.1.18",
