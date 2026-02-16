@@ -13,6 +13,18 @@ export type PinoramaStats = {
   memoryUsage: number
 }
 
+export class PinoramaError extends Error {
+  status: number
+  errorDetails?: unknown
+
+  constructor(status: number, message: string, errorDetails?: unknown) {
+    super(message)
+    this.name = "PinoramaError"
+    this.status = status
+    this.errorDetails = errorDetails
+  }
+}
+
 const clientOptionsSchema = z.object({
   url: z.string(),
   maxRetries: z.number().min(2),
@@ -77,6 +89,14 @@ export class PinoramaClient<T extends AnyOrama> {
     return headers
   }
 
+  private async throwResponseError(response: Response, message: string) {
+    let body: unknown
+    try {
+      body = await response.json()
+    } catch {}
+    throw new PinoramaError(response.status, message, body)
+  }
+
   private async retryOperation(operation: () => Promise<void>): Promise<void> {
     let retries = 0
     let currentBackoff = this.backoff
@@ -87,7 +107,11 @@ export class PinoramaClient<T extends AnyOrama> {
       } catch (error) {
         console.error("error during operation:", error)
         retries++
-        if (retries >= this.maxRetries) throw new Error("max retries reached")
+        if (retries >= this.maxRetries) {
+          throw error instanceof PinoramaError
+            ? error
+            : new PinoramaError(0, "max retries reached")
+        }
         await setTimeout(Math.min(currentBackoff, this.backoffMax))
         currentBackoff *= this.backoffFactor
       }
@@ -103,69 +127,49 @@ export class PinoramaClient<T extends AnyOrama> {
       })
 
       if (response.status !== 201) {
-        throw new Error("[TODO ERROR]: PinoramaClient.insert failed")
+        await this.throwResponseError(response, "insert failed")
       }
     })
   }
 
   public async search(payload: SearchParams<T>) {
-    try {
-      const response = await fetch(`${this.url}/search`, {
-        method: "POST",
-        headers: this.defaultHeaders,
-        body: JSON.stringify(payload)
-      })
+    const response = await fetch(`${this.url}/search`, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      body: JSON.stringify(payload)
+    })
 
-      if (!response.ok) {
-        throw new Error("[TODO ERROR]: PinoramaClient.search failed")
-      }
-
-      const json: Results<TypedDocument<T>> = await response.json()
-
-      return json
-    } catch (error) {
-      console.error("error searching logs:", error)
-      throw error
+    if (!response.ok) {
+      await this.throwResponseError(response, "search failed")
     }
+
+    return (await response.json()) as Results<TypedDocument<T>>
   }
 
   public async styles(): Promise<string> {
-    try {
-      const response = await fetch(`${this.url}/styles.css`, {
-        method: "GET",
-        headers: { ...this.defaultHeaders, contentType: "text/css" }
-      })
+    const response = await fetch(`${this.url}/styles.css`, {
+      method: "GET",
+      headers: { ...this.defaultHeaders, contentType: "text/css" }
+    })
 
-      if (response.status !== 200) {
-        throw new Error("[TODO ERROR]: PinoramaClient.styles failed")
-      }
-
-      const css = await response.text()
-      return css
-    } catch (error) {
-      console.error("error fetching styles:", error)
-      throw error
+    if (response.status !== 200) {
+      await this.throwResponseError(response, "styles failed")
     }
+
+    return await response.text()
   }
 
   public async introspection() {
-    try {
-      const response = await fetch(`${this.url}/introspection`, {
-        method: "GET",
-        headers: this.defaultHeaders
-      })
+    const response = await fetch(`${this.url}/introspection`, {
+      method: "GET",
+      headers: this.defaultHeaders
+    })
 
-      if (!response.ok) {
-        throw new Error("[TODO ERROR]: PinoramaClient.introspection failed")
-      }
-
-      const json: PinoramaIntrospection<T["schema"]> = await response.json()
-
-      return json
-    } catch (error) {
-      console.error("error fetching introspection:", error)
-      throw error
+    if (!response.ok) {
+      await this.throwResponseError(response, "introspection failed")
     }
+
+    return (await response.json()) as PinoramaIntrospection<T["schema"]>
   }
 
   public async clear(): Promise<void> {
@@ -174,27 +178,20 @@ export class PinoramaClient<T extends AnyOrama> {
     })
 
     if (!response.ok) {
-      throw new Error("[TODO ERROR]: PinoramaClient.clear failed")
+      await this.throwResponseError(response, "clear failed")
     }
   }
 
   public async stats(): Promise<PinoramaStats> {
-    try {
-      const response = await fetch(`${this.url}/stats`, {
-        method: "GET",
-        headers: this.defaultHeaders
-      })
+    const response = await fetch(`${this.url}/stats`, {
+      method: "GET",
+      headers: this.defaultHeaders
+    })
 
-      if (!response.ok) {
-        throw new Error("[TODO ERROR]: PinoramaClient.stats failed")
-      }
-
-      const json: PinoramaStats = await response.json()
-
-      return json
-    } catch (error) {
-      console.error("error fetching stats:", error)
-      throw error
+    if (!response.ok) {
+      await this.throwResponseError(response, "stats failed")
     }
+
+    return (await response.json()) as PinoramaStats
   }
 }

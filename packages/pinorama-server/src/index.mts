@@ -49,9 +49,19 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 ) => {
   const opts = { ...defaultOptions, ...options }
 
-  const db = fs.existsSync(opts.dbPath as string)
-    ? await restoreFromFile(opts.dbFormat, opts.dbPath)
-    : create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
+  let db: AnyOrama
+  if (opts.dbPath && fs.existsSync(opts.dbPath)) {
+    try {
+      db = await restoreFromFile(opts.dbFormat, opts.dbPath)
+    } catch (error) {
+      fastify.log.error(
+        `Failed to restore database from ${opts.dbPath}, creating fresh instance: ${error}`
+      )
+      db = create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
+    }
+  } else {
+    db = create({ schema: withPinoramaMetadataSchema(opts.dbSchema) })
+  }
 
   fastify.decorate("pinorama", { db, opts })
 

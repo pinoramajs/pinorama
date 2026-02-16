@@ -10,7 +10,8 @@ const exampleOptions = {
   backoffMax: 10000,
   adminSecret: "secret123",
   batchSize: 50, // not a client option
-  flushInterval: 2000 // not a client option
+  flushInterval: 2000, // not a client option
+  maxBufferSize: 5000 // not a client option
 }
 
 vi.mock("pinorama-client", async (importOriginal) => {
