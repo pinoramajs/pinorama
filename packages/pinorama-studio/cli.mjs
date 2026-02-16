@@ -23,7 +23,7 @@ const defaultOptions = {
   server: false,
   "server-prefix": "/pinorama",
   "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
-  "admin-secret": "your-secret",
+  "admin-secret": undefined,
   preset: "pino",
   "batch-size": 10,
   "flush-interval": 100
@@ -55,7 +55,7 @@ async function start(options) {
     -s, --server               Start Pinorama Server (default: ${defaultOptions.server}).
     -e, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
     -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
-    -k, --server-admin-secret  Set Pinorama Server admin secret key (default: ${defaultOptions["admin-secret"]}). 
+    -k, --server-admin-secret  Set Pinorama Server admin secret key (disabled by default).
     -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
     -b, --batch-size           Set batch size for transport (default: ${defaultOptions["batch-size"]}).
     -f, --flush-interval       Set flush wait time in ms (default: ${defaultOptions["flush-interval"]}).
@@ -112,7 +112,7 @@ async function start(options) {
     console.log(msg.join("\n"))
 
     opts.open &&
-      (await open(`${studioUrl}?connectionUrl=${serverUrl}&liveMode=true`))
+      (await open(`${studioUrl}?serverUrl=${serverUrl}&liveMode=true`))
   })
 
   if (isPiped) {

@@ -7,8 +7,10 @@ import {
   Navigate,
   RouterProvider
 } from "@tanstack/react-router"
+import { NuqsAdapter } from "nuqs/adapters/react"
 import { StrictMode } from "react"
 
+import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import {
   AppConfigProvider,
@@ -41,17 +43,20 @@ const router = createRouter({
 export function RootComponent() {
   return (
     <StrictMode>
-      <I18nProvider>
-        <AppConfigProvider>
-          <PinoramaClientProvider>
-            <ThemeProvider>
-              <TooltipProvider delay={700}>
-                <RouterProvider router={router} />
-              </TooltipProvider>
-            </ThemeProvider>
-          </PinoramaClientProvider>
-        </AppConfigProvider>
-      </I18nProvider>
+      <NuqsAdapter>
+        <I18nProvider>
+          <AppConfigProvider>
+            <PinoramaClientProvider>
+              <ThemeProvider>
+                <TooltipProvider delay={700}>
+                  <RouterProvider router={router} />
+                  <Toaster />
+                </TooltipProvider>
+              </ThemeProvider>
+            </PinoramaClientProvider>
+          </AppConfigProvider>
+        </I18nProvider>
+      </NuqsAdapter>
     </StrictMode>
   )
 }

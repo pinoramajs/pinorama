@@ -2,6 +2,7 @@ import { Plug01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnyOrama } from "@orama/orama"
 import { useQueryClient } from "@tanstack/react-query"
+import { useQueryState } from "nuqs"
 import type { PinoramaDocument } from "pinorama-types"
 import { useImperativeHandle, useRef, useState } from "react"
 import { useIntl } from "react-intl"
@@ -20,9 +21,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup
 } from "@/components/ui/resizable"
-import { useAppConfig } from "@/contexts"
 import { usePinoramaConnection } from "@/hooks"
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
+import { liveModeParam } from "@/lib/search-params"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
 import type { SearchFilters } from "./log-filters/types"
@@ -63,12 +64,11 @@ export function LogExplorer({
   ref?: React.Ref<ImperativeLogExplorerHandle>
 }) {
   const intl = useIntl()
-  const appConfig = useAppConfig()
 
   const { isConnected, toggleConnection, introspection } =
     usePinoramaConnection()
 
-  const [liveMode, setLiveMode] = useState<boolean | null>(null)
+  const [liveMode, setLiveMode] = useQueryState("liveMode", liveModeParam)
   const [liveSessionStart, setLiveSessionStart] = useState(0)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [searchText, setSearchText] = useState<string>("")
@@ -79,8 +79,6 @@ export function LogExplorer({
   const [viewerStatus, setViewerStatus] = useState<LogViewerStatus | null>(null)
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(true)
   const [filtersPanelCollapsed, setFiltersPanelCollapsed] = useState(true)
-
-  const isLiveModeEnabled = liveMode ?? appConfig?.config.liveMode ?? false
 
   const statsQuery = useStats()
   const isDbEmpty = (statsQuery.data?.totalDocs ?? 0) === 0
@@ -186,7 +184,7 @@ export function LogExplorer({
     copyToClipboard: () => {
       detailsRef.current?.copyToClipboard()
     },
-    liveMode: () => toggleLiveMode(!isLiveModeEnabled),
+    liveMode: () => toggleLiveMode(!liveMode),
     refresh: handleRefresh,
     focusSearch: () => viewerRef.current?.focusSearch(),
     selectNextRow: () => viewerRef.current?.selectNextRow(),
@@ -246,7 +244,7 @@ export function LogExplorer({
             introspection={introspection}
             searchText={debouncedSearchText}
             filters={filters}
-            liveMode={isLiveModeEnabled}
+            liveMode={liveMode}
             liveSessionStart={liveSessionStart}
             isDbEmpty={isDbEmpty}
             onFiltersChange={setFilters}
@@ -265,7 +263,7 @@ export function LogExplorer({
             searchText={searchText}
             debouncedSearchText={debouncedSearchText}
             filters={filters}
-            liveMode={isLiveModeEnabled}
+            liveMode={liveMode}
             liveSessionStart={liveSessionStart}
             dbTotalDocs={statsQuery.data?.totalDocs ?? 0}
             onSearchTextChange={setSearchText}
@@ -308,7 +306,7 @@ export function LogExplorer({
 
       {viewerStatus && (
         <StatusBar
-          liveMode={isLiveModeEnabled}
+          liveMode={liveMode}
           page={viewerStatus.page}
           pageSize={viewerStatus.pageSize}
           totalCount={viewerStatus.totalCount}

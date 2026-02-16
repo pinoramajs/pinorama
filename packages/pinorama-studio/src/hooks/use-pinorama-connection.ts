@@ -36,7 +36,7 @@ export function usePinoramaConnection() {
 
   useEffect(() => {
     switch (true) {
-      case appConfig?.config.connectionIntent === false:
+      case appConfig?.connectionIntent === false:
         setConnectionStatus({ connectionStatus: ConnectionStatus.Disconnected })
         break
       case introspection.status === "pending" &&
@@ -57,20 +57,18 @@ export function usePinoramaConnection() {
         break
     }
   }, [
-    appConfig?.config.connectionIntent,
+    appConfig?.connectionIntent,
     introspection.status,
     introspection.fetchStatus
   ])
 
   const toggleConnection = () => {
-    appConfig?.setConfig({
-      ...appConfig.config,
-      connectionIntent: !appConfig.config.connectionIntent
-    })
+    appConfig?.setConnectionIntent(!appConfig.connectionIntent)
   }
 
   return {
     connectionStatus,
+    connectionError: introspection.error,
     toggleConnection,
     isConnected,
     introspection: introspection.data
