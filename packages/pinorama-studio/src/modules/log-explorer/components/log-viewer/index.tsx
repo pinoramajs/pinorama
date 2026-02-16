@@ -1,6 +1,7 @@
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnySchema } from "@orama/orama"
+import { useIsFetching } from "@tanstack/react-query"
 import {
   getCoreRowModel,
   type RowSelectionState,
@@ -234,6 +235,8 @@ export function LogViewer(props: LogViewerProps) {
     virtualizer.scrollToIndex(rows.length - 1, { align: "end" })
   }, [virtualizer, rows.length])
 
+  const fetchingCount = useIsFetching()
+
   const isLoading = logsQuery.status === "pending"
   const hasError = logsQuery.status === "error"
   const hasNoData = logsQuery.data?.length === 0
@@ -243,12 +246,10 @@ export function LogViewer(props: LogViewerProps) {
     <div className="flex flex-col h-full bg-muted/20">
       <LogViewerHeader
         searchInputRef={searchInputRef}
-        introspection={props.introspection}
-        table={table}
         searchText={props.searchText}
         liveMode={props.liveMode}
         showClearFiltersButton={hasFilters}
-        isLoading={logsQuery.isFetching}
+        isLoading={fetchingCount > 0}
         onSearchTextChange={props.onSearchTextChange}
         onToggleFiltersButtonClick={props.onToggleFiltersButtonClick}
         onToggleLiveButtonClick={props.onToggleLiveButtonClick}
@@ -265,7 +266,7 @@ export function LogViewer(props: LogViewerProps) {
           onScroll={handleScroll}
         >
           <table className="text-xs w-full">
-            <TableHead table={table} />
+            <TableHead table={table} introspection={props.introspection} />
             {isLoading || hasNoData || hasError ? (
               <tbody className="relative">
                 <tr>
