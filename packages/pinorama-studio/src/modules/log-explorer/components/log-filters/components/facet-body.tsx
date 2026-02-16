@@ -21,13 +21,13 @@ export function FacetBody(props: FacetBodyProps) {
   const rowVirtualizer = useVirtualizer({
     count: props.values.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 38
+    estimateSize: () => 32
   })
 
   return (
     <div
       ref={parentRef}
-      className="border box-border rounded-md overflow-auto max-h-[241px] my-2"
+      className="border box-border rounded-md overflow-auto max-h-[201px] my-2"
     >
       <div
         className="w-full relative"

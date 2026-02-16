@@ -95,7 +95,7 @@ export function LogDetails(props: LogDetailsProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar  */}
-      <div className="p-3 bg-background border-b border-border overflow-auto">
+      <div className="p-2 bg-background border-b border-border overflow-auto">
         <div className="flex justify-between items-center space-x-1.5 whitespace-nowrap">
           <IconButton
             variant="ghost"

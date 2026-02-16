@@ -7,7 +7,7 @@ import { ThemeToggleButton } from "./components/theme-toggle-button"
 export function TitleBar() {
   return (
     <div className="border-b bg-muted/20">
-      <div className="relative flex justify-between text-sm h-full px-3">
+      <div className="relative flex justify-between text-sm h-full px-2">
         {/* Left */}
         <div className="flex items-center">
           <PinoramaLogo />
