@@ -13,6 +13,7 @@ type FlattenedKeys<T> = T extends object
   : never
 
 export type PinoramaIntrospection<T extends AnySchema> = {
+  searchProperties?: string[]
   facets?: Partial<{
     [K in FlattenedKeys<SafeFlatten<T>>]: IntrospectionFacet
   }>

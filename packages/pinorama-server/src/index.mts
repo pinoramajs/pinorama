@@ -39,7 +39,7 @@ type PinoramaServerOptions = {
 
 export const defaultOptions: PinoramaServerOptions = {
   adminSecret: process.env.PINORAMA_SERVER_ADMIN_SECRET,
-  dbFormat: "json",
+  dbFormat: "binary",
   dbSchema: defaultPreset.schema,
   introspection: defaultPreset.introspection
 }

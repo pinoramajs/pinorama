@@ -31,13 +31,7 @@ export const useFacets = (
       liveMode,
       liveSessionStart
     ],
-    queryFn: async ({ signal }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      if (signal.aborted) {
-        return {}
-      }
-
+    queryFn: async () => {
       const facets: Record<string, object> = {}
       for (const name of names) {
         facets[name] = {}

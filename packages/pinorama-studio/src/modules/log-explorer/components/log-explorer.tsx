@@ -277,6 +277,7 @@ export function LogExplorer({
             onClearLogsButtonClick={clearLogs}
             onToggleDetailsButtonClick={showDetails}
             onStatusChange={setViewerStatus}
+            searchProperties={introspection.searchProperties}
           />
         </ResizablePanel>
         <ResizableHandle

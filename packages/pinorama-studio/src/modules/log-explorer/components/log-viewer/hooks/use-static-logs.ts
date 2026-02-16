@@ -9,17 +9,26 @@ export const useStaticLogs = (
   searchFilters?: SearchFilters,
   enabled?: boolean,
   page = 0,
-  pageSize = 500
+  pageSize = 500,
+  searchProperties?: string[]
 ) => {
   const client = usePinoramaClient()
 
   const query = useQuery({
-    queryKey: ["static-logs", searchText, searchFilters, page, pageSize],
+    queryKey: [
+      "static-logs",
+      searchText,
+      searchFilters,
+      page,
+      pageSize,
+      searchProperties
+    ],
     queryFn: async () => {
       const offset = page * pageSize
       const payload = buildPayload(searchText, searchFilters, {
         limit: pageSize,
-        offset
+        offset,
+        searchProperties
       })
 
       const response = await client?.search(payload)

@@ -6,6 +6,7 @@ type BuildPayloadOptions = {
   limit?: number
   offset?: number
   cursor?: number
+  searchProperties?: string[]
 }
 
 const createBasePayload = <T extends BaseOramaPinorama>(
@@ -16,9 +17,16 @@ const createBasePayload = <T extends BaseOramaPinorama>(
 })
 
 const withSearchText =
-  <T extends BaseOramaPinorama>(searchText: string) =>
+  <T extends BaseOramaPinorama>(
+    searchText: string,
+    searchProperties?: string[]
+  ) =>
   (payload: SearchParams<T>): SearchParams<T> => {
-    return { ...payload, term: searchText }
+    return {
+      ...payload,
+      term: searchText,
+      ...(searchProperties && { properties: searchProperties })
+    } as SearchParams<T>
   }
 
 const withSearchFilters =
@@ -57,12 +65,17 @@ export const buildPayload = <T extends BaseOramaPinorama>(
   searchFilters?: SearchParams<T>["where"],
   options?: BuildPayloadOptions
 ) => {
-  const { limit = DEFAULT_PAGE_SIZE, offset, cursor } = options ?? {}
+  const {
+    limit = DEFAULT_PAGE_SIZE,
+    offset,
+    cursor,
+    searchProperties
+  } = options ?? {}
 
   let payload = createBasePayload(limit)
 
   if (searchText) {
-    const addSearchText = withSearchText(searchText)
+    const addSearchText = withSearchText(searchText, searchProperties)
     payload = addSearchText(payload)
   }
 

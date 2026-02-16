@@ -10,7 +10,8 @@ export const useLiveLogs = <T extends AnyOrama>(
   searchText?: string,
   searchFilters?: SearchParams<T>["where"],
   enabled?: boolean,
-  liveSessionStart?: number
+  liveSessionStart?: number,
+  searchProperties?: string[]
 ) => {
   const client = usePinoramaClient()
   const cursorRef = useRef(0)
@@ -42,7 +43,8 @@ export const useLiveLogs = <T extends AnyOrama>(
 
       try {
         const payload = buildPayload(searchText, searchFilters, {
-          cursor: cursorRef.current
+          cursor: cursorRef.current,
+          searchProperties
         })
         const response = await client?.search(payload)
         const newItems = response?.hits.map((hit) => hit.document) ?? []
@@ -77,7 +79,15 @@ export const useLiveLogs = <T extends AnyOrama>(
     return () => {
       clearInterval(intervalId)
     }
-  }, [enabled, searchText, searchFilters, liveSessionStart, client, refreshKey])
+  }, [
+    enabled,
+    searchText,
+    searchFilters,
+    liveSessionStart,
+    client,
+    refreshKey,
+    searchProperties
+  ])
 
   const refetch = () => {
     setRefreshKey((k) => k + 1)
