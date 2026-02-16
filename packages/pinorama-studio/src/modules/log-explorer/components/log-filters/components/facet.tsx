@@ -134,7 +134,6 @@ export function Facet(props: FacetProps) {
       <FacetHeader
         introspection={props.introspection}
         name={props.name}
-        loading={!isDateFacet && props.facetFetchStatus === "fetching"}
         count={selelectedOptionCount}
         open={open}
         onClick={() => setOpen((value) => !value)}

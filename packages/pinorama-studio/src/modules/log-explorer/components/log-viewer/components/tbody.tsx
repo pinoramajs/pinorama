@@ -36,7 +36,8 @@ export function TableBody({
             data-index={virtualItem.index}
             onClick={row.getToggleSelectedHandler()}
             onKeyDown={() => {}}
-            className={`select-none cursor-pointer flex absolute hover:bg-muted/50 odd:bg-muted/20 w-full ${row.getIsSelected() ? "bg-muted/75 hover:bg-muted/75 odd:bg-muted/75" : ""}`}
+            data-selected={row.getIsSelected() || undefined}
+            className={`select-none cursor-pointer flex absolute w-full ${row.getIsSelected() ? "bg-foreground/10" : "hover:bg-muted/50 odd:bg-muted/20"}`}
             style={{ transform: `translateY(${virtualItem.start}px)` }}
           >
             {cells.map((cell) => {
