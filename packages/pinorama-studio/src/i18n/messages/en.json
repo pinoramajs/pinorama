@@ -6,6 +6,8 @@
   "theme.system": "System",
   "connection.labels.serverUrl": "Server URL",
   "connection.labels.reset": "Reset",
+  "connection.labels.enableAuth": "Authentication",
+  "connection.labels.adminSecret": "Admin Secret",
   "connection.labels.save": "Save",
   "connection.labels.connect": "Connect",
   "connection.labels.disconnect": "Disconnect",

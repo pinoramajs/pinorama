@@ -1,11 +1,14 @@
 import { timingSafeEqual } from "node:crypto"
 import type { FastifyInstance } from "fastify"
+import fp from "fastify-plugin"
 
-export async function authHook(fastify: FastifyInstance) {
+async function authHookPlugin(fastify: FastifyInstance) {
   const { adminSecret } = fastify.pinorama.opts
   if (!adminSecret) return
 
   fastify.addHook("preHandler", async (req, res) => {
+    if (req.routeOptions.url?.endsWith("/health")) return
+
     const provided = req.headers["x-pinorama-admin-secret"]
     if (
       typeof provided !== "string" ||
@@ -16,3 +19,5 @@ export async function authHook(fastify: FastifyInstance) {
     }
   })
 }
+
+export const authHook = fp(authHookPlugin)

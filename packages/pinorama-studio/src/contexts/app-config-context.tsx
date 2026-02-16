@@ -1,57 +1,45 @@
 import { createContext, use, useEffect, useState } from "react"
 
-export type AppConfig = {
-  connectionIntent: boolean
-  connectionUrl?: string | null
-  liveMode: boolean
-}
-
 type AppConfigContextType = {
-  config: AppConfig
-  setConfig: (config: AppConfig) => void
-}
-
-const DEFAULT_CONFIG: AppConfig = {
-  connectionIntent: false,
-  connectionUrl: "http://localhost:6200",
-  liveMode: false
-}
-
-const getAppConfigFromQueryParams = () => {
-  const appConfig: Partial<AppConfig> = {}
-  const params = new URLSearchParams(window.location.search)
-
-  const connectionUrl = params.get("connectionUrl")
-  if (connectionUrl) {
-    appConfig.connectionUrl = connectionUrl
-  }
-
-  const liveMode = params.get("liveMode")
-  if (liveMode) {
-    appConfig.liveMode = liveMode === "true"
-  }
-
-  return appConfig
+  connectionIntent: boolean
+  setConnectionIntent: (value: boolean) => void
+  adminSecret: string | null
+  setAdminSecret: (value: string | null) => void
 }
 
 const AppConfigContext = createContext<AppConfigContextType | null>(null)
 
 export function AppConfigProvider(props: { children: React.ReactNode }) {
-  const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG)
+  const [connectionIntent, setConnectionIntent] = useState(false)
+  const [adminSecret, setAdminSecret] = useState<string | null>(null)
 
   useEffect(() => {
-    const queryConfig = getAppConfigFromQueryParams()
+    const params = new URLSearchParams(window.location.search)
 
-    const autoConnect = !!queryConfig.connectionUrl
-    if (autoConnect) {
-      queryConfig.connectionIntent = true
+    const serverUrl = params.get("serverUrl")
+    if (serverUrl) {
+      setConnectionIntent(true)
     }
 
-    setConfig((prevConfig) => ({ ...prevConfig, ...queryConfig }))
+    const secret = params.get("adminSecret")
+    if (secret) {
+      setAdminSecret(secret)
+      params.delete("adminSecret")
+      const qs = params.toString()
+      const newUrl = `${window.location.pathname}${qs ? `?${qs}` : ""}`
+      window.history.replaceState(null, "", newUrl)
+    }
   }, [])
 
   return (
-    <AppConfigContext value={{ config, setConfig }}>
+    <AppConfigContext
+      value={{
+        connectionIntent,
+        setConnectionIntent,
+        adminSecret,
+        setAdminSecret
+      }}
+    >
       {props.children}
     </AppConfigContext>
   )
