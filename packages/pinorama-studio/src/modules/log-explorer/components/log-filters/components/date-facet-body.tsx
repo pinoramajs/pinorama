@@ -217,7 +217,7 @@ export function DateFacetBody({
   }
 
   return (
-    <div className="my-2 space-y-2">
+    <div className="my-2 space-y-1.5">
       <DateTimeField
         placeholder={intl.formatMessage({ id: "labels.dateFrom" })}
         value={currentFrom}

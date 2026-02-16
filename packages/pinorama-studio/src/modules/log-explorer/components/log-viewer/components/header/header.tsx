@@ -45,7 +45,7 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
   }
 
   return (
-    <div className="flex items-center p-3 pb-1 bg-background space-x-1.5">
+    <div className="flex items-center p-2 pb-1 bg-background space-x-1.5">
       <IconButton
         aria-label={hotkeys.showFilters?.description}
         tooltip={hotkeys.showFilters?.description}

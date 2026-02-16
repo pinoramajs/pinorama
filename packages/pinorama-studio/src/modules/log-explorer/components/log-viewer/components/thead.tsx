@@ -10,7 +10,7 @@ export function TableHead({ table }: { table: Table<unknown> }) {
             <th
               key={header.id}
               colSpan={header.colSpan}
-              className="relative px-3 mb-1 text-left font-normal text-muted-foreground align-middle h-9"
+              className="relative px-2 mb-1 text-left font-normal text-muted-foreground align-middle h-8"
               style={{ width: header.getSize() }}
             >
               {header.isPlaceholder
