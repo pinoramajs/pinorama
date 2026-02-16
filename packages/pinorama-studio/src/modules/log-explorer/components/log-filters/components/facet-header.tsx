@@ -1,8 +1,7 @@
 import {
   ArrowDown01Icon,
   ArrowRight01Icon,
-  CancelCircleIcon,
-  Loading03Icon
+  CancelCircleIcon
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnySchema } from "@orama/orama"
@@ -14,7 +13,6 @@ import { createField } from "@/lib/introspection"
 type FacetHeaderProps = {
   introspection: PinoramaIntrospection<AnySchema>
   name: string
-  loading: boolean
   count: number
   open: boolean
   onClick: () => void
@@ -38,13 +36,6 @@ export function FacetHeader(props: FacetHeaderProps) {
           className="mr-2 w-5 h-5"
         />
         {field.getDisplayLabel()}
-        {props.loading ? (
-          <HugeiconsIcon
-            icon={Loading03Icon}
-            strokeWidth={2}
-            className="w-4 h-4 ml-2 animate-spin text-muted-foreground"
-          />
-        ) : null}
       </div>
       {props.count > 0 ? (
         <Button
