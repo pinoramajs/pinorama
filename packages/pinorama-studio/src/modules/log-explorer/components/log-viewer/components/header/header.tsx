@@ -5,21 +5,15 @@ import {
   PanelRightIcon,
   Refresh01Icon
 } from "@hugeicons/core-free-icons"
-import type { AnySchema } from "@orama/orama"
-import type { Table } from "@tanstack/react-table"
-import type { PinoramaIntrospection } from "pinorama-types"
 import { useIntl } from "react-intl"
 import { IconButton } from "@/components/icon-button/icon-button"
 import { SearchInput } from "@/components/search-input"
 import { useModuleHotkeys } from "@/hooks/use-module-hotkeys"
 import LogExplorerModule from "@/modules/log-explorer"
-import { ToggleColumnsButton } from "./toggle-columns-button"
 import { ToggleLiveButton } from "./toggle-live-button"
 
 type LogViewerHeaderProps = {
   searchInputRef: React.RefObject<HTMLInputElement | null>
-  introspection: PinoramaIntrospection<AnySchema>
-  table: Table<unknown>
   searchText: string
   showClearFiltersButton: boolean
   liveMode: boolean
@@ -90,10 +84,6 @@ export function LogViewerHeader(props: LogViewerHeaderProps) {
           onClick={props.onClearFiltersButtonClick}
         />
       ) : null}
-      <ToggleColumnsButton
-        table={props.table}
-        introspection={props.introspection}
-      />
       <IconButton
         aria-label={hotkeys.showDetails?.description}
         tooltip={hotkeys.showDetails?.description}
