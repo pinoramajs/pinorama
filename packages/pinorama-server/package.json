@@ -34,7 +34,8 @@
     "fastify": "^5.7.4",
     "fastify-plugin": "^5.1.0",
     "pinorama-presets": "workspace:*",
-    "pinorama-types": "workspace:*"
+    "pinorama-types": "workspace:*",
+    "serialize-error": "^13.0.1"
   },
   "publishConfig": {
     "access": "public"

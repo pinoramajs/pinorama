@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import { create } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
+import { serializeError } from "serialize-error"
 import { withPinoramaMetadataSchema } from "../utils/metadata.mjs"
 
 export async function clearRoute(fastify: FastifyInstance) {
@@ -23,7 +24,10 @@ export async function clearRoute(fastify: FastifyInstance) {
         res.code(204).send()
       } catch (e) {
         req.log.error(e)
-        res.code(500).send({ error: "failed to clear data" })
+        res.code(500).send({
+          error: "failed to clear data",
+          details: serializeError(e)
+        })
       }
     }
   })

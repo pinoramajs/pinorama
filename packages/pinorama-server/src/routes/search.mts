@@ -1,11 +1,15 @@
 import { type AnyOrama, type Results, search } from "@orama/orama"
 import type { FastifyInstance } from "fastify"
 import type { PinoramaDocument } from "pinorama-types"
+import { serializeError } from "serialize-error"
 
 export async function searchRoute(fastify: FastifyInstance) {
   fastify.route({
     url: "/search",
     method: "post",
+    schema: {
+      body: { type: "object" }
+    },
     handler: async (req, res) => {
       try {
         const result: Results<PinoramaDocument<AnyOrama>> = await search(
@@ -15,7 +19,10 @@ export async function searchRoute(fastify: FastifyInstance) {
         res.code(200).send(result)
       } catch (e) {
         req.log.error(e)
-        res.code(500).send({ error: "failed to search data" })
+        res.code(500).send({
+          error: "failed to search data",
+          details: serializeError(e)
+        })
       }
     }
   })

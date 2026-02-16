@@ -1,5 +1,6 @@
 import { persistToFile } from "@orama/plugin-data-persistence/server"
 import type { FastifyInstance } from "fastify"
+import { serializeError } from "serialize-error"
 
 export async function persistRoute(fastify: FastifyInstance) {
   fastify.route({
@@ -15,7 +16,10 @@ export async function persistRoute(fastify: FastifyInstance) {
         res.code(204).send()
       } catch (e) {
         req.log.error(e)
-        res.code(500).send({ error: "failed to persist data" })
+        res.code(500).send({
+          error: "failed to persist data",
+          details: serializeError(e)
+        })
       }
     }
   })

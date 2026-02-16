@@ -44,6 +44,7 @@ async function main(argv: Partial<PinoramaCliOptions>) {
     -i, --backoff           Initial backoff time in ms for retries (default: ${defaultClientOptions.backoff}).
     -d, --backoffFactor     Backoff factor for exponential increase (default: ${defaultClientOptions.backoffFactor}).
     -x, --backoffMax        Maximum backoff time in ms (default: ${defaultClientOptions.backoffMax}).
+    -s, --maxBufferSize     Max buffer size before dropping old logs (default: ${defaultBulkOptions.maxBufferSize}).
 
   Example:
     cat logs | pino-pinorama --url http://localhost:6200
@@ -75,7 +76,8 @@ async function main(argv: Partial<PinoramaCliOptions>) {
       maxRetries: argv.maxRetries,
       backoff: argv.backoff,
       backoffFactor: argv.backoffFactor,
-      backoffMax: argv.backoffMax
+      backoffMax: argv.backoffMax,
+      maxBufferSize: argv.maxBufferSize
     })
   } catch (e: any) {
     console.error(`Error: ${e.message}`)
@@ -86,7 +88,12 @@ async function main(argv: Partial<PinoramaCliOptions>) {
     console.error("pinoramaTransport error:", error)
   })
 
-  pipeline(process.stdin, transport)
+  try {
+    await pipeline(process.stdin, transport)
+  } catch (error) {
+    console.error("pipeline error:", error)
+    process.exit(1)
+  }
 }
 
 const cliOptions = minimist<PinoramaCliOptions>(process.argv.slice(2), {
@@ -100,11 +107,13 @@ const cliOptions = minimist<PinoramaCliOptions>(process.argv.slice(2), {
     m: "maxRetries",
     i: "backoff",
     d: "backoffFactor",
-    x: "backoffMax"
+    x: "backoffMax",
+    s: "maxBufferSize"
   },
   default: {
     batchSize: defaultBulkOptions.batchSize,
     flushInterval: defaultBulkOptions.flushInterval,
+    maxBufferSize: defaultBulkOptions.maxBufferSize,
     maxRetries: defaultClientOptions.maxRetries,
     backoff: defaultClientOptions.backoff,
     backoffFactor: defaultClientOptions.backoffFactor,

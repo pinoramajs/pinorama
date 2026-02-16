@@ -8,11 +8,13 @@ import type { BaseOramaPinorama, PinoramaDocument } from "pinorama-types"
 type BulkOptions = {
   batchSize: number
   flushInterval: number
+  maxBufferSize: number
 }
 
 export const defaultBulkOptions: BulkOptions = {
   batchSize: 100,
-  flushInterval: 5000
+  flushInterval: 5000,
+  maxBufferSize: 10_000
 }
 
 export type PinoramaTransportOptions = PinoramaClientOptions & BulkOptions
@@ -35,7 +37,11 @@ export default function pinoramaTransport(
     "adminSecret"
   ])
 
-  const bulkOpts = filterOptions(options, ["batchSize", "flushInterval"])
+  const bulkOpts = filterOptions(options, [
+    "batchSize",
+    "flushInterval",
+    "maxBufferSize"
+  ])
 
   const client = new PinoramaClient(clientOpts)
 
@@ -46,7 +52,9 @@ export default function pinoramaTransport(
 
     const opts: BulkOptions = {
       batchSize: bulkOpts?.batchSize ?? defaultBulkOptions.batchSize,
-      flushInterval: bulkOpts?.flushInterval ?? defaultBulkOptions.flushInterval
+      flushInterval:
+        bulkOpts?.flushInterval ?? defaultBulkOptions.flushInterval,
+      maxBufferSize: bulkOpts?.maxBufferSize ?? defaultBulkOptions.maxBufferSize
     }
 
     const flush = async () => {
@@ -71,6 +79,9 @@ export default function pinoramaTransport(
 
     stream.on("data", async (data) => {
       buffer.push(data)
+      if (buffer.length > opts.maxBufferSize) {
+        buffer.splice(0, buffer.length - opts.maxBufferSize)
+      }
       if (buffer.length >= opts.batchSize) {
         await flush()
       }
