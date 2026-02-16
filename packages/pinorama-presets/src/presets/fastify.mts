@@ -21,6 +21,7 @@ export const fastify = createPreset(
     responseTime: "number"
   },
   {
+    searchProperties: ["msg", "req.url"],
     facets: {
       time: "date",
       level: "enum",

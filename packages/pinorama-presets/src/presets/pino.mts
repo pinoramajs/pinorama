@@ -9,6 +9,7 @@ export const pino = createPreset(
     hostname: "string"
   },
   {
+    searchProperties: ["msg"],
     facets: {
       time: "date",
       level: "enum",

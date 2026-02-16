@@ -13,7 +13,7 @@ type BulkOptions = {
 
 export const defaultBulkOptions: BulkOptions = {
   batchSize: 100,
-  flushInterval: 5000,
+  flushInterval: 1000,
   maxBufferSize: 10_000
 }
 

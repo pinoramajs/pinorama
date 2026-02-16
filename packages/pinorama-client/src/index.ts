@@ -112,7 +112,8 @@ export class PinoramaClient<T extends AnyOrama> {
             ? error
             : new PinoramaError(0, "max retries reached")
         }
-        await setTimeout(Math.min(currentBackoff, this.backoffMax))
+        const jitter = 0.75 + Math.random() * 0.5
+        await setTimeout(Math.min(currentBackoff * jitter, this.backoffMax))
         currentBackoff *= this.backoffFactor
       }
     }

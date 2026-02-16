@@ -56,6 +56,7 @@ type LogViewerProps = {
   onClearLogsButtonClick: () => void
   onToggleDetailsButtonClick: () => void
   onStatusChange?: (status: LogViewerStatus) => void
+  searchProperties?: string[]
 }
 
 export type ImperativeLogViewerHandle = {
@@ -80,14 +81,16 @@ export function LogViewer(props: LogViewerProps) {
     props.filters,
     !props.liveMode,
     page,
-    pageSize
+    pageSize,
+    props.searchProperties
   )
 
   const liveLogsQuery = useLiveLogs(
     props.debouncedSearchText,
     props.filters,
     props.liveMode,
-    props.liveSessionStart
+    props.liveSessionStart,
+    props.searchProperties
   )
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
