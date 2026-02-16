@@ -33,6 +33,7 @@ type PinoramaServerOptions = {
   dbFormat?: PersistenceFormat
   prefix?: string
   logLevel?: LogLevel
+  autoSaveInterval?: number
   introspection: PinoramaIntrospection<any>
 }
 
@@ -75,6 +76,10 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
     registerOpts.logLevel = opts.logLevel
   }
 
+  fastify.register(routes.healthRoute, registerOpts)
+
+  fastify.register(plugins.authHook)
+
   fastify.register(routes.bulkRoute, registerOpts)
   fastify.register(routes.clearRoute, registerOpts)
   fastify.register(routes.introspectionRoute, registerOpts)
@@ -84,7 +89,7 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
   fastify.register(routes.stylesRoute, registerOpts)
 
   fastify.register(plugins.gracefulSaveHook)
-  fastify.register(plugins.authHook)
+  fastify.register(plugins.autoSavePlugin)
 }
 
 function createServer(
