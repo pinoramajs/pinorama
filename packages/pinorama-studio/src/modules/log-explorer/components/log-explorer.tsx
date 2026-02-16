@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/resizable"
 import { useAppConfig } from "@/contexts"
 import { usePinoramaConnection } from "@/hooks"
+import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { type ImperativeLogDetailsHandle, LogDetails } from "./log-details"
 import { LogFilters } from "./log-filters"
 import type { SearchFilters } from "./log-filters/types"
@@ -71,6 +72,7 @@ export function LogExplorer({
   const [liveSessionStart, setLiveSessionStart] = useState(0)
   const [filters, setFilters] = useState<SearchFilters>({})
   const [searchText, setSearchText] = useState<string>("")
+  const debouncedSearchText = useDebouncedValue(searchText)
   const [selectedRow, setSelectedRow] =
     useState<PinoramaDocument<AnyOrama> | null>(null)
 
@@ -242,7 +244,7 @@ export function LogExplorer({
         >
           <LogFilters
             introspection={introspection}
-            searchText={searchText}
+            searchText={debouncedSearchText}
             filters={filters}
             liveMode={isLiveModeEnabled}
             liveSessionStart={liveSessionStart}
@@ -261,6 +263,7 @@ export function LogExplorer({
             ref={viewerRef}
             introspection={introspection}
             searchText={searchText}
+            debouncedSearchText={debouncedSearchText}
             filters={filters}
             liveMode={isLiveModeEnabled}
             liveSessionStart={liveSessionStart}
