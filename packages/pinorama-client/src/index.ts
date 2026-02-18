@@ -11,6 +11,40 @@ import { setTimeout } from "./platform/node.js"
 export type PinoramaStats = {
   totalDocs: number
   memoryUsage: number
+  oldestTimestamp: number | null
+  newestTimestamp: number | null
+}
+
+export type PinoramaContextParams = {
+  timestamp: number
+  before?: number
+  after?: number
+  where?: Record<string, unknown>
+}
+
+export type PinoramaContextResult = {
+  before: Array<{
+    id: string
+    score: number
+    document: Record<string, unknown>
+  }>
+  after: Array<{ id: string; score: number; document: Record<string, unknown> }>
+  timestamp: number
+}
+
+export type PinoramaAggregateParams = {
+  field: string
+  metric?: { field: string; fn: "count" | "avg" | "min" | "max" }
+  where?: Record<string, unknown>
+  limit?: number
+}
+
+export type PinoramaAggregateResult = {
+  values: Array<{ value: string; count: number; metric?: number }>
+}
+
+export type PinoramaMcpStatus = {
+  enabled: boolean
 }
 
 export class PinoramaError extends Error {
@@ -194,5 +228,64 @@ export class PinoramaClient<T extends AnyOrama> {
     }
 
     return (await response.json()) as PinoramaStats
+  }
+
+  public async context(
+    params: PinoramaContextParams
+  ): Promise<PinoramaContextResult> {
+    const response = await fetch(`${this.url}/context`, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      body: JSON.stringify(params)
+    })
+
+    if (!response.ok) {
+      await this.throwResponseError(response, "context failed")
+    }
+
+    return (await response.json()) as PinoramaContextResult
+  }
+
+  public async aggregateByField(
+    params: PinoramaAggregateParams
+  ): Promise<PinoramaAggregateResult> {
+    const response = await fetch(`${this.url}/aggregate/field`, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      body: JSON.stringify(params)
+    })
+
+    if (!response.ok) {
+      await this.throwResponseError(response, "aggregate failed")
+    }
+
+    return (await response.json()) as PinoramaAggregateResult
+  }
+
+  public async mcpStatus(): Promise<PinoramaMcpStatus> {
+    const response = await fetch(`${this.url}/mcp/status`, {
+      method: "GET",
+      headers: this.defaultHeaders
+    })
+
+    if (!response.ok) {
+      await this.throwResponseError(response, "mcp status failed")
+    }
+
+    return (await response.json()) as PinoramaMcpStatus
+  }
+
+  public async setMcpStatus(enabled: boolean): Promise<PinoramaMcpStatus> {
+    const response = await fetch(`${this.url}/mcp/status`, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      body: JSON.stringify({ enabled })
+    })
+
+    if (!response.ok) {
+      await this.throwResponseError(response, "set mcp status failed")
+    }
+
+    return (await response.json()) as PinoramaMcpStatus
   }
 }

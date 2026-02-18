@@ -1,17 +1,21 @@
 {
-  "name": "pinorama-server",
-  "version": "0.2.1",
+  "name": "pinorama-mcp",
+  "version": "0.1.0",
   "license": "MIT",
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": "./dist/index.mjs",
+  "bin": {
+    "pinorama-mcp": "./bin.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "bin.mjs"
   ],
   "scripts": {
     "clean": "rimraf dist node_modules",
     "build": "tsc",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
   "homepage": "https://github.com/pinoramajs/pinorama#readme",
@@ -22,7 +26,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/pinoramajs/pinorama.git",
-    "directory": "packages/pinorama-server"
+    "directory": "packages/pinorama-mcp"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
@@ -31,17 +35,9 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@orama/orama": "^3.1.18",
-    "@orama/plugin-data-persistence": "3.1.18",
-    "change-case": "^5.4.4",
-    "fastify": "^5.7.4",
-    "fastify-plugin": "^5.1.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "pinorama-client": "workspace:*",
-    "pinorama-mcp": "workspace:*",
-    "pinorama-presets": "workspace:*",
-    "pinorama-types": "workspace:*",
-    "serialize-error": "^13.0.1"
+    "zod": "^4.3.6"
   },
   "publishConfig": {
     "access": "public"
