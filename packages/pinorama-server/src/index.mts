@@ -80,13 +80,17 @@ const fastifyPinoramaServer: FastifyPluginAsync<PinoramaServerOptions> = async (
 
   fastify.register(plugins.authHook)
 
+  fastify.register(routes.aggregateRoute, registerOpts)
   fastify.register(routes.bulkRoute, registerOpts)
   fastify.register(routes.clearRoute, registerOpts)
+  fastify.register(routes.contextRoute, registerOpts)
   fastify.register(routes.introspectionRoute, registerOpts)
   fastify.register(routes.persistRoute, registerOpts)
   fastify.register(routes.searchRoute, registerOpts)
   fastify.register(routes.statsRoute, registerOpts)
   fastify.register(routes.stylesRoute, registerOpts)
+
+  fastify.register(plugins.mcpPlugin, registerOpts)
 
   fastify.register(plugins.gracefulSaveHook)
   fastify.register(plugins.autoSavePlugin)

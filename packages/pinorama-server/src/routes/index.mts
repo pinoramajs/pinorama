@@ -1,5 +1,7 @@
+export * from "./aggregate.mjs"
 export * from "./bulk.mjs"
 export * from "./clear.mjs"
+export * from "./context.mjs"
 export * from "./health.mjs"
 export * from "./introspection.mjs"
 export * from "./persist.mjs"
