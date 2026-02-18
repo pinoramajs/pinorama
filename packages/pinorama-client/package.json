@@ -1,6 +1,6 @@
 {
   "name": "pinorama-client",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "license": "MIT",
   "main": "./dist/node/pinorama-client.cjs",
   "module": "./dist/node/pinorama-client.mjs",
