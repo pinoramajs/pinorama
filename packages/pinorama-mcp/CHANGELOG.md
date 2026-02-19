@@ -1,5 +1,11 @@
 # pinorama-mcp
 
+## 0.2.1
+
+### Patch Changes
+
+- 8cff224: Fix CLI documentation: URL is a positional argument, not a --url flag
+
 ## 0.2.0
 
 ### Minor Changes
