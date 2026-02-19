@@ -1,42 +1,94 @@
-# Pinorama 🌀
+<p align="center">
+  <img src="packages/pinorama-docs/public/pinorama-logo.webp" width="120" alt="Pinorama" />
+</p>
 
-![Build Status](https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main)
-[![Known Vulnerabilities](https://snyk.io/test/github/pinoramajs/pinorama/badge.svg)](https://snyk.io/test/github/pinoramajs/pinorama)
-[![All Contributors](https://img.shields.io/github/all-contributors/pinoramajs/pinorama?color=ee8449&style=flat-square)](#contributors-)
+<h1 align="center">Pinorama</h1>
 
-⚠️ **Warning: This project is currently under development and not ready for production use.**
+<p align="center">
+  <b>Explore your logs smarter and faster</b><br />
+  A beautiful yet powerful Node.js log viewer
+</p>
 
-Pinorama is a suite of node.js packages that allow you to store and explore [pino](https://getpino.io) logs. It contains:
-
-- **server:** http server that stores logs using [orama](https://askorama.ai) and exposes rest api using [fastify](https://fastify.dev).
-- **client:** http client that streams and retrieves logs from the pinorama-server.
-- **transport:** pino logger transport that streams logs to the pinorama-server.
-- **docs:** project documentation available online at [pinorama.dev](https://pinorama.dev) powered by [vitepress](https://vitepress.dev).
-- **studio:** standalone app that allows you to explore the logs using [react](https://react.dev) and [shadcn/ui](https://ui.shadcn.com).
-
----
-
-This README will be updated as the project evolves.
+<p align="center">
+  <a href="https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml"><img src="https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main" alt="Build Status" /></a>
+  <a href="https://pinorama.dev"><img src="https://img.shields.io/badge/docs-pinorama.dev-blue" alt="Documentation" /></a>
+  <a href="https://github.com/pinoramajs/pinorama/blob/main/LICENSE"><img src="https://img.shields.io/github/license/pinoramajs/pinorama" alt="License" /></a>
+</p>
 
 ---
 
-## Contributors ✨
+Pinorama is a suite of packages for storing, exploring, and analyzing [Pino](https://getpino.io) logs. Pipe logs from any Node.js process, search them instantly with [Orama](https://askorama.ai), and explore them in a real-time web UI.
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://cesco.me/"><img src="https://avatars.githubusercontent.com/u/244004?v=4?s=100" width="100px;" alt="Francesco Pasqua"/><br /><sub><b>Francesco Pasqua</b></sub></a><br /><a href="https://github.com/pinoramajs/Pinorama/commits?author=cesconix" title="Code">💻</a> <a href="#design-cesconix" title="Design">🎨</a> <a href="https://github.com/pinoramajs/Pinorama/commits?author=cesconix" title="Documentation">📖</a> <a href="#ideas-cesconix" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-cesconix" title="Maintenance">🚧</a> <a href="#projectManagement-cesconix" title="Project Management">📆</a> <a href="https://github.com/pinoramajs/Pinorama/pulls?q=is%3Apr+reviewed-by%3Acesconix" title="Reviewed Pull Requests">👀</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://ilteoood.xyz/"><img src="https://avatars.githubusercontent.com/u/6383527?v=4?s=100" width="100px;" alt="Matteo Pietro Dazzi"/><br /><sub><b>Matteo Pietro Dazzi</b></sub></a><br /><a href="https://github.com/pinoramajs/Pinorama/commits?author=ilteoood" title="Code">💻</a> <a href="https://github.com/pinoramajs/Pinorama/pulls?q=is%3Apr+reviewed-by%3Ailteoood" title="Reviewed Pull Requests">👀</a> <a href="#design-ilteoood" title="Design">🎨</a></td>
-    </tr>
-  </tbody>
-</table>
+<p align="center">
+  <img src="packages/pinorama-docs/public/pinorama-screenshot.webp" width="800" alt="Pinorama Studio" />
+</p>
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+## Features
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+- **Full-text search** — Powered by Orama with faceted filtering
+- **Real-time streaming** — Pipe logs and watch them appear instantly with Live Mode
+- **MCP integration** — Connect AI assistants to query logs in natural language
+- **Keyboard-first** — Navigate, filter, and inspect logs without touching the mouse
+- **Custom styles** — Color-code log levels, HTTP methods, and any field
+- **Fastify plugin** — Drop-in server with authentication, persistence, and auto-save
+- **Presets** — Built-in schemas for Pino and Fastify logs, or create your own
 
-This project follows the [all-contributors](https://allcontributors.org/) specification. Contributions of any kind welcome!
+## Quick Start
+
+Install Pinorama Studio globally:
+
+```sh
+npm i -g pinorama-studio
+```
+
+Pipe logs from any Node.js application:
+
+```sh
+node app.js | pinorama --open
+```
+
+This starts an embedded server, ingests the piped logs, and opens the Studio UI in your browser.
+
+## Packages
+
+| Package | Description |
+| --- | --- |
+| [pinorama-studio](https://pinorama.dev/packages/studio) | Web UI and CLI for viewing, filtering, and analyzing logs |
+| [pinorama-server](https://pinorama.dev/packages/server) | Fastify plugin with REST API, auth, persistence, and MCP |
+| [pinorama-transport](https://pinorama.dev/packages/transport) | Pino transport that buffers and streams logs to the server |
+| [pinorama-client](https://pinorama.dev/packages/client) | Isomorphic HTTP client for Node.js and the browser |
+| [pinorama-mcp](https://pinorama.dev/packages/mcp) | Model Context Protocol server for AI-powered log analysis |
+| [pinorama-presets](https://pinorama.dev/advanced/presets) | Schema and introspection configs for Pino and Fastify |
+
+## How It Works
+
+```
+Pino Logger → Transport (buffers) → POST /bulk → Server (Orama) → Studio UI
+                                                        ↕
+                                                   MCP (AI assistants)
+```
+
+1. **Pino Logger** creates structured JSON logs
+2. **Pinorama Transport** buffers and sends them in batches
+3. **Pinorama Server** stores and indexes logs with Orama
+4. **Pinorama Studio** displays logs with search, filters, and live refresh
+5. **Pinorama MCP** connects AI assistants for natural-language queries
+
+## Documentation
+
+Full documentation is available at **[pinorama.dev](https://pinorama.dev)**.
+
+## Contributing
+
+Contributions are welcome! This is a monorepo using pnpm workspaces and Turborepo.
+
+```sh
+pnpm install   # install dependencies
+pnpm build     # build all packages
+pnpm test      # run all tests
+pnpm dev       # start dev servers
+```
+
+## License
+
+[MIT](LICENSE)
