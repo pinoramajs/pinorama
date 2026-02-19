@@ -1,5 +1,13 @@
 # pinorama-studio
 
+## 0.5.2
+
+### Patch Changes
+
+- c15cee4: Fix table header columns misaligning with body when resizing panels
+  - pinorama-server@0.3.2
+  - pinorama-transport@0.1.4
+
 ## 0.5.1
 
 ### Patch Changes

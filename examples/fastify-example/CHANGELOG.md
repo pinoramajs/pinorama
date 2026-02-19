@@ -1,5 +1,12 @@
 # pinorama-fastify-example
 
+## 0.1.7
+
+### Patch Changes
+
+- pinorama-server@0.3.2
+- pinorama-transport@0.1.4
+
 ## 0.1.6
 
 ### Patch Changes

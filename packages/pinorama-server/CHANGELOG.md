@@ -1,5 +1,12 @@
 # pinorama-server
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [8cff224]
+  - pinorama-mcp@0.2.1
+
 ## 0.3.1
 
 ### Patch Changes
