@@ -4,12 +4,12 @@ outline: deep
 
 # Quick Start
 
-Get up and running with **Pinorama Studio** in minutes! This guide will walk you through the process of installing Pinorama Studio and integrating it with a simple Node.js application.
+Get up and running with Pinorama Studio in minutes.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) version 20 or higher.
-- Terminal for starting the Pinorama Studio CLI.
+- [Node.js](https://nodejs.org/) version 20 or higher
+- A terminal for running the CLI
 
 ## Installation
 
@@ -33,7 +33,7 @@ yarn global add pinorama-studio
 
 ## Quick Setup
 
-Let's set up a minimal Fastify application with Pinorama Studio for log viewing:
+Create a minimal Fastify application with Pinorama Studio for log viewing:
 
 1. Create a new directory:
 
@@ -59,19 +59,19 @@ Let's set up a minimal Fastify application with Pinorama Studio for log viewing:
 
    :::
 
-3. Create an `index.js` file with the following content:
+3. Create an `index.js` file:
 
-   ```javascript
+   ```javascript {2}
    const fastify = require("fastify")({
-     logger: true, // needed for piping logs to Pinorama!
-   });
+     logger: true // needed for piping logs to Pinorama
+   })
 
    fastify.get("/", async (request, reply) => {
-     request.log.info("Pinorama is awesome! 🚀");
-     return { hello: "world" };
-   });
+     request.log.info("Pinorama is awesome!")
+     return { hello: "world" }
+   })
 
-   fastify.listen({ port: 3000 });
+   fastify.listen({ port: 3000 })
    ```
 
 4. Run your application and pipe the output to Pinorama Studio:
@@ -80,10 +80,12 @@ Let's set up a minimal Fastify application with Pinorama Studio for log viewing:
    node index.js | pinorama --open
    ```
 
-This command will start your Fastify application, pipe its logs to Pinorama Studio, and open the Pinorama web interface in your default browser.
+This starts your Fastify application, pipes its logs to Pinorama Studio, and opens the web interface in your default browser.
 
 ## Next Steps
 
-Check out the full Pinorama documentation for information on customizing your logging setup and using other Pinorama components.
-
-Happy logging with Pinorama!
+- [Pinorama Studio](/packages/studio) — Keyboard shortcuts, Live Mode, Details panel, and all CLI options
+- [Pinorama Server](/packages/server) — Run a standalone server with authentication and persistence
+- [Pinorama MCP](/packages/mcp) — Connect AI assistants to your log database
+- [Presets](/advanced/presets) — Customize schemas, columns, facets, and styles
+- [Persistence](/advanced/persistence) — Save logs to disk and restore on startup

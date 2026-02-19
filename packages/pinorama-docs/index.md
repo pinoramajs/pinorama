@@ -14,7 +14,7 @@ hero:
       link: /guide/
     - theme: alt
       text: Pinorama Studio
-      link: /guide/install/
+      link: /packages/studio
     - theme: alt
       text: View on GitHub
       link: https://github.com/pinoramajs/pinorama
@@ -25,22 +25,22 @@ hero:
 features:
   - title: Orama Powered
     icon: 🚀
-    details: Easily filter logs by facets and perform searches with the Orama super powers.
-  - title: Fastify Integration
-    icon: 🔋
-    details: Connect your Fastify app to a Pinorama and send logs with the transport plugin.
-  - title: Piped Output
+    details: Full-text search and faceted filtering powered by Orama. Find any log instantly.
+  - title: MCP Integration
+    icon: 🤖
+    details: Connect AI assistants to your logs via the Model Context Protocol. Query logs in natural language.
+  - title: Real-Time Streaming
     icon: 📡
-    details: Pipe Node.js logs from any process to Pinorama and view them in real-time.
-  - title: NDJSON Support
-    icon: 🍋
-    details: Configure Pinorama to handle NDJSON files and display them in a structured way.
+    details: Pipe logs from any Node.js process and watch them appear in real-time with Live Mode.
+  - title: Keyboard Shortcuts
+    icon: ⌨️
+    details: Navigate, filter, and inspect logs without touching the mouse. Full keyboard support.
   - title: Custom Styles
     icon: 🎨
-    details: Customize log lines with your own colors and styles to make them stand out.
-  - title: ESM Support
-    icon: 📦
-    details: Built with ESM in mind, ensuring it works with modern JS standards.
+    details: Color-code log levels, HTTP methods, and any field with per-value CSS styles.
+  - title: Fastify Integration
+    icon: 🔋
+    details: Drop-in Fastify plugin with a dedicated preset for request/response logging.
 ---
 
 <style>

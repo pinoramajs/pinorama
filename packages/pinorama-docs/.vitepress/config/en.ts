@@ -68,6 +68,10 @@ export const en = defineConfig({
           {
             text: "Client",
             link: "/packages/client"
+          },
+          {
+            text: "MCP",
+            link: "/packages/mcp"
           }
         ]
       },
@@ -88,7 +92,13 @@ export const en = defineConfig({
 
     footer: {
       message: "Open Source ❤ MIT Licensed",
-      copyright: "© 2024 Francesco Pasqua & Contributors"
+      copyright: "© 2024-2026 Francesco Pasqua & Contributors"
+    },
+
+    editLink: {
+      pattern:
+        "https://github.com/pinoramajs/pinorama/edit/main/packages/pinorama-docs/:path",
+      text: "Edit this page on GitHub"
     },
 
     docFooter: {

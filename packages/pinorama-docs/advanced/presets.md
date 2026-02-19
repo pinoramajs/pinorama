@@ -4,14 +4,14 @@ outline: deep
 
 # Presets
 
-Presets define the database schema and introspection configuration for a Pinorama Server. They control how logs are indexed, displayed, filtered, and styled in Studio.
+Presets define the database schema and introspection configuration for Pinorama Server. They control how logs are indexed, displayed, filtered, and styled in Pinorama Studio.
 
 ## How Presets Work
 
 A preset is an object with two properties:
 
 - **`schema`** — An [Orama schema](https://docs.orama.com/open-source/usage/create) that defines the indexed fields and their types
-- **`introspection`** — A `PinoramaIntrospection` config that controls how Studio renders the data
+- **`introspection`** — A `PinoramaIntrospection` config that controls how Pinorama Studio renders the data
 
 ```ts
 type PinoramaPreset<T> = {
@@ -84,14 +84,21 @@ Extended preset for Fastify applications. Includes all `pino` fields plus HTTP r
 
 ## Introspection Config
 
-The `PinoramaIntrospection` object controls how Studio renders each field:
+The `PinoramaIntrospection` object controls how Pinorama Studio renders each field:
 
 ### `facets`
 
-Defines which fields appear as filters in the sidebar. Each field is either `"enum"` (select from values) or `"string"` (free text search).
+Defines which fields appear as filters in the sidebar. Three facet types are available:
+
+| Type | Description | UI Control |
+| --- | --- | --- |
+| `"enum"` | Select from known values | Checkbox list |
+| `"string"` | Free text search | Text input |
+| `"date"` | Date range filter | Date range picker |
 
 ```ts
 facets: {
+  time: "date",
   level: "enum",
   msg: "string",
   "req.method": "string"
@@ -115,7 +122,7 @@ columns: {
 
 Defines display labels for fields. Can be a simple string or a tuple with a value map for human-readable values.
 
-```ts
+```ts {4-12}
 labels: {
   time: "Time",                    // simple label
   msg: "Message",
@@ -144,7 +151,7 @@ formatters: {
 
 Defines CSS styles applied to field values. Can be a base style object or a tuple with per-value styles.
 
-```ts
+```ts {3-8}
 styles: {
   time: { opacity: "0.5" },       // base style for all values
   level: [{}, {                    // base + per-value styles
@@ -159,7 +166,18 @@ The server generates CSS classes from these styles (e.g. `.pinorama-level`, `.pi
 
 ## Custom Presets
 
-Create a custom preset using the `createPreset` function from `pinorama-presets`:
+Create a custom preset using the `createPreset` function from `pinorama-presets`, then pass it to the server:
+
+```ts {3-4}
+import pinoramaServer from "pinorama-server"
+
+app.register(pinoramaServer, {
+  dbSchema: myPreset.schema,
+  introspection: myPreset.introspection
+})
+```
+
+::: details Full custom preset example
 
 ```ts
 import { createPreset } from "pinorama-presets"
@@ -175,6 +193,7 @@ const myPreset = createPreset(
   // Introspection config
   {
     facets: {
+      timestamp: "date",
       severity: "enum",
       message: "string",
       service: "enum"
@@ -204,14 +223,4 @@ const myPreset = createPreset(
   }
 )
 ```
-
-Then pass it to the server:
-
-```ts
-import pinoramaServer from "pinorama-server"
-
-app.register(pinoramaServer, {
-  dbSchema: myPreset.schema,
-  introspection: myPreset.introspection
-})
-```
+:::

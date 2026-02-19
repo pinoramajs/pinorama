@@ -4,7 +4,7 @@ outline: deep
 
 # Transport
 
-**Pinorama Transport** is a [Pino transport](https://getpino.io/#/docs/transports) that streams log data to a [Pinorama Server](/packages/server). It buffers logs in batches and sends them via the [Pinorama Client](/packages/client) with automatic retry on failure.
+**Pinorama Transport** is a [Pino transport](https://getpino.io/#/docs/transports) that streams log data to [Pinorama Server](/packages/server). It buffers logs in batches and sends them via [Pinorama Client](/packages/client) with automatic retry on failure.
 
 ## Installation
 
@@ -46,7 +46,7 @@ logger.info("hello from pinorama!")
 
 ### With custom buffering options
 
-```js
+```js {6-8}
 const logger = pino({
   transport: {
     target: "pinorama-transport",
@@ -62,7 +62,7 @@ const logger = pino({
 
 ## CLI Usage
 
-The `pino-pinorama` CLI reads JSON logs from stdin and streams them to a Pinorama Server:
+The `pino-pinorama` CLI reads JSON logs from stdin and streams them to Pinorama Server:
 
 ```sh
 node app.js | pino-pinorama --url http://localhost:3000/pinorama
@@ -81,11 +81,12 @@ pino-pinorama [options]
 | `--url` | `-u` | `string` | *required* | Pinorama Server URL |
 | `--adminSecret` | `-k` | `string` | | Server admin secret |
 | `--batchSize` | `-b` | `number` | `100` | Logs per bulk insert |
-| `--flushInterval` | `-f` | `number` | `5000` | Flush interval in ms |
+| `--flushInterval` | `-f` | `number` | `1000` | Flush interval in ms |
 | `--maxRetries` | `-m` | `number` | `5` | Max retry attempts |
 | `--backoff` | `-i` | `number` | `1000` | Initial backoff time in ms |
 | `--backoffFactor` | `-d` | `number` | `2` | Backoff multiplier |
 | `--backoffMax` | `-x` | `number` | `30000` | Max backoff time in ms |
+| `--maxBufferSize` | `-s` | `number` | `10000` | Max buffer size before dropping old logs |
 
 ## Options
 
@@ -96,7 +97,8 @@ All options from both the [Client](/packages/client) and the transport itself:
 | `url` | `string` | *required* | Pinorama Server URL |
 | `adminSecret` | `string` | | Server admin secret |
 | `batchSize` | `number` | `100` | Number of logs to buffer before flushing |
-| `flushInterval` | `number` | `5000` | Max time (ms) between flushes |
+| `flushInterval` | `number` | `1000` | Max time (ms) between flushes |
+| `maxBufferSize` | `number` | `10000` | Maximum buffer size before dropping oldest logs |
 | `maxRetries` | `number` | `5` | Max retry attempts for failed inserts |
 | `backoff` | `number` | `1000` | Initial backoff time in ms |
 | `backoffFactor` | `number` | `2` | Backoff multiplier per retry |
@@ -113,13 +115,20 @@ On each flush, the transport pauses the input stream, sends the buffered logs vi
 
 Only valid JSON objects are accepted — non-object or empty-object lines are silently dropped.
 
+### Buffer Overflow
+
+When the buffer exceeds `maxBufferSize`, the oldest logs are dropped to keep the buffer within the limit. This prevents unbounded memory growth when the server is unreachable or slow to respond. The default limit is 10,000 entries.
+
 ## Retry with Exponential Backoff
 
-When a flush fails, the [Pinorama Client](/packages/client) retries with exponential backoff:
+When a flush fails, [Pinorama Client](/packages/client) retries with exponential backoff. After exhausting all retries, the error is logged to stderr and the transport continues processing new logs.
+
+::: details Retry sequence
 
 1. First attempt fails — wait `backoff` ms (default: 1000ms)
 2. Second retry — wait `backoff * backoffFactor` ms (default: 2000ms)
 3. Third retry — wait `backoff * backoffFactor^2` ms (default: 4000ms)
 4. Continues until `maxRetries` is reached or `backoffMax` is hit
 
-The wait time is always capped at `backoffMax` (default: 30s). After exhausting all retries, the error is logged to stderr and the transport continues processing new logs.
+The wait time is always capped at `backoffMax` (default: 30s).
+:::
