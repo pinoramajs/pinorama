@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml"><img src="https://github.com/pinoramajs/pinorama/actions/workflows/turbo.yml/badge.svg?branch=main" alt="Build Status" /></a>
   <a href="https://pinorama.dev"><img src="https://img.shields.io/badge/docs-pinorama.dev-blue" alt="Documentation" /></a>
-  <a href="https://github.com/pinoramajs/pinorama/blob/main/LICENSE"><img src="https://img.shields.io/github/license/pinoramajs/pinorama" alt="License" /></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-orange.svg" alt="License: MIT" /></a>
 </p>
 
 ---
