@@ -34,7 +34,7 @@ yarn add pinorama-mcp
 Standalone mode starts a stdio-based MCP server that connects to a running Pinorama Server.
 
 ```sh
-pinorama-mcp --url http://localhost:6200/pinorama
+pinorama-mcp http://localhost:6200/pinorama
 ```
 
 ### Claude Desktop Setup
@@ -51,7 +51,7 @@ Add the following to your Claude Desktop config file:
       "command": "npx",
       "args": [
         "pinorama-mcp",
-        "--url", "http://localhost:6200/pinorama"
+        "http://localhost:6200/pinorama"
       ]
     }
   }
@@ -66,7 +66,7 @@ Add the following to your Claude Desktop config file:
       "command": "npx",
       "args": [
         "pinorama-mcp",
-        "--url", "http://localhost:6200/pinorama"
+        "http://localhost:6200/pinorama"
       ]
     }
   }
@@ -78,7 +78,7 @@ Add the following to your Claude Desktop config file:
 ### Claude Code Setup
 
 ```sh
-claude mcp add pinorama -- npx pinorama-mcp --url http://localhost:6200/pinorama
+claude mcp add pinorama -- npx pinorama-mcp http://localhost:6200/pinorama
 ```
 
 ### VS Code Setup
@@ -189,6 +189,6 @@ Once connected, ask your AI assistant questions in natural language:
 
 ## Security
 
-- **Authentication** — In standalone mode, pass `--admin-secret` if the server requires it. In embedded mode, the MCP endpoints (`POST/GET/DELETE /mcp`) do not require authentication, but `POST /mcp/status` (to toggle MCP on/off) does.
+- **Authentication** — In standalone mode, set the `PINORAMA_ADMIN_SECRET` environment variable if the server requires it. In embedded mode, the MCP endpoints (`POST/GET/DELETE /mcp`) do not require authentication, but `POST /mcp/status` (to toggle MCP on/off) does.
 - **Read-only** — All MCP tools are read-only. They query the database but never modify it.
 - **Network exposure** — In embedded mode, the MCP endpoint is available on the same host and port as Pinorama Server. Restrict network access accordingly in non-local environments.

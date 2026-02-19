@@ -11,7 +11,7 @@ npm i pinorama-mcp
 ## Standalone Mode
 
 ```sh
-pinorama-mcp --url http://localhost:6200/pinorama
+pinorama-mcp http://localhost:6200/pinorama
 ```
 
 ### Claude Desktop
@@ -21,7 +21,7 @@ pinorama-mcp --url http://localhost:6200/pinorama
   "mcpServers": {
     "pinorama": {
       "command": "npx",
-      "args": ["pinorama-mcp", "--url", "http://localhost:6200/pinorama"]
+      "args": ["pinorama-mcp", "http://localhost:6200/pinorama"]
     }
   }
 }
@@ -30,7 +30,7 @@ pinorama-mcp --url http://localhost:6200/pinorama
 ### Claude Code
 
 ```sh
-claude mcp add pinorama -- npx pinorama-mcp --url http://localhost:6200/pinorama
+claude mcp add pinorama -- npx pinorama-mcp http://localhost:6200/pinorama
 ```
 
 ## Tools
