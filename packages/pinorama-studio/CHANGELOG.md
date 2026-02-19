@@ -1,5 +1,24 @@
 # pinorama-studio
 
+## 0.5.0
+
+### Minor Changes
+
+- c3c0771: Migrate shadcn/ui components from Radix UI to Base UI
+- 924b2a1: Add MCP server integration with 8 AI-powered log analysis tools, new /context and /aggregate endpoints, and studio MCP toggle with setup guide
+- 4fe0250: Upgrade core stack to Fastify 5, Orama 3, React 19, Tailwind CSS 4, Vite 7, and Biome 2
+- a39753c: Redesign studio UI with paginated static mode, date facets, status bar, log details panel, column context menu, and performance optimizations
+
+### Patch Changes
+
+- Updated dependencies [924b2a1]
+- Updated dependencies [f478c6a]
+- Updated dependencies [4fe0250]
+- Updated dependencies [e429d7a]
+  - pinorama-server@0.3.0
+  - pinorama-client@0.3.0
+  - pinorama-transport@0.1.4
+
 ## 0.4.0
 
 ### Minor Changes
