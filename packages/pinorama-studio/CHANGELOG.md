@@ -1,5 +1,15 @@
 # pinorama-studio
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [ee1f559]
+  - pinorama-presets@0.2.0
+  - pinorama-server@0.3.1
+  - pinorama-client@0.3.0
+  - pinorama-transport@0.1.4
+
 ## 0.5.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "pinorama-create-server-example",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "private": true,
   "scripts": {
