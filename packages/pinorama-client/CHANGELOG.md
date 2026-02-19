@@ -1,5 +1,17 @@
 # pinorama-client
 
+## 0.3.0
+
+### Minor Changes
+
+- 924b2a1: Add MCP server integration with 8 AI-powered log analysis tools, new /context and /aggregate endpoints, and studio MCP toggle with setup guide
+- f478c6a: Add health check, auto-save plugin, stats endpoint, and improve error handling, input validation, and auth security
+
+### Patch Changes
+
+- 4fe0250: Upgrade core stack to Fastify 5, Orama 3, React 19, Tailwind CSS 4, Vite 7, and Biome 2
+- e429d7a: Add Vitest setup and initial test suites for client and server packages
+
 ## 0.2.1
 
 ### Patch Changes
