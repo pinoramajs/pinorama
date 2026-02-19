@@ -1,5 +1,12 @@
 # pinorama-create-server-example
 
+## 0.1.6
+
+### Patch Changes
+
+- pinorama-server@0.3.1
+- pinorama-transport@0.1.4
+
 ## 0.1.5
 
 ### Patch Changes

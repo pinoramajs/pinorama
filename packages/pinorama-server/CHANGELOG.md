@@ -1,5 +1,14 @@
 # pinorama-server
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [ee1f559]
+  - pinorama-presets@0.2.0
+  - pinorama-types@0.2.0
+  - pinorama-client@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes
