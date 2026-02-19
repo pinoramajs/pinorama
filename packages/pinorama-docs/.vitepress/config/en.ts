@@ -91,8 +91,9 @@ export const en = defineConfig({
     ],
 
     footer: {
-      message: "Open Source ❤ MIT Licensed",
-      copyright: "© 2024-2026 Francesco Pasqua & Contributors"
+      message: "Released under the MIT License",
+      copyright:
+        'Copyright © 2024-present <a href="https://cesco.me">Francesco Pasqua</a>'
     },
 
     editLink: {

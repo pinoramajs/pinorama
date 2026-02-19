@@ -46,14 +46,8 @@ features:
 <style>
 .pinorama-screenshot {
   margin-top: 4rem;
-}
-
-@media (min-width: 960px) {
-  .pinorama-screenshot {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  margin-bottom: -4rem;
+  width: 100%;
 }
 </style>
 
