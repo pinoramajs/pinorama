@@ -27,12 +27,12 @@ export function TableHead({ table, introspection }: TableHeadProps) {
         }
       >
         {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
+          <tr key={headerGroup.id} className="flex w-full">
             {headerGroup.headers.map((header) => (
               <th
                 key={header.id}
                 colSpan={header.colSpan}
-                className="relative px-2 mb-1 text-left font-normal text-muted-foreground align-middle h-8"
+                className="relative px-2 mb-1 text-left font-normal text-muted-foreground h-8 flex items-center"
                 style={{ width: header.getSize() }}
               >
                 {header.isPlaceholder
