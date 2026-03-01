@@ -50,7 +50,7 @@
     "@types/node": "^25.2.3",
     "pinorama-types": "workspace:*",
     "rimraf": "^6.1.2",
-    "rollup": "^4.57.1",
+    "rollup": "^4.59.0",
     "rollup-plugin-dts": "^6.3.0",
     "tslib": "^2.6.3",
     "typescript": "^5.9.3",
