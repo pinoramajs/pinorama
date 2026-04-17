@@ -30,7 +30,7 @@
     "@base-ui/react": "^1.2.0",
     "@fastify/cors": "^11.2.0",
     "@fastify/one-line-logger": "^2.1.0",
-    "@fastify/static": "^9.0.0",
+    "@fastify/static": "^9.1.1",
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@hugeicons/core-free-icons": "^3.1.1",
@@ -44,7 +44,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "fastify": "^5.8.3",
+    "fastify": "^5.8.5",
     "minimist": "^1.2.8",
     "next-themes": "^0.4.6",
     "nuqs": "^2.8.8",
@@ -78,7 +78,7 @@
     "rimraf": "^6.1.2",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
+    "vite": "^7.3.2",
     "vite-plugin-package-version": "^1.1.0"
   },
   "publishConfig": {
