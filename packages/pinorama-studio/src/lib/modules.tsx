@@ -8,11 +8,11 @@ import {
 import { useHotkeys } from "react-hotkeys-hook"
 import type { ImportMessages } from "@/i18n"
 
-export type MethodKeys<T> = {
+type MethodKeys<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never
 }[keyof T]
 
-export type Hotkeys<T> = Record<MethodKeys<T>, string>
+type Hotkeys<T> = Record<MethodKeys<T>, string>
 
 export type Module<T extends ComponentType> = {
   id: string
