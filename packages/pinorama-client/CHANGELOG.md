@@ -1,5 +1,11 @@
 # pinorama-client
 
+## 0.3.1
+
+### Patch Changes
+
+- 7388aff: Include README in the published package
+
 ## 0.3.0
 
 ### Minor Changes

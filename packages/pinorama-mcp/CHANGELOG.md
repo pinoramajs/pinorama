@@ -1,5 +1,12 @@
 # pinorama-mcp
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [7388aff]
+  - pinorama-client@0.3.1
+
 ## 0.2.1
 
 ### Patch Changes

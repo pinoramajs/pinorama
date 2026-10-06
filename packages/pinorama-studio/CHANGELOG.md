@@ -1,5 +1,22 @@
 # pinorama-studio
 
+## 0.6.0
+
+### Minor Changes
+
+- 7388aff: Add `--server-url` option to connect Pinorama Studio to an existing Pinorama Server
+
+### Patch Changes
+
+- 7388aff: Fix Fastify FSTWRN003 warning by replacing callback-style `app.listen()` with `await app.listen()`
+- Updated dependencies [7388aff]
+- Updated dependencies [7388aff]
+- Updated dependencies [7388aff]
+  - pinorama-presets@0.2.1
+  - pinorama-transport@0.1.5
+  - pinorama-client@0.3.1
+  - pinorama-server@0.3.3
+
 ## 0.5.2
 
 ### Patch Changes

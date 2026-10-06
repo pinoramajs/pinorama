@@ -1,5 +1,13 @@
 # pinorama-transport
 
+## 0.1.5
+
+### Patch Changes
+
+- 7388aff: Declare `pinorama-client` as a runtime dependency so that installing `pinorama-transport` on its own works
+- Updated dependencies [7388aff]
+  - pinorama-client@0.3.1
+
 ## 0.1.4
 
 ### Patch Changes
