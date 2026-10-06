@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "packages/pinorama-docs/**"
+      # the site shows the Studio version, read at build time
+      - "packages/pinorama-studio/package.json"
   workflow_dispatch:
 
 permissions:
