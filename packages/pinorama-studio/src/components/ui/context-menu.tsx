@@ -99,9 +99,9 @@ function ContextMenuSeparator({
 
 export {
   ContextMenu,
-  ContextMenuTrigger,
+  ContextMenuCheckboxItem,
   ContextMenuContent,
   ContextMenuItem,
-  ContextMenuCheckboxItem,
-  ContextMenuSeparator
+  ContextMenuSeparator,
+  ContextMenuTrigger
 }

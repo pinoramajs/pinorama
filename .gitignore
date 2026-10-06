@@ -42,3 +42,6 @@ logs
 # Orama
 orama_bump_*.json
 orama_bump_*.msp
+
+# Written by turbo when it detects an AI agent
+AGENTS.md

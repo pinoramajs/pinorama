@@ -1,5 +1,5 @@
 import type { AnySchema } from "@orama/orama"
-import { flexRender, type Row } from "@tanstack/react-table"
+import { flexRender } from "@tanstack/react-table"
 import type { Virtualizer } from "@tanstack/react-virtual"
 import type { PinoramaIntrospection } from "pinorama-types"
 import {
@@ -8,10 +8,11 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { createField } from "@/lib/introspection"
+import type { LogRow } from "../utils"
 
 type TableBodyProps = {
   virtualizer: Virtualizer<any, Element>
-  rows: Row<unknown>[]
+  rows: LogRow[]
   introspection: PinoramaIntrospection<AnySchema>
 }
 
@@ -27,7 +28,7 @@ export function TableBody({
       style={{ height: `${virtualizer.getTotalSize()}px` }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {
-        const row = rows[virtualItem.index] as Row<unknown>
+        const row = rows[virtualItem.index] as LogRow
         const cells = row.getVisibleCells()
 
         return (
