@@ -1,11 +1,12 @@
 import modules from "@/modules"
+import type { Locale } from "./detect-locale"
+
+export type { Locale } from "./detect-locale"
 
 const appMessages: ImportMessages = {
   en: () => import("./messages/en.json"),
   it: () => import("./messages/it.json")
 }
-
-export type Locale = "en" | "it"
 
 export type Messages = Record<string, string>
 

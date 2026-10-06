@@ -158,7 +158,7 @@ Pinorama Studio supports multiple languages:
 | English | `en` |
 | Italian | `it` |
 
-The language is detected automatically from the browser settings.
+The language is picked from the browser settings (`navigator.languages`); unsupported languages fall back to English. To force one, set `localStorage.locale` to a code from the table.
 
 ## Examples
 

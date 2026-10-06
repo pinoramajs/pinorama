@@ -2,6 +2,7 @@ import type React from "react"
 import { createContext, use, useEffect, useState } from "react"
 import { IntlProvider } from "react-intl"
 import { getMessages, type Locale, type Messages } from "@/i18n"
+import { detectLocale } from "@/i18n/detect-locale"
 
 type I18nProviderProps = {
   children: React.ReactNode
@@ -14,11 +15,9 @@ type LocaleContextProps = {
 
 const LocaleContext = createContext<LocaleContextProps | undefined>(undefined)
 
-const defaultLocale: Locale = "en"
-
 export function I18nProvider(props: I18nProviderProps) {
-  const [locale, setLocale] = useState<Locale>(
-    (localStorage.getItem("locale") as Locale) ?? defaultLocale
+  const [locale, setLocale] = useState<Locale>(() =>
+    detectLocale(localStorage.getItem("locale"), navigator.languages)
   )
   const [messages, setMessages] = useState<Messages | null>(null)
 
