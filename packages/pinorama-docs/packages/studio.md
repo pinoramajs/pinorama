@@ -38,11 +38,17 @@ This starts an embedded Pinorama Server, ingests the piped logs, and opens the S
 
 ### Connect to an existing server
 
-If you already have a [Pinorama Server](/packages/server) running, launch Pinorama Studio as a standalone viewer:
+If you already have a [Pinorama Server](/packages/server) running, launch Pinorama Studio as a standalone viewer and point it at the server with `--server-url`:
 
 ```sh
-pinorama --open --server-prefix http://localhost:3000/pinorama
+pinorama --open --server-url http://localhost:3000/pinorama
 ```
+
+No embedded server is started. If logs are piped in, they are sent to the existing server instead.
+
+::: tip
+Pinorama Studio runs in the browser on its own origin, so the existing server must allow cross-origin requests, for example by registering [`@fastify/cors`](https://github.com/fastify/fastify-cors) on the Fastify instance that hosts Pinorama Server.
+:::
 
 ### With a Fastify application
 
@@ -54,7 +60,7 @@ Use the `fastify` preset to get Fastify-specific columns like request method, UR
 
 ## Server Mode
 
-Server mode is **automatically enabled** when stdin is piped (i.e. `!process.stdin.isTTY`). You can also enable it explicitly with the `--server` flag.
+Server mode is **automatically enabled** when stdin is piped (i.e. `!process.stdin.isTTY`). You can also enable it explicitly with the `--server` flag. It is never enabled when `--server-url` is set.
 
 When server mode is active:
 
@@ -83,6 +89,7 @@ pinorama [options]
 | `--server-prefix` | `-e` | `string` | `"/pinorama"` | Server endpoint prefix |
 | `--server-db-path` | `-f` | `string` | `<tmpdir>/pinorama.msp` | Database file path |
 | `--admin-secret` | `-k` | `string` | | Server admin secret key |
+| `--server-url` | `-u` | `string` | | URL of an existing Pinorama Server to connect to |
 | `--preset` | `-p` | `string` | `"pino"` | Preset name (`pino` or `fastify`) |
 | `--batch-size` | `-b` | `number` | `10` | Transport batch size |
 | `--flush-interval` | `-f` | `number` | `100` | Transport flush interval (ms) |

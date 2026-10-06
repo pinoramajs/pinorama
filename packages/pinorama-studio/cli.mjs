@@ -23,6 +23,7 @@ const defaultOptions = {
   server: false,
   "server-prefix": "/pinorama",
   "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
+  "server-url": undefined,
   "admin-secret": undefined,
   preset: "pino",
   "batch-size": 10,
@@ -56,6 +57,7 @@ async function start(options) {
     -e, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
     -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
     -k, --server-admin-secret  Set Pinorama Server admin secret key (disabled by default).
+    -u, --server-url           Connect to an existing Pinorama Server instead of starting one.
     -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
     -b, --batch-size           Set batch size for transport (default: ${defaultOptions["batch-size"]}).
     -f, --flush-interval       Set flush wait time in ms (default: ${defaultOptions["flush-interval"]}).
@@ -66,6 +68,7 @@ async function start(options) {
     cat logs | pinorama --batch-size 1000 --flush-interval 5000
     pinorama --host 192.168.1.1 --port 8080
     pinorama --server --logger
+    pinorama --open --server-url http://localhost:3000/pinorama
     node app.js | pinorama --open --preset fastify
 `)
     return
@@ -76,8 +79,20 @@ async function start(options) {
     return
   }
 
+  if (opts["server-url"]) {
+    if (opts.server) {
+      console.error(c.red("--server and --server-url cannot be used together"))
+      process.exit(1)
+    }
+
+    if (!URL.canParse(opts["server-url"])) {
+      console.error(c.red(`Invalid server URL: ${opts["server-url"]}`))
+      process.exit(1)
+    }
+  }
+
   const isPiped = !process.stdin.isTTY
-  opts.server = isPiped || opts.server
+  opts.server = !opts["server-url"] && (isPiped || opts.server)
 
   const app = createServer(opts)
 
@@ -99,14 +114,17 @@ async function start(options) {
   }
 
   const studioUrl = `http://${opts.host}:${opts.port}`
-  const serverUrl = `${studioUrl}${opts["server-prefix"]}`
+  const serverUrl = opts["server-url"] || `${studioUrl}${opts["server-prefix"]}`
 
   await app.listen({ host: opts.host, port: opts.port })
 
   const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`]
 
-  if (opts.server) {
+  if (opts.server || opts["server-url"]) {
     msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
+  }
+
+  if (opts.server) {
     msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
   }
 
@@ -118,7 +136,11 @@ async function start(options) {
 
   if (isPiped) {
     console.log(
-      c.yellow("Detected piped output. Server mode activated by default.")
+      c.yellow(
+        opts.server
+          ? "Detected piped output. Server mode activated by default."
+          : "Detected piped output. Logs are sent to the existing server."
+      )
     )
 
     const stream = pinoramaTransport({
@@ -172,12 +194,14 @@ start(
       server: "s",
       "server-prefix": "e",
       "server-db-path": "f",
+      "server-url": "u",
       "admin-secret": "k",
       preset: "p",
       "batch-size": "b",
       "flush-interval": "f"
     },
     boolean: ["server", "open"],
+    string: ["server-url"],
     default: defaultOptions
   })
 )
