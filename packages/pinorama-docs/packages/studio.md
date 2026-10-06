@@ -87,7 +87,7 @@ pinorama [options]
 | `--logger` | `-l` | `boolean` | `false` | Enable Fastify request logging |
 | `--server` | `-s` | `boolean` | `false` | Start embedded Pinorama Server |
 | `--server-prefix` | `-e` | `string` | `"/pinorama"` | Server endpoint prefix |
-| `--server-db-path` | `-f` | `string` | `<tmpdir>/pinorama.msp` | Database file path |
+| `--server-db-path` | `-f` | `string` | | Save the embedded server database to this file on exit and restore it on start |
 | `--admin-secret` | `-k` | `string` | | Server admin secret key |
 | `--server-url` | `-u` | `string` | | URL of an existing Pinorama Server to connect to |
 | `--preset` | `-p` | `string` | `"pino"` | Preset name (`pino` or `fastify`) |
