@@ -1,5 +1,11 @@
 # pinorama-client
 
+## 0.3.2
+
+### Patch Changes
+
+- 63ad86b: Update dependencies to their latest versions
+
 ## 0.3.1
 
 ### Patch Changes
