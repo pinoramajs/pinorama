@@ -2,11 +2,7 @@ import { ArrowDown01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { AnySchema } from "@orama/orama"
 import { useIsFetching } from "@tanstack/react-query"
-import {
-  getCoreRowModel,
-  type RowSelectionState,
-  useReactTable
-} from "@tanstack/react-table"
+import { type RowSelectionState, useTable } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import type { PinoramaIntrospection } from "pinorama-types"
 import {
@@ -101,19 +97,22 @@ export function LogViewer(props: LogViewerProps) {
   const shouldAutoScrollRef = useRef(true)
 
   const logsQuery = props.liveMode ? liveLogsQuery : staticLogsQuery
-  const logs = useMemo(() => logsQuery.data ?? [], [logsQuery.data])
+  const logs = useMemo<utils.LogData[]>(
+    () => logsQuery.data ?? [],
+    [logsQuery.data]
+  )
 
   const columnsConfig = useMemo(
     () => utils.getColumnsConfig(props.introspection),
     [props.introspection]
   )
 
-  const table = useReactTable({
+  const table = useTable({
+    features: utils.logTableFeatures,
     data: logs,
     columns: columnsConfig.definition,
     enableColumnResizing: true,
     columnResizeMode: "onChange",
-    getCoreRowModel: getCoreRowModel(),
     enableMultiRowSelection: false,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,

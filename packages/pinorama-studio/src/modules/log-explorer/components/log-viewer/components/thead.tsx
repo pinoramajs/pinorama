@@ -1,5 +1,5 @@
 import type { AnySchema } from "@orama/orama"
-import { flexRender, type Table } from "@tanstack/react-table"
+import { flexRender } from "@tanstack/react-table"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { FormattedMessage } from "react-intl"
 import {
@@ -11,9 +11,10 @@ import {
   ContextMenuTrigger
 } from "@/components/ui/context-menu"
 import { createField } from "@/lib/introspection"
+import type { LogTable } from "../utils"
 
 type TableHeadProps = {
-  table: Table<unknown>
+  table: LogTable
   introspection: PinoramaIntrospection<AnySchema>
 }
 

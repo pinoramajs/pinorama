@@ -1,5 +1,14 @@
 import type { AnySchema } from "@orama/orama"
-import type { ColumnDef, Table } from "@tanstack/react-table"
+import {
+  type ColumnDef,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  type Row,
+  rowSelectionFeature,
+  type Table,
+  tableFeatures
+} from "@tanstack/react-table"
 import type { Virtualizer } from "@tanstack/react-virtual"
 import type { PinoramaIntrospection } from "pinorama-types"
 import { createField } from "@/lib/introspection"
@@ -7,12 +16,25 @@ import { cn } from "@/lib/utils"
 
 const DEFAULT_COLUMN_SIZE = 150
 
+export const logTableFeatures = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+  columnVisibilityFeature,
+  rowSelectionFeature
+})
+
+type LogTableFeatures = typeof logTableFeatures
+export type LogData = Record<string, unknown>
+
+export type LogTable = Table<LogTableFeatures, LogData>
+export type LogRow = Row<LogTableFeatures, LogData>
+
 export const getColumnsConfig = (
   introspection: PinoramaIntrospection<AnySchema>
 ) => {
   const visibility: Record<string, boolean> = {}
   const sizing: Record<string, number> = {}
-  const definition: ColumnDef<unknown>[] = []
+  const definition: ColumnDef<LogTableFeatures, LogData>[] = []
 
   const columns = introspection?.columns
   if (!columns)
@@ -60,7 +82,7 @@ export const getColumnsConfig = (
   }
 }
 
-export const selectRowByIndex = (index: number, table: Table<unknown>) => {
+export const selectRowByIndex = (index: number, table: LogTable) => {
   const totalRows = table.getRowModel().rows.length
   if (index < 0 || index >= totalRows) return false
 
@@ -68,17 +90,17 @@ export const selectRowByIndex = (index: number, table: Table<unknown>) => {
   return true
 }
 
-export const getCurrentRowIndex = (table: Table<unknown>) => {
+export const getCurrentRowIndex = (table: LogTable) => {
   const selectedKeys = table.getSelectedRowModel()
   return selectedKeys.rows[0]?.index ?? -1
 }
 
-export const canSelectNextRow = (table: Table<unknown>) => {
+export const canSelectNextRow = (table: LogTable) => {
   const currentRowIndex = getCurrentRowIndex(table)
   return currentRowIndex < table.getRowModel().rows.length - 1
 }
 
-export const canSelectPreviousRow = (table: Table<unknown>) => {
+export const canSelectPreviousRow = (table: LogTable) => {
   const currentRowIndex = getCurrentRowIndex(table)
   return currentRowIndex > 0
 }
