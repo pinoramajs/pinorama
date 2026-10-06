@@ -28,7 +28,7 @@ export function useModuleHotkeys<M extends Module<ComponentType>>(module: M) {
     const hotkeys: Partial<Record<ModuleMethod<M>, ModuleHotkey>> = {}
 
     const mod = modules.find((m) => m.id === module.id)
-    if (!mod || !mod.hotkeys) return hotkeys
+    if (!mod?.hotkeys) return hotkeys
 
     for (const [method, key] of Object.entries(mod.hotkeys)) {
       hotkeys[method as ModuleMethod<M>] = {

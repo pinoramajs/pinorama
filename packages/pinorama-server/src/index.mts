@@ -111,4 +111,4 @@ const plugin = fp(fastifyPinoramaServer, {
 })
 
 export default plugin
-export { fastifyPinoramaServer, createServer }
+export { createServer, fastifyPinoramaServer }
