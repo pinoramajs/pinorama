@@ -5,18 +5,24 @@ on:
     branches:
       - main
 
+permissions: {}
+
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # commit version changes, push tags, create GitHub releases
+      pull-requests: write # open and update the release PR
+      id-token: write # npm Trusted Publishing (OIDC)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup PNPM
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,24 +35,22 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Creating .npmrc and remove .husky
+      # Token fallback until every package has a trusted publisher on npmjs.com.
+      # pnpm tries OIDC first and only uses the token when the registry has no
+      # trusted publisher for the package. The token is read from the
+      # environment at publish time, never written to disk.
+      - name: Setup npm auth
         run: |
-          cat << EOF > "$HOME/.npmrc"
-            enable-pre-post-scripts=true
-            package-manager-strict=false
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          cat << 'EOF' > "$HOME/.npmrc"
+          //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
           EOF
-          rm -rf .husky
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Release PR or Publish to NPM
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          publish: pnpm release
-          commit: "chore: release"
-          title: "chore: release candidate"
+          publish-script: pnpm release
+          commit-message: "chore: release"
+          pr-title: "chore: release candidate"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
