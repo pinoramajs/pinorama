@@ -1,5 +1,15 @@
 # pinorama-studio
 
+## 0.6.1
+
+### Patch Changes
+
+- 63ad86b: Update dependencies to their latest versions
+- Updated dependencies [63ad86b]
+  - pinorama-client@0.3.2
+  - pinorama-server@0.3.4
+  - pinorama-transport@0.1.6
+
 ## 0.6.0
 
 ### Minor Changes

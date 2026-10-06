@@ -1,5 +1,13 @@
 # pinorama-mcp
 
+## 0.2.3
+
+### Patch Changes
+
+- 63ad86b: Update dependencies to their latest versions
+- Updated dependencies [63ad86b]
+  - pinorama-client@0.3.2
+
 ## 0.2.2
 
 ### Patch Changes
