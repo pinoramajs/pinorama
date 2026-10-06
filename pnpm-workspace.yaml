@@ -1,3 +1,19 @@
 packages:
   - "packages/*"
   - "examples/*"
+
+# pnpm 11 blocks dependency build scripts unless allowed here; esbuild's
+# postinstall only swaps its JS shim for the native binary (vite, vitepress, vitest)
+allowBuilds:
+  esbuild: true
+
+# pnpm 11 waits a day (minimumReleaseAge) before resolving a newly published
+# version. These were locked with pnpm 9 on the day they came out; pnpm added
+# them here itself, pinned to the exact version. Safe to drop once a day old.
+minimumReleaseAgeExclude:
+  - '@shadcn/registry@0.1.2'
+  - electron-to-chromium@1.5.446
+  - express-rate-limit@8.7.1
+  - shadcn@4.21.3
+  - tinybench@6.2.1
+  - vite@8.3.3

@@ -21,14 +21,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
-    "@changesets/cli": "^2.31.1",
+    "@changesets/cli": "^3.0.3",
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "husky": "^9.1.7",
     "rimraf": "^6.1.3",
     "turbo": "^2.11.7"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@11.28.2+sha512.755ce2fe3c05bfd7bb412b42aff3c5c55cd38c529c6eca810475497ae36746c571e4b6e1814e6e7e4b97d7ee864b8a0e44673c3b297a50e0ac28771c5ce15d27",
   "engines": {
     "node": ">=22.12.0"
   }
