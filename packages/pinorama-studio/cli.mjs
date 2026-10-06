@@ -99,21 +99,20 @@ async function start(options) {
   const studioUrl = `http://${opts.host}:${opts.port}`
   const serverUrl = `${studioUrl}${opts["server-prefix"]}`
 
-  app.listen({ host: opts.host, port: opts.port }, async (err) => {
-    if (err) throw err
+  await app.listen({ host: opts.host, port: opts.port })
 
-    const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`]
+  const msg = [`${"Pinorama Studio Web:"} ${c.dim(studioUrl)}`]
 
-    if (opts.server) {
-      msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
-      msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
-    }
+  if (opts.server) {
+    msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
+    msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
+  }
 
-    console.log(msg.join("\n"))
+  console.log(msg.join("\n"))
 
-    opts.open &&
-      (await open(`${studioUrl}?serverUrl=${serverUrl}&liveMode=true`))
-  })
+  if (opts.open) {
+    await open(`${studioUrl}?serverUrl=${serverUrl}&liveMode=true`)
+  }
 
   if (isPiped) {
     console.log(
