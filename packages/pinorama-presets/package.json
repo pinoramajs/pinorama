@@ -2,8 +2,8 @@
   "name": "pinorama-presets",
   "version": "0.2.0",
   "type": "module",
-  "types": "./dist/presets/index.d.mts",
-  "exports": "./dist/presets/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": "./dist/index.mjs",
   "files": [
     "dist"
   ],

@@ -82,7 +82,9 @@ async function start(options) {
   const app = createServer(opts)
 
   if (opts.server) {
-    if (!Object.keys(pinoramaPresets).includes(opts.preset)) {
+    const preset = pinoramaPresets[opts.preset]
+
+    if (!preset?.schema || !preset?.introspection) {
       console.error(c.red(`Invalid preset: ${opts.preset}`))
       process.exit(1)
     }
@@ -91,8 +93,8 @@ async function start(options) {
       adminSecret: opts["admin-secret"],
       dbPath: opts["server-db-path"],
       prefix: opts["server-prefix"],
-      dbSchema: pinoramaPresets[opts.preset].schema,
-      introspection: pinoramaPresets[opts.preset].introspection
+      dbSchema: preset.schema,
+      introspection: preset.introspection
     })
   }
 
