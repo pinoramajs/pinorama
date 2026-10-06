@@ -1,5 +1,15 @@
 # pinorama-server
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [7388aff]
+- Updated dependencies [7388aff]
+  - pinorama-presets@0.2.1
+  - pinorama-client@0.3.1
+  - pinorama-mcp@0.2.2
+
 ## 0.3.2
 
 ### Patch Changes

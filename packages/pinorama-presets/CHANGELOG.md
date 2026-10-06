@@ -1,5 +1,11 @@
 # pinorama-presets
 
+## 0.2.1
+
+### Patch Changes
+
+- 7388aff: Export `createPreset` from the package entry point, as documented
+
 ## 0.2.0
 
 ### Minor Changes
