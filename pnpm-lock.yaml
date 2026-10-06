@@ -392,6 +392,9 @@ importers:
       pino-abstract-transport:
         specifier: ^3.0.0
         version: 3.0.0
+      pinorama-client:
+        specifier: workspace:*
+        version: link:../pinorama-client
     devDependencies:
       '@types/minimist':
         specifier: ^1.2.5
@@ -405,9 +408,6 @@ importers:
       pino:
         specifier: ^10.3.1
         version: 10.3.1
-      pinorama-client:
-        specifier: workspace:*
-        version: link:../pinorama-client
       pinorama-server:
         specifier: workspace:*
         version: link:../pinorama-server
