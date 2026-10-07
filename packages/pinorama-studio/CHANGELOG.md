@@ -1,5 +1,19 @@
 # pinorama-studio
 
+## 0.7.0
+
+### Minor Changes
+
+- c8c784a: Shut down gracefully on `SIGINT`/`SIGTERM`: piped logs still buffered in the transport are delivered and the embedded server is closed before exiting. `--server-db-path` now works as documented: the database is restored on start and saved on exit. It no longer defaults to `<tmpdir>/pinorama.msp`; without the flag logs stay in memory.
+
+### Patch Changes
+
+- 9cc4c89: Pick the UI language from the browser settings (`navigator.languages`), as the docs always said. A value stored in `localStorage.locale` still wins; unsupported values are ignored instead of breaking the translations.
+- Updated dependencies [c8c784a]
+- Updated dependencies [c8c784a]
+  - pinorama-server@0.3.5
+  - pinorama-transport@0.1.7
+
 ## 0.6.1
 
 ### Patch Changes

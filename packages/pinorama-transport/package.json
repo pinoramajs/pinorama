@@ -1,6 +1,6 @@
 {
   "name": "pinorama-transport",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "load pino logs into Pinorama",
   "type": "module",
   "types": "./dist/lib.d.mts",
