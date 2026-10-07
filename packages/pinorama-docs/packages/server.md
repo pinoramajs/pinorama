@@ -253,6 +253,10 @@ The auto-save timer is automatically cleared when the server shuts down.
 
 ## Graceful Shutdown
 
-When `dbPath` is configured, the database is automatically persisted to disk when the Fastify server shuts down (via the `onClose` hook). This means data is saved when you stop the server with `Ctrl+C` or call `app.close()`.
+When `dbPath` is configured, the database is automatically persisted to disk when the Fastify server shuts down (via the `onClose` hook). The hook runs on `app.close()`, so call it from your `SIGINT`/`SIGTERM` handler to save on `Ctrl+C`:
+
+```js
+process.on("SIGINT", () => app.close().then(() => process.exit(0)))
+```
 
 See [Persistence](/advanced/persistence) for more details on formats and configuration.

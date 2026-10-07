@@ -1,3 +1,4 @@
+import { once } from "node:events"
 import { setTimeout } from "node:timers/promises"
 import { pino } from "pino"
 import { PinoramaClient } from "pinorama-client"
@@ -81,6 +82,34 @@ describe("pinoramaTransport", async () => {
     for (const hit of response.hits) {
       expect(hit.document.msg).toBe("hello world")
     }
+  })
+
+  it("should deliver buffered logs before the stream closes", async () => {
+    // slow /bulk: a search sent after the stream closed must still see the logs
+    const slowServer = createServer({}, { forceCloseConnections: true })
+    slowServer.addHook("onRequest", async (req) => {
+      if (req.url === "/bulk") await setTimeout(200)
+    })
+    await slowServer.listen()
+    const address = slowServer.server.address()
+    const port = typeof address === "string" ? address : address?.port
+    const client = new PinoramaClient({ url: `http://localhost:${port}` })
+
+    const transport = pinoramaTransport({
+      url: `http://localhost:${port}`,
+      batchSize: 1000,
+      flushInterval: 60_000
+    })
+
+    // act
+    transport.write('{"msg":"one","level":30}\n')
+    transport.write('{"msg":"two","level":30}\n')
+    transport.end()
+    await once(transport, "close")
+
+    const response = await client.search({})
+    await slowServer.close()
+    expect(response.hits.length).toBe(2)
   })
 
   it("should ignore all values except non-empty plain objects", async () => {

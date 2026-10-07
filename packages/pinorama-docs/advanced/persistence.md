@@ -9,7 +9,7 @@ Pinorama Server stores logs in-memory using [Orama](https://askorama.ai/). Persi
 ## How It Works
 
 1. **On startup** — If the configured `dbPath` file exists, the database is restored from it. Otherwise, a fresh database is created.
-2. **On shutdown** — When the server closes gracefully (e.g. `Ctrl+C` or `app.close()`), the database is automatically saved to `dbPath` via the Fastify `onClose` hook.
+2. **On shutdown** — When the server closes gracefully (`app.close()`), the database is automatically saved to `dbPath` via the Fastify `onClose` hook. Call it from your signal handler so `Ctrl+C` saves too; Pinorama Studio does this for its embedded server.
 3. **On demand** — Trigger a save at any time via the `POST /persist` endpoint.
 4. **Auto-save** — When `autoSaveInterval` is configured, the database is saved periodically at the specified interval.
 
@@ -89,10 +89,8 @@ Returns `204 No Content` on success. Requires authentication if `adminSecret` is
 
 ## Pinorama Studio
 
-When using [Pinorama Studio](/packages/studio) with piped input, the `--server-db-path` flag controls where the embedded server stores its database:
+When using [Pinorama Studio](/packages/studio) with piped input, the embedded server keeps logs in memory and discards them on exit. Pass `--server-db-path` to persist them: the file is restored on startup and saved on `Ctrl+C`.
 
 ```sh
 node app.js | pinorama --open --server-db-path ./my-logs.msp
 ```
-
-The default path is a temporary file at `<tmpdir>/pinorama.msp`.

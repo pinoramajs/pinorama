@@ -1,9 +1,6 @@
 #! /usr/bin/env node
 
 import { readFileSync } from "node:fs"
-import os from "node:os"
-import path from "node:path"
-import { pipeline } from "node:stream/promises"
 import { fileURLToPath } from "node:url"
 import fastifyCors from "@fastify/cors"
 import fastifyStatic from "@fastify/static"
@@ -22,7 +19,7 @@ const defaultOptions = {
   logger: false,
   server: false,
   "server-prefix": "/pinorama",
-  "server-db-path": path.resolve(os.tmpdir(), "pinorama.msp"),
+  "server-db-path": undefined,
   "server-url": undefined,
   "admin-secret": undefined,
   preset: "pino",
@@ -55,7 +52,7 @@ async function start(options) {
     -l, --logger               Enable logging (default: ${defaultOptions.logger}).
     -s, --server               Start Pinorama Server (default: ${defaultOptions.server}).
     -e, --server-prefix        Set Pinorama Server endpoint (default: ${defaultOptions["server-prefix"]}).
-    -f, --server-db-path       Set Pinorama Server db filepath (default: TMPDIR/pinorama.msp).
+    -f, --server-db-path       Save Pinorama Server db to this file on exit (disabled by default).
     -k, --server-admin-secret  Set Pinorama Server admin secret key (disabled by default).
     -u, --server-url           Connect to an existing Pinorama Server instead of starting one.
     -p, --preset               Use a predefined config preset (default: ${defaultOptions.preset}).
@@ -124,7 +121,7 @@ async function start(options) {
     msg.push(`${"Pinorama Server API:"} ${c.dim(serverUrl)}`)
   }
 
-  if (opts.server) {
+  if (opts.server && opts["server-db-path"]) {
     msg.push(`${"Server DB File Path:"} ${c.dim(opts["server-db-path"])}`)
   }
 
@@ -133,6 +130,8 @@ async function start(options) {
   if (opts.open) {
     await open(`${studioUrl}?serverUrl=${serverUrl}&liveMode=true`)
   }
+
+  let stream
 
   if (isPiped) {
     console.log(
@@ -143,7 +142,7 @@ async function start(options) {
       )
     )
 
-    const stream = pinoramaTransport({
+    stream = pinoramaTransport({
       url: serverUrl,
       adminSecret: opts["admin-secret"],
       batchSize: opts["batch-size"],
@@ -155,8 +154,35 @@ async function start(options) {
     })
 
     await app.ready()
-    pipeline(process.stdin, stream)
+    process.stdin.pipe(stream)
   }
+
+  let closing = false
+
+  const shutdown = async () => {
+    // second signal: quit without waiting
+    if (closing) process.exit(1)
+    closing = true
+
+    try {
+      if (stream && !stream.closed) {
+        // stop reading stdin and deliver what is buffered before the server goes away
+        process.stdin.unpipe(stream)
+        stream.end()
+        await new Promise((resolve) => stream.once("close", resolve))
+      }
+
+      // closing the server saves the db when --server-db-path is set
+      await app.close()
+      process.exit(0)
+    } catch (error) {
+      console.error(error)
+      process.exit(1)
+    }
+  }
+
+  process.on("SIGINT", shutdown)
+  process.on("SIGTERM", shutdown)
 }
 
 function createServer(opts) {

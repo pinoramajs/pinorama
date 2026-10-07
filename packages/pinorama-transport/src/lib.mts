@@ -45,10 +45,12 @@ export default function pinoramaTransport(
 
   const client = new PinoramaClient(clientOpts)
 
+  let close = async () => {}
+
   /* build */
   const buildFn = async (stream: Transform) => {
     const buffer: PinoramaDocument<BaseOramaPinorama>[] = []
-    let flushing = false
+    let flushing: Promise<void> | undefined
 
     const opts: BulkOptions = {
       batchSize: bulkOpts?.batchSize ?? defaultBulkOptions.batchSize,
@@ -57,10 +59,7 @@ export default function pinoramaTransport(
       maxBufferSize: bulkOpts?.maxBufferSize ?? defaultBulkOptions.maxBufferSize
     }
 
-    const flush = async () => {
-      if (buffer.length === 0 || flushing) return
-      flushing = true
-
+    const send = async () => {
       try {
         stream.pause()
         await client.insert(buffer)
@@ -69,8 +68,15 @@ export default function pinoramaTransport(
         console.error("Failed to flush logs:", error)
       } finally {
         stream.resume()
-        flushing = false
       }
+    }
+
+    const flush = () => {
+      if (buffer.length === 0) return flushing ?? Promise.resolve()
+      flushing ??= send().finally(() => {
+        flushing = undefined
+      })
+      return flushing
     }
 
     const intervalId = setInterval(() => {
@@ -87,10 +93,10 @@ export default function pinoramaTransport(
       }
     })
 
-    stream.on("end", async () => {
+    close = async () => {
       clearInterval(intervalId)
       await flush()
-    })
+    }
   }
 
   /* parseLine */
@@ -108,7 +114,11 @@ export default function pinoramaTransport(
     return obj
   }
 
-  return abstractTransport(buildFn, { parseLine: parseLineFn })
+  return abstractTransport(buildFn, {
+    parseLine: parseLineFn,
+    // runs on end and on destroy: the stream closes once the buffer is delivered
+    close: (err, cb) => close().finally(() => cb(err))
+  })
 }
 
 /**
