@@ -1,5 +1,11 @@
 # pinorama-server
 
+## 0.3.5
+
+### Patch Changes
+
+- c8c784a: Skip the save on close when `dbPath` is not configured. It used to write an `orama_bump_<timestamp>` dump file into the current directory.
+
 ## 0.3.4
 
 ### Patch Changes
